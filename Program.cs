@@ -12,6 +12,7 @@ builder.Services.AddSwaggerGen();
 
 // SERVICE (isso estava faltando)
 builder.Services.AddScoped<IFilmeService, FilmeService>();
+builder.Services.AddScoped<ISessaoService, SessaoService>();
 
 // DB
 builder.Services.AddDbContext<AppDbContext>(options =>

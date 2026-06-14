@@ -103,3 +103,4 @@
 /home/gustavo/CinemaAPI/obj/Debug/net8.0/CinemaAPI.pdb
 /home/gustavo/CinemaAPI/obj/Debug/net8.0/CinemaAPI.genruntimeconfig.cache
 /home/gustavo/CinemaAPI/obj/Debug/net8.0/ref/CinemaAPI.dll
+/home/gustavo/CinemaAPI/obj/Debug/net8.0/CinemaAPI.sourcelink.json
