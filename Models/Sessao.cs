@@ -5,6 +5,7 @@ namespace CinemaAPI.Models;
 
 public class Sessao
 {
+    [Key]
     public int Id { get; set; }
 
     [Required]
@@ -15,14 +16,6 @@ public class Sessao
 
     [Required]
     public DateTime DataHora { get; set; }
-
-    [Required]
-    [Column(TypeName = "decimal(10,2)")]
-    public decimal PrecoInteira { get; set; }
-
-    [Required]
-    [Column(TypeName = "decimal(10,2)")]
-    public decimal PrecoMeia { get; set; }
 
     public bool Ativa { get; set; } = true;
 }
