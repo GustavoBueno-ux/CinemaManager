@@ -104,3 +104,12 @@
 /home/gustavo/CinemaAPI/obj/Debug/net8.0/CinemaAPI.genruntimeconfig.cache
 /home/gustavo/CinemaAPI/obj/Debug/net8.0/ref/CinemaAPI.dll
 /home/gustavo/CinemaAPI/obj/Debug/net8.0/CinemaAPI.sourcelink.json
+/home/gustavo/CinemaAPI/bin/Debug/net8.0/BCrypt-Net-Next.dll
+/home/gustavo/CinemaAPI/bin/Debug/net8.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+/home/gustavo/CinemaAPI/bin/Debug/net8.0/Microsoft.IdentityModel.Abstractions.dll
+/home/gustavo/CinemaAPI/bin/Debug/net8.0/Microsoft.IdentityModel.JsonWebTokens.dll
+/home/gustavo/CinemaAPI/bin/Debug/net8.0/Microsoft.IdentityModel.Logging.dll
+/home/gustavo/CinemaAPI/bin/Debug/net8.0/Microsoft.IdentityModel.Protocols.dll
+/home/gustavo/CinemaAPI/bin/Debug/net8.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+/home/gustavo/CinemaAPI/bin/Debug/net8.0/Microsoft.IdentityModel.Tokens.dll
+/home/gustavo/CinemaAPI/bin/Debug/net8.0/System.IdentityModel.Tokens.Jwt.dll
