@@ -20,8 +20,6 @@ public class AppDbContext : DbContext
 
     public DbSet<Ingresso> Ingressos { get; set; }
 
-    public DbSet<ValidacaoIngresso> ValidacoesIngresso { get; set; }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

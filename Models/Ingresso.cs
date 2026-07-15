@@ -24,10 +24,6 @@ public class Ingresso
 
     [ForeignKey(nameof(UsuarioId))]
     public Usuario Usuario { get; set; } = null!;
-
-    [Required]
-    public TipoIngresso TipoIngresso { get; set; }
-
     [Required]
     [Column(TypeName = "decimal(10,2)")]
     public decimal ValorPago { get; set; }
@@ -37,14 +33,15 @@ public class Ingresso
     public string TokenQrCode { get; set; } = string.Empty;
 
     public DateTime DataCompra { get; set; } = DateTime.UtcNow;
+    public OrigemVenda OrigemVenda { get; set; }
 
     public bool Utilizado { get; set; } = false;
 
     public DateTime? DataUtilizacao { get; set; }
 }
 
-public enum TipoIngresso
+public enum OrigemVenda
 {
-    Inteira = 1,
-    Meia = 2
+    Online = 1,
+    Bilheteria = 2
 }
