@@ -7,21 +7,22 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Controllers
 builder.Services.AddControllers();
 
+// Swagger
 builder.Services.AddEndpointsApiExplorer();
-
 builder.Services.AddSwaggerGen();
 
-
-// SERVICES
+// Services
 builder.Services.AddScoped<IFilmeService, FilmeService>();
 builder.Services.AddScoped<ISessaoService, SessaoService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<IIngressoService, IngressoService>();
+builder.Services.AddScoped<IAssentoService, AssentoService>();
 
-
-// DATABASE
+// Banco de dados
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseMySql(
@@ -32,39 +33,37 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     );
 });
 
-
 // JWT
-builder.Services.AddAuthentication(
-    JwtBearerDefaults.AuthenticationScheme)
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.TokenValidationParameters =
-            new TokenValidationParameters
-            {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
 
-                ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
 
-                ValidAudience = builder.Configuration["Jwt:Audience"],
-
-                IssuerSigningKey =
-                    new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(
-                            builder.Configuration["Jwt:Key"]!
-                        )
-                    )
-            };
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)
+            )
+        };
     });
-
 
 builder.Services.AddAuthorization();
 
-
 var app = builder.Build();
 
+// Popula automaticamente os assentos da sala caso a tabela esteja vazia.
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await DbInitializer.PopularAssentosAsync(context);
+}
 
 if (app.Environment.IsDevelopment())
 {
@@ -72,17 +71,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
 app.UseHttpsRedirection();
 
-
-// ORDEM IMPORTA
+// A autenticação deve vir antes da autorização.
 app.UseAuthentication();
-
 app.UseAuthorization();
 
-
 app.MapControllers();
-
 
 app.Run();

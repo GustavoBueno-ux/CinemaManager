@@ -4,6 +4,7 @@ using CinemaAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CinemaAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260713135238_AddOrigemVendaIngresso")]
+    partial class AddOrigemVendaIngresso
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -99,6 +102,9 @@ namespace CinemaAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("SessaoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TipoIngresso")
                         .HasColumnType("int");
 
                     b.Property<string>("TokenQrCode")
@@ -187,6 +193,32 @@ namespace CinemaAPI.Migrations
                     b.ToTable("Usuarios");
                 });
 
+            modelBuilder.Entity("CinemaAPI.Models.ValidacaoIngresso", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DataValidacao")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("IngressoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IngressoId");
+
+                    b.HasIndex("UsuarioId");
+
+                    b.ToTable("ValidacoesIngresso");
+                });
+
             modelBuilder.Entity("CinemaAPI.Models.Ingresso", b =>
                 {
                     b.HasOne("CinemaAPI.Models.Assento", "Assento")
@@ -223,6 +255,25 @@ namespace CinemaAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("Filme");
+                });
+
+            modelBuilder.Entity("CinemaAPI.Models.ValidacaoIngresso", b =>
+                {
+                    b.HasOne("CinemaAPI.Models.Ingresso", "Ingresso")
+                        .WithMany()
+                        .HasForeignKey("IngressoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CinemaAPI.Models.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Ingresso");
+
+                    b.Navigation("Usuario");
                 });
 #pragma warning restore 612, 618
         }
