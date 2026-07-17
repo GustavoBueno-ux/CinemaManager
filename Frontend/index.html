@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Cinema - Login</title>
+
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/pages/login.css">
+</head>
+
+<body>
+
+    <main class="login-page">
+
+        <section class="login-card">
+
+            <header class="login-header">
+
+                <div class="cinema-logo">
+                    <img src="assets/images/logo.png" alt="Logo do Cinema">
+                </div>
+
+                <h1>Bem-vindo ao Cinema</h1>
+
+                <p>
+                    Acesse sua conta e compre seus ingressos de forma rápida e segura.
+                </p>
+
+            </header>
+
+
+            <form class="login-form" id="login-form">
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email
+                    </label>
+
+                    <input 
+                        type="email" 
+                        id="email"
+                        name="email"
+                        placeholder="Digite seu email"
+                        autocomplete="email"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="senha">
+                        Senha
+                    </label>
+
+                    <input 
+                        type="password" 
+                        id="senha"
+                        name="senha"
+                        placeholder="Digite sua senha"
+                        autocomplete="current-password"
+                        required
+                    >
+
+                </div>
+
+
+                <button 
+                    type="submit" 
+                    class="login-button"
+                    id="login-button"
+                >
+                    Entrar
+                </button>
+
+
+                <p class="login-error" id="login-error">
+                    
+                </p>
+
+
+            </form>
+
+
+            <footer class="login-footer">
+
+                <p>
+                    Não possui uma conta?
+                    <a href="cadastro.html">
+                        Criar conta
+                    </a>
+                </p>
+
+                <small>
+                    © 2026 Cinema. Todos os direitos reservados.
+                </small>
+
+            </footer>
+
+
+        </section>
+
+    </main>
+
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/pages/login.js"></script>
+
+</body>
+
+</html>
