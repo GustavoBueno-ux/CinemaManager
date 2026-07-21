@@ -31,6 +31,14 @@ public class SessaoController : ControllerBase
         return Ok(sessoes);
     }
 
+    [HttpGet("ativas")]
+    public async Task<IActionResult> ListarAtivas()
+    {
+        var sessoes = await _sessaoService.ListarAtivasAsync();
+
+        return Ok(sessoes);
+    }
+
     [HttpGet("{id}")]
     public async Task<IActionResult> BuscarSessaoPorId(int id)
     {
