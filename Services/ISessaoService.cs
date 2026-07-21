@@ -7,6 +7,8 @@ public interface ISessaoService
     Task<SessaoResponseDTO> CriarAsync(CriarSessaoDTO dto);
 
     Task<List<SessaoResponseDTO>> ListarTodosAsync();
+    
+    Task<List<SessaoResponseDTO>> ListarAtivasAsync();
 
     Task<SessaoResponseDTO?> BuscarPorIdAsync(int id);
 

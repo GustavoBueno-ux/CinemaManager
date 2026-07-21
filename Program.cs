@@ -35,6 +35,8 @@ builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IIngressoService, IngressoService>();
 builder.Services.AddScoped<IAssentoService, AssentoService>();
 
+builder.Services.AddHostedService<SessaoBackgroundService>();
+
 // Banco de dados
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
