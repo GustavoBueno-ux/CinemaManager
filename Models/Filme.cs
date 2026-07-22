@@ -26,6 +26,8 @@ public class Filme
     public string PosterUrl { get; set; } = string.Empty;
 
     public DateTime DataCadastro { get; set; } = DateTime.UtcNow;
+
+    public ICollection<Sessao> Sessoes { get; set; } = new List<Sessao>();
 }
 
 public enum ClassificacaoIndicativa
