@@ -30,6 +30,13 @@ public class FilmeController : ControllerBase
         return Ok(filmes);
     }
 
+    [HttpGet("ativos")]
+    public async Task<IActionResult> ListarFilmesAtivos()
+    {
+        var filmes = await _filmeService.ListarComSessoesAtivasAsync();
+        return Ok(filmes);
+    }
+
     [HttpGet("{id}")]
     public async Task<IActionResult> BuscarFilmePorId(int id)
     {

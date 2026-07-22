@@ -6,6 +6,8 @@ public interface IFilmeService
 {
     Task<List<FilmeResponseDTO>> ListarTodosAsync();
 
+    Task<List<FilmeResponseDTO>> ListarComSessoesAtivasAsync();
+
     Task<FilmeResponseDTO?> BuscarPorIdAsync(int id);
 
     Task<FilmeResponseDTO> CriarAsync(CriarFilmeDTO dto);

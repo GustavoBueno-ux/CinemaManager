@@ -42,6 +42,15 @@ public class FilmeService : IFilmeService
             .ToList();
     }
 
+    public async Task<List<FilmeResponseDTO>> ListarComSessoesAtivasAsync()
+    {
+        var filmes = await _context.Filmes
+            .Where(f => f.Sessoes.Any(s => s.Ativa))
+            .ToListAsync();
+    
+        return filmes.Select(ConverterParaDTO).ToList();
+    }
+    
     public async Task<FilmeResponseDTO?> BuscarPorIdAsync(int id)
     {
         var filme = await _context.Filmes
