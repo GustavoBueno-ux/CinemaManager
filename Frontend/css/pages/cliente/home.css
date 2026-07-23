@@ -1,0 +1,610 @@
+/* =========================
+   RESET
+========================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+}
+
+
+body {
+
+    background: #070707;
+
+    color: #ffffff;
+
+    min-height: 100vh;
+
+}
+
+
+
+/* =========================
+   NAVBAR
+========================= */
+
+
+.navbar {
+
+    height: 75px;
+
+    width: 100%;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 0 6%;
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 10;
+
+    background: rgba(7,7,7,0.85);
+
+    backdrop-filter: blur(15px);
+
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+
+}
+
+
+
+.logo img {
+
+    width: 55px;
+
+    cursor: pointer;
+
+}
+
+
+
+.usuario-container {
+
+    position: relative;
+
+}
+
+
+
+.usuario-btn {
+
+    background: transparent;
+
+    border: none;
+
+    color: white;
+
+    cursor: pointer;
+
+    font-size: 15px;
+
+    display: flex;
+
+    gap: 10px;
+
+    align-items: center;
+
+}
+
+
+
+.menu-usuario {
+
+    position: absolute;
+
+    right: 0;
+
+    top: 45px;
+
+    width: 200px;
+
+    background: #111;
+
+    border-radius: 15px;
+
+    padding: 10px;
+
+    display: none;
+
+    flex-direction: column;
+
+    border: 1px solid rgba(255,255,255,.1);
+
+    box-shadow: 0 10px 30px rgba(0,0,0,.5);
+
+}
+
+
+.menu-usuario.ativo {
+
+    display:flex;
+
+}
+
+
+
+.menu-usuario a {
+
+    color: white;
+
+    text-decoration: none;
+
+    padding: 12px;
+
+    border-radius: 10px;
+
+    transition: .3s;
+
+}
+
+
+
+.menu-usuario a:hover {
+
+    background: rgba(229,9,20,.15);
+
+}
+
+
+
+
+
+
+
+
+/* =========================
+   INTRODUÇÃO
+========================= */
+
+
+.introducao {
+
+    text-align: center;
+
+    padding: 70px 20px 40px;
+
+}
+
+
+
+.introducao h1 {
+
+    font-size: clamp(30px,5vw,48px);
+
+    margin-bottom: 15px;
+
+}
+
+
+
+.introducao p {
+
+    color:#bdbdbd;
+
+    font-size:18px;
+
+}
+
+
+
+/* =========================
+   SEÇÕES GERAIS
+========================= */
+
+
+section {
+
+    padding: 35px 6%;
+
+}
+
+
+
+section h2 {
+
+    font-size:28px;
+
+    margin-bottom:25px;
+
+}
+
+
+/* =========================
+   FILMES
+========================= */
+
+
+.cards-filmes{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    justify-content:flex-start;
+
+    gap:30px;
+
+}
+
+
+
+.filme-card{
+
+    flex:1 1 320px;
+
+    max-width:420px;
+
+    min-width:280px;
+
+    background:#111;
+
+    border-radius:20px;
+
+    overflow:hidden;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    padding:20px;
+
+    transition:.3s;
+
+    cursor:pointer;
+
+}
+
+
+
+.filme-card:hover {
+
+    transform:translateY(-8px);
+
+    border-color:#E50914;
+
+}
+
+
+
+.filme-card img{
+
+    width:100%;
+
+    max-width:220px;
+
+    aspect-ratio:2/3;
+
+    object-fit:cover;
+
+    display:block;
+
+    margin:0 auto 20px;
+
+    border-radius: 12px;
+
+}
+
+
+
+.filme-card h3 {
+    font-size:22px;
+
+    margin-bottom:10px;
+}
+
+
+
+.filme-card p {
+
+    color:#aaa;
+
+    margin-bottom:20px;
+
+}
+
+
+
+.filme-card button {
+
+    background:transparent;
+
+    color:white;
+
+    border:1px solid #E50914;
+
+    padding:10px 22px;
+
+    border-radius:25px;
+
+    cursor:pointer;
+
+}
+
+
+
+.filme-card button:hover {
+
+    transition: .4s;
+
+    background:#E50914;
+
+}
+
+
+/* =========================
+   DATAS
+========================= */
+
+
+.lista-datas {
+
+    display:flex;
+
+    gap:15px;
+
+    overflow-x:auto;
+
+    padding-bottom:10px;
+
+}
+
+
+
+.botao-data {
+
+    background:#111;
+
+    color:white;
+
+    border:1px solid rgba(255,255,255,.12);
+
+    padding:14px 28px;
+
+    border-radius:30px;
+
+    cursor:pointer;
+
+    font-size:15px;
+
+    transition:.3s;
+
+    white-space:nowrap;
+
+}
+
+
+
+.botao-data:hover {
+
+    border-color:#E50914;
+
+}
+
+
+
+.botao-data.ativa {
+
+    background:#E50914;
+
+    border-color:#E50914;
+
+}
+
+
+
+/* =========================
+   SESSÕES
+========================= */
+
+.filtro-sessoes{
+
+    margin-bottom:30px;
+
+}
+
+.filtro-sessoes p{
+
+    color:#cfcfcf;
+
+    font-size:.95rem;
+
+    margin-bottom:12px;
+
+    font-weight:500;
+
+}
+
+
+.cards-sessoes {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    justify-content: flex-start;
+
+    gap: 25px;
+
+}
+
+
+
+.sessao-card {
+
+    flex: 1 1 250px;
+
+    max-width: 380px;
+
+    min-width: 250px;
+
+    background: #111;
+
+    padding: 30px;
+
+    border-radius: 20px;
+
+    border: 1px solid rgba(255,255,255,.08);
+
+    transition: .3s;
+
+}
+
+
+
+.sessao-card:hover {
+
+    transform:translateY(-8px);
+
+    border-color:#E50914;
+
+}
+
+
+
+.horario {
+
+    color:#ff6b00;
+
+    font-size:28px;
+
+    font-weight:bold;
+    margin-bottom: 16px;
+
+}
+
+
+
+.sessao-card h3 {
+
+    margin:12px 0;
+
+    font-size:28px;
+
+}
+
+
+
+.sessao-card button {
+
+    width:100%;
+
+    padding:13px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#E50914;
+
+    color:white;
+
+    cursor:pointer;
+
+    font-size:15px;
+
+    transition:.3s;
+
+}
+
+
+
+.sessao-card button:hover {
+
+    background:#ff2733;
+
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+
+footer {
+
+    text-align:center;
+
+    padding:40px 20px;
+
+    color:#777;
+
+}
+
+
+
+/* =========================
+   RESPONSIVIDADE
+========================= */
+
+
+@media(max-width:768px){
+
+
+.navbar {
+
+    padding:0 20px;
+
+}
+
+
+
+.logo img {
+
+    width:48px;
+
+}
+
+
+
+.introducao {
+
+    padding-top:45px;
+
+}
+
+
+
+section {
+
+    padding:25px 20px;
+
+}
+
+
+
+section h2 {
+
+    font-size:23px;
+
+}
+
+
+.card-filme img {
+
+    height:280px;
+
+}
+
+.cards-filmes {
+
+    justify-content:center;
+
+}
+
+
+
+.cards-sessoes {
+
+    justify-content:center;
+
+}
+
+
+}

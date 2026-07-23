@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Cinema | Cadastro</title>
+
+    <link rel="stylesheet" href="../../css/pages/cliente/cadastro.css">
+
+</head>
+
+<body>
+
+    <main class="auth-container">
+
+        <section class="auth-card">
+
+            <div class="logo-container">
+
+                <img
+                    src="../../assets/logos/logo.png"
+                    alt="Logo do Cinema"
+                    class="logo">
+
+            </div>
+
+            <h1>Crie sua conta</h1>
+
+            <p class="subtitle">
+                Cadastre-se para comprar ingressos online.
+            </p>
+
+            <form id="cadastro-form">
+
+                <div class="campo">
+
+                    <label for="nome">
+                        Nome
+                    </label>
+
+                    <input
+                        type="text"
+                        id="nome"
+                        name="nome"
+                        placeholder="Digite seu nome"
+                        maxlength="100"
+                        required>
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="email">
+                        E-mail
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Digite seu e-mail"
+                        maxlength="150"
+                        required>
+
+                </div>
+
+                <div class="campo">
+
+                    <label for="senha">
+                        Senha
+                    </label>
+
+                    <input
+                        type="password"
+                        id="senha"
+                        name="senha"
+                        placeholder="Crie uma senha"
+                        minlength="6"
+                        required>
+
+                </div>
+
+                <p
+                    id="cadastro-error"
+                    class="error-message">
+                </p>
+
+                <button
+                    id="cadastro-button"
+                    type="submit"
+                    class="primary-button">
+
+                    Criar conta
+
+                </button>
+
+            </form>
+
+            <div class="auth-footer">
+
+                <p>
+
+                    Já possui uma conta?
+
+                    <a href="../../index.html">
+
+                        Fazer login
+
+                    </a>
+
+                </p>
+
+            </div>
+
+            <footer class="copyright">
+
+                <p>
+                    © 2026 Cinema • Todos os direitos reservados.
+                </p>
+            
+            </footer>
+
+        </section>
+
+    </main>
+
+    <script src="../../js/config.js"></script>
+    <script src="../../js/api.js"></script>
+    <script src="/Frontend/js/pages/cliente/cadastro.js"></script>
+
+</body>
+
+</html>

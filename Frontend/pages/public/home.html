@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Cinema</title>
+
+    <link rel="stylesheet" href="../../css/pages/cliente/home.css">
+
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <div class="logo">
+
+        <a href="home.html">
+
+            <img src="../../assets/logos/logo.png" alt="Cinema">
+
+        </a>
+
+    </div>
+
+    <div class="usuario-container">
+
+        <button
+            class="usuario-btn"
+            id="usuarioBtn">
+
+            <span id="nomeUsuario">
+
+                Usuário
+
+            </span>
+
+            <span>
+
+                ▼
+
+            </span>
+
+        </button>
+
+        <div
+            class="menu-usuario"
+            id="menuUsuario">
+
+            <a href="meus-ingressos.html">
+                🎟 Meus ingressos
+            </a>
+
+            <a href="perfil.html">
+                👤 Meu perfil
+            </a>
+
+            <a
+                href="#"
+                id="logoutBtn">
+
+                🚪 Sair
+
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+<main>
+
+<section class="introducao">
+
+    <h1>
+
+        Encontre sua próxima sessão
+
+    </h1>
+
+    <p>
+
+        Escolha o filme, o horário e garanta seu ingresso.
+
+    </p>
+
+</section>
+
+<section class="filmes">
+
+    <h2>
+
+        Filmes em cartaz
+
+    </h2>
+
+    <div
+        class="cards-filmes"
+        id="listaFilmes">
+
+        <p class="mensagem-vazia">
+
+            Carregando filmes...
+
+        </p>
+
+    </div>
+
+</section>
+
+<section class="sessoes">
+
+    <h2>
+
+        Sessões
+
+    </h2>
+
+    <div class="filtro-sessoes">
+
+        <p>
+
+            Escolha uma data
+
+        </p>
+
+        <div
+            class="lista-datas"
+            id="listaDatas">
+
+            <!-- JavaScript -->
+
+        </div>
+
+    </div>
+
+    <div
+        class="cards-sessoes"
+        id="listaSessoes">
+
+        <p class="mensagem-vazia">
+
+            Carregando sessões...
+
+        </p>
+
+    </div>
+
+</section>
+
+
+
+</main>
+
+<footer>
+
+    <p>
+
+        © 2026 Cinema. Todos os direitos reservados.
+
+    </p>
+
+</footer>
+
+<script src="../../js/config.js"></script>
+<script src="../../js/api.js"></script>
+<script src="../../js/pages/cliente/home.js"></script>
+
+</body>
+
+</html>

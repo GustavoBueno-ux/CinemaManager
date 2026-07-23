@@ -103,7 +103,7 @@ form.addEventListener("submit", async (event) => {
     else{
 
         window.location.href =
-            "home.html";
+            "pages/public/home.html";
 
     }
 
