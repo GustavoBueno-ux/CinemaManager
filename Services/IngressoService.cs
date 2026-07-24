@@ -88,6 +88,26 @@ public class IngressoService : IIngressoService
     }
 
 
+    public async Task<List<IngressoResponseDTO>> ListarDoUsuarioAsync(
+        int usuarioId
+    )
+    {
+        var ingressos = await _context.Ingressos
+            .AsNoTracking()
+            .Where(i => i.UsuarioId == usuarioId)
+            .Include(i => i.Sessao)
+                .ThenInclude(s => s.Filme)
+            .Include(i => i.Assento)
+            .Include(i => i.Usuario)
+            .OrderByDescending(i => i.Sessao.DataHora)
+            .ToListAsync();
+    
+        return ingressos
+            .Select(ConverterParaDTO)
+            .ToList();
+    }
+
+
     public async Task<IngressoResponseDTO?> BuscarPorIdAsync(int id)
     {
         var ingresso = await _context.Ingressos

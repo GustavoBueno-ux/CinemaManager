@@ -8,6 +8,8 @@ public interface IIngressoService
 
     Task<List<IngressoResponseDTO>> ListarTodosAsync();
 
+    Task<List<IngressoResponseDTO>> ListarDoUsuarioAsync(int usuarioId);
+
     Task<IngressoResponseDTO?> BuscarPorIdAsync(int id);
 
     Task<ValidacaoIngressoResponseDTO> ValidarAsync(ValidarIngressoDTO dto);

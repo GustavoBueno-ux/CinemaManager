@@ -1,6 +1,8 @@
 using CinemaAPI.DTOs.Ingressos;
 using CinemaAPI.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CinemaAPI.Controllers;
 
@@ -50,6 +52,32 @@ public class IngressoController : ControllerBase
     public async Task<IActionResult> ListarTodos()
     {
         var ingressos = await _service.ListarTodosAsync();
+        return Ok(ingressos);
+    }
+
+
+    [Authorize]
+    [HttpGet("meus")]
+    public async Task<IActionResult> ListarMeusIngressos()
+    {
+        var usuarioIdClaim = User.FindFirst(
+            ClaimTypes.NameIdentifier
+        )?.Value;
+
+        if (
+            string.IsNullOrWhiteSpace(usuarioIdClaim) ||
+            !int.TryParse(usuarioIdClaim, out var usuarioId)
+        )
+        {
+            return Unauthorized(new
+            {
+                mensagem = "Token inválido ou usuário não identificado."
+            });
+        }
+
+        var ingressos = await _service
+            .ListarDoUsuarioAsync(usuarioId);
+
         return Ok(ingressos);
     }
 
