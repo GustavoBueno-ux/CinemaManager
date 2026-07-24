@@ -1,0 +1,881 @@
+/* =========================================
+   CONFIGURAÇÕES GERAIS
+========================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    background:
+        radial-gradient(
+            circle at top,
+            #242424 0%,
+            #111111 45%,
+            #080808 100%
+        );
+    color: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+button,
+input {
+    font-family: inherit;
+}
+
+
+/* =========================
+   NAVBAR
+========================= */
+
+
+.navbar {
+
+    height: 75px;
+
+    width: 100%;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 0 6%;
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 10;
+
+    background: rgba(7,7,7,0.85);
+
+    backdrop-filter: blur(15px);
+
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+
+}
+
+
+
+.logo img {
+
+    width: 55px;
+
+    cursor: pointer;
+
+}
+
+
+
+.usuario-container {
+
+    position: relative;
+
+}
+
+
+
+.usuario-btn {
+
+    background: transparent;
+
+    border: none;
+
+    color: white;
+
+    cursor: pointer;
+
+    font-size: 15px;
+
+    display: flex;
+
+    gap: 10px;
+
+    align-items: center;
+
+}
+
+
+
+.menu-usuario {
+
+    position: absolute;
+
+    right: 0;
+
+    top: 45px;
+
+    width: 200px;
+
+    background: #111;
+
+    border-radius: 15px;
+
+    padding: 10px;
+
+    display: none;
+
+    flex-direction: column;
+
+    border: 1px solid rgba(255,255,255,.1);
+
+    box-shadow: 0 10px 30px rgba(0,0,0,.5);
+
+}
+
+
+.menu-usuario.ativo {
+
+    display:flex;
+
+}
+
+
+
+.menu-usuario a {
+
+    color: white;
+
+    text-decoration: none;
+
+    padding: 12px;
+
+    border-radius: 10px;
+
+    transition: .3s;
+
+}
+
+
+
+.menu-usuario a:hover {
+
+    background: rgba(229,9,20,.15);
+
+}
+
+
+/* =========================================
+   CONTEÚDO PRINCIPAL
+========================================= */
+
+main {
+    width: 100%;
+    min-height: 100vh;
+    padding: 40px 20px 70px;
+}
+
+
+
+.botao-voltar{
+
+    display:inline-block;
+
+    margin-left: 10%;
+
+    margin-bottom:30px;
+
+    color:#E50914;
+
+    text-decoration:none;
+
+    font-size:18px;
+
+    font-weight:600;
+
+    transition:.3s;
+
+}
+
+.botao-voltar:hover{
+
+    color:white;
+
+}
+
+/* =========================================
+   INFORMAÇÕES DA SESSÃO
+========================================= */
+
+.informacoes-sessao {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(360px, 1fr);
+    align-items: stretch;
+    gap: 22px;
+    width: 100%;
+    max-width: 1250px;
+    margin: 0 auto 28px;
+}
+
+.informacoes-filme,
+.estatisticas-assentos {
+    border: 1px solid #303030;
+    border-radius: 18px;
+    background:
+        linear-gradient(
+            145deg,
+            rgba(28, 28, 28, 0.98),
+            rgba(17, 17, 17, 0.98)
+        );
+    box-shadow:
+        0 14px 32px rgba(0, 0, 0, 0.28);
+}
+
+.informacoes-filme {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 35px;
+    padding: 26px 30px;
+}
+
+.titulo-filme-container {
+    flex: 1;
+    min-width: 0;
+}
+
+.rotulo-informacao {
+    display: block;
+    margin-bottom: 7px;
+    color: #929292;
+    font-size: 0.73rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+#titulo-filme {
+    overflow: hidden;
+    margin: 0;
+    color: #ffffff;
+    font-size: clamp(1.45rem, 2.5vw, 2.25rem);
+    line-height: 1.15;
+    text-overflow: ellipsis;
+}
+
+.detalhes-sessao {
+    display: flex;
+    flex-shrink: 0;
+    gap: 14px;
+}
+
+.detalhe-sessao {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    min-width: 130px;
+    padding: 14px 16px;
+    border: 1px solid #343434;
+    border-radius: 12px;
+    background: #121212;
+}
+
+.icone-detalhe {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 37px;
+    height: 37px;
+    border-radius: 9px;
+    background: #252525;
+    font-size: 1.05rem;
+}
+
+.detalhe-sessao strong {
+    display: block;
+    color: #ffffff;
+    font-size: 0.98rem;
+}
+
+
+/* =========================================
+   ESTATÍSTICAS DOS ASSENTOS
+========================================= */
+
+.estatisticas-assentos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    padding: 17px;
+}
+
+.estatistica-assento {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 11px;
+    min-width: 0;
+    padding: 16px 10px;
+    border: 1px solid #333333;
+    border-radius: 13px;
+    background: #121212;
+}
+
+.estatistica-assento div {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.estatistica-assento strong {
+    color: #ffffff;
+    font-size: 1.3rem;
+    line-height: 1;
+}
+
+.estatistica-assento div > span {
+    margin-top: 5px;
+    color: #a9a9a9;
+    font-size: 0.72rem;
+}
+
+
+/* Miniatura da poltrona */
+
+.mini-assento {
+    position: relative;
+    display: block;
+    flex-shrink: 0;
+    width: 30px;
+    height: 26px;
+    border-radius: 6px 6px 8px 8px;
+}
+
+.mini-assento::before {
+    content: "";
+    position: absolute;
+    top: -5px;
+    left: 3px;
+    width: calc(100% - 6px);
+    height: 8px;
+    border-radius: 5px 5px 2px 2px;
+    background: inherit;
+}
+
+.mini-assento::after {
+    content: "";
+    position: absolute;
+    bottom: -4px;
+    left: 5px;
+    width: calc(100% - 10px);
+    height: 5px;
+    border-radius: 0 0 5px 5px;
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.estatistica-assento.disponiveis .mini-assento {
+    background: #24a148;
+}
+
+.estatistica-assento.ocupados .mini-assento {
+    background: #d32f2f;
+}
+
+.estatistica-assento.selecionados .mini-assento {
+    background: #1677ff;
+}
+
+
+/* =========================================
+   ÁREA DA SALA
+========================================= */
+
+/*.sala-cinema {
+    width: 100%;
+    padding: 35px 25px 45px;
+    border: 1px solid #303030;
+    border-radius: 20px;
+    background: rgba(18, 18, 18, 0.95);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+    overflow-x: auto;
+}*/
+
+
+/* =========================================
+   TELA DO CINEMA
+========================================= */
+
+.tela-container {
+    width: 100%;
+    min-width: 720px;
+    margin-bottom: 55px;
+    padding: 0 55px;
+    perspective: 600px;
+}
+
+.tela-cinema {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 75%;
+    max-width: 760px;
+    min-height: 48px;
+    margin: 0 auto;
+    padding: 13px 90px;
+    border: 2px solid #dddddd;
+    border-radius: 50% 50% 12px 12px;
+    background:
+        linear-gradient(
+            180deg,
+            #f5f5f5 0%,
+            #d7d7d7 55%,
+            #9f9f9f 100%
+        );
+    color: #181818;
+    box-shadow:
+        0 8px 20px rgba(255, 255, 255, 0.15),
+        0 18px 35px rgba(255, 255, 255, 0.08);
+    transform: rotateX(-8deg);
+}
+
+.tela-cinema span {
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 10px;
+    text-indent: 10px;
+}
+
+
+/* =========================================
+   MAPA DE ASSENTOS
+========================================= */
+
+.sala-cinema {
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 35px 25px 30px;
+    border: 1px solid #303030;
+    border-radius: 20px;
+    background: rgba(18, 18, 18, 0.95);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+    overflow-x: auto;
+}
+
+.tela-container {
+    width: 100%;
+    min-width: 720px;
+    margin: 60px auto 5px;
+    text-align: center;
+}
+
+/*.tela {
+    width: 72%;
+    height: 12px;
+    margin: 0 auto 14px;
+    border-radius: 50%;
+    background: linear-gradient(
+        90deg,
+        #777777,
+        #ffffff,
+        #777777
+    );
+    box-shadow:
+        0 5px 20px rgba(255, 255, 255, 0.35),
+        0 15px 35px rgba(255, 255, 255, 0.12);
+}
+
+.tela-container span {
+    color: #a7a7a7;
+    font-size: 0.8rem;
+    font-weight: bold;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+}*/
+
+#mapa-assentos,
+.mapa-assentos {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+    min-width: 720px;
+    margin: 0 auto;
+}
+
+.fileira {
+    display: grid;
+    grid-template-columns:
+        28px
+        minmax(650px, 1fr)
+        28px;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+
+.identificador-fileira {
+    color: #aaaaaa;
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.area-assentos-fileira {
+    display: grid;
+    grid-template-columns: repeat(19, minmax(25px, 1fr));
+    align-items: center;
+    gap: clamp(4px, 0.7vw, 9px);
+    width: 100%;
+}
+
+
+/* =========================================
+   ASSENTOS
+========================================= */
+
+.assento {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    aspect-ratio: 1.08 / 1;
+    min-width: 25px;
+    max-width: 48px;
+    justify-self: center;
+    border: none;
+    border-radius: 7px 7px 10px 10px;
+    font-size: clamp(0.58rem, 0.8vw, 0.72rem);
+    font-weight: bold;
+    cursor: pointer;
+    transition:
+        transform 0.2s ease,
+        background-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.assento::before {
+    content: "";
+    position: absolute;
+    top: -4px;
+    left: 3px;
+    width: calc(100% - 6px);
+    height: 8px;
+    border-radius: 6px 6px 2px 2px;
+    background: inherit;
+}
+
+.assento::after {
+    content: "";
+    position: absolute;
+    bottom: -4px;
+    left: 5px;
+    width: calc(100% - 10px);
+    height: 5px;
+    border-radius: 0 0 5px 5px;
+    background: rgba(0, 0, 0, 0.35);
+}
+
+
+/* Disponível: verde */
+
+.assento.disponivel {
+    background: #24a148;
+    color: #ffffff;
+}
+
+.assento.disponivel:hover {
+    background: #2fbd58;
+    transform: translateY(-4px);
+    box-shadow:
+        0 7px 18px rgba(36, 161, 72, 0.4);
+}
+
+
+/* Selecionado: azul */
+
+.assento.selecionado {
+    background: #1677ff;
+    color: #ffffff;
+    transform: translateY(-3px);
+    box-shadow:
+        0 7px 18px rgba(22, 119, 255, 0.45);
+}
+
+.assento.selecionado:hover {
+    background: #1677ff;
+    color: #ffffff;
+    transform: translateY(-3px);
+    box-shadow:
+        0 7px 18px rgba(22, 119, 255, 0.45);
+}
+
+
+/* Ocupado: vermelho */
+
+.assento.ocupado,
+.assento:disabled {
+    background: #d32f2f;
+    color: #ffffff;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.assento.ocupado:hover,
+.assento:disabled:hover {
+    background: #d32f2f;
+    transform: none;
+    box-shadow: none;
+}
+
+
+/* =========================================
+   LEGENDA
+========================================= */
+
+.legenda-assentos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px;
+    margin-top: 42px;
+}
+
+.item-legenda {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: #c4c4c4;
+    font-size: 0.9rem;
+}
+
+.cor-legenda {
+    width: 24px;
+    height: 20px;
+    border-radius: 5px;
+    background: #eeeeee;
+}
+
+.cor-legenda.selecionado {
+    background: #e50914;
+}
+
+.cor-legenda.ocupado {
+    background: #4a4a4a;
+}
+
+
+/* =========================================
+   RESUMO DA COMPRA
+========================================= */
+
+.resumo-selecao {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 25px;
+    width: 100%;
+    margin-top: 30px;
+    padding: 25px;
+    border: 1px solid #303030;
+    border-radius: 16px;
+    background: #151515;
+}
+
+.informacoes-resumo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.item-resumo {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.item-resumo span:first-child {
+    color: #999999;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.item-resumo span:last-child {
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+#valor-total,
+.valor-total {
+    color: #ffffff;
+    font-size: 1.3rem;
+}
+
+.botao-continuar {
+    min-width: 180px;
+    padding: 14px 26px;
+    border: none;
+    border-radius: 8px;
+    background: #e50914;
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease,
+        opacity 0.2s ease;
+}
+
+.botao-continuar:hover:not(:disabled) {
+    background: #ff1722;
+    transform: translateY(-2px);
+}
+
+.botao-continuar:disabled {
+    background: #555555;
+    color: #a5a5a5;
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+
+/* =========================================
+   MENSAGENS
+========================================= */
+
+.mensagem-erro,
+.mensagem-carregando {
+    width: 100%;
+    padding: 35px;
+    color: #c4c4c4;
+    text-align: center;
+}
+
+.mensagem-erro {
+    color: #ff676f;
+}
+
+/*=========================================
+   MODAL PAGAMENTO
+=========================================*/
+
+.modal-pagamento[hidden] {
+    display: none !important;
+}
+
+.modal-pagamento {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.75);
+}
+
+body.modal-aberto {
+    overflow: hidden;
+}
+
+
+/* =========================================
+   RESPONSIVIDADE
+========================================= */
+
+@media (max-width: 900px) {
+    main {
+        padding: 25px 12px 50px;
+    }
+
+    .sala-cinema {
+        padding: 28px 15px 38px;
+    }
+
+    .resumo-selecao {
+        grid-template-columns: 1fr;
+    }
+
+    .botao-continuar {
+        width: 100%;
+    }
+}
+
+@media (max-width: 800px) {
+    main {
+        padding: 25px 10px 50px;
+    }
+
+    .sala-cinema {
+        padding: 28px 12px 38px;
+        border-radius: 14px;
+    }
+
+    .fileira {
+        grid-template-columns:
+            24px
+            minmax(650px, 1fr)
+            24px;
+        gap: 7px;
+    }
+
+    .tela-container,
+    #mapa-assentos,
+    .mapa-assentos {
+        min-width: 710px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .informacoes-sessao {
+        grid-template-columns: 1fr;
+    }
+
+    .informacoes-filme {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 22px;
+    }
+
+    .detalhes-sessao {
+        width: 100%;
+    }
+
+    .detalhe-sessao {
+        flex: 1;
+    }
+
+    .estatisticas-assentos {
+        grid-template-columns: repeat(3, minmax(105px, 1fr));
+        overflow-x: auto;
+    }
+}
+
+@media (max-width: 520px) {
+    .detalhes-sessao {
+        flex-direction: column;
+    }
+
+    .estatisticas-assentos {
+        grid-template-columns: 1fr;
+    }
+
+    .estatistica-assento {
+        justify-content: flex-start;
+        padding-left: 25px;
+    }
+}
+
+@media (max-width: 600px) {
+    .cabecalho-pagina {
+        text-align: left;
+    }
+
+    .informacoes-resumo {
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .legenda-assentos {
+        justify-content: flex-start;
+        gap: 15px;
+    }
+}

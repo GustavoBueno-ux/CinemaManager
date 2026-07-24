@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Detalhes do Filme</title>
+
+    <link
+        rel="stylesheet"
+        href="../../css/pages/cliente/detalhes.css">
+
+</head>
+
+<body>
+
+    <header class="navbar">
+
+        <div class="logo">
+
+            <a href="home.html">
+
+                <img src="../../assets/logos/logo.png" alt="Cinema">
+
+            </a>
+
+        </div>
+
+        <div class="usuario-container">
+
+            <button
+                class="usuario-btn"
+                id="usuarioBtn">
+
+                <span id="nomeUsuario">
+
+                    Usuário
+
+                </span>
+
+                <span>
+
+                    ▼
+
+                </span>
+
+            </button>
+
+            <div
+                class="menu-usuario"
+                id="menuUsuario">
+
+                <a href="meus-ingressos.html">
+                    🎟 Meus ingressos
+                </a>
+
+                <a href="perfil.html">
+                    👤 Meu perfil
+                </a>
+
+                <a
+                    href="#"
+                    id="logoutBtn">
+
+                    🚪 Sair
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </header>
+
+    <main>
+
+        <a
+            href="home.html"
+            class="botao-voltar">
+
+            ← Voltar
+
+        </a>
+
+        <section class="detalhes-filme">
+
+            <section class="poster-container">
+
+                <img
+                    id="posterFilme"
+                    src="#"
+                    alt="Poster do filme">
+
+            </section>
+
+            <section class="informacoes-container">
+
+                <h1 id="tituloFilme">
+
+                    Carregando...
+
+                </h1>
+
+                <div class="informacoes-filme">
+
+                    <p>
+
+                        <strong>Gênero:</strong>
+
+                        <span id="generoFilme">
+
+                            -
+
+                        </span>
+
+                    </p>
+
+                    <p>
+
+                        <strong>Duração:</strong>
+
+                        <span id="duracaoFilme">
+
+                            -
+
+                        </span>
+
+                    </p>
+
+                    <p>
+
+                        <strong>Classificação:</strong>
+
+                        <span id="classificacaoFilme">
+
+                            -
+
+                        </span>
+
+                    </p>
+
+                </div>
+
+                <section class="sessoes-container">
+
+                    <h2>
+
+                        Sessões disponíveis
+
+                    </h2>
+
+                    <div
+                        class="cards-sessoes"
+                        id="listaSessoes">
+
+                        <!-- JavaScript -->
+                        
+                        
+                    </div>
+
+                </section>
+
+            </section>
+
+        </section>
+
+    </main>
+
+    <footer>
+
+        <p>
+
+            © 2026 Cinema. Todos os direitos reservados.
+
+        </p>
+
+    </footer>
+
+    <script src="../../js/api.js"></script>
+    <script src="../../js/config.js"></script>
+    <script src="../../js/pages/cliente/detalhes.js"></script>
+
+</body>
+
+</html>

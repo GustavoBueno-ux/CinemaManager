@@ -1,0 +1,484 @@
+/* =========================
+   RESET
+========================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+}
+
+
+body {
+
+    background: #070707;
+
+    color: #ffffff;
+
+    min-height: 100vh;
+
+}
+
+
+/* =========================
+   NAVBAR
+========================= */
+
+
+.navbar {
+
+    height: 75px;
+
+    width: 100%;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 0 6%;
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 10;
+
+    background: rgba(7,7,7,0.85);
+
+    backdrop-filter: blur(15px);
+
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+
+}
+
+
+
+.logo img {
+
+    width: 55px;
+
+    cursor: pointer;
+
+}
+
+
+
+.usuario-container {
+
+    position: relative;
+
+}
+
+
+
+.usuario-btn {
+
+    background: transparent;
+
+    border: none;
+
+    color: white;
+
+    cursor: pointer;
+
+    font-size: 15px;
+
+    display: flex;
+
+    gap: 10px;
+
+    align-items: center;
+
+}
+
+
+
+.menu-usuario {
+
+    position: absolute;
+
+    right: 0;
+
+    top: 45px;
+
+    width: 200px;
+
+    background: #111;
+
+    border-radius: 15px;
+
+    padding: 10px;
+
+    display: none;
+
+    flex-direction: column;
+
+    border: 1px solid rgba(255,255,255,.1);
+
+    box-shadow: 0 10px 30px rgba(0,0,0,.5);
+
+}
+
+
+.menu-usuario.ativo {
+
+    display:flex;
+
+}
+
+
+
+.menu-usuario a {
+
+    color: white;
+
+    text-decoration: none;
+
+    padding: 12px;
+
+    border-radius: 10px;
+
+    transition: .3s;
+
+}
+
+
+
+.menu-usuario a:hover {
+
+    background: rgba(229,9,20,.15);
+
+}
+
+/* =========================
+   CONTAINER
+========================= */
+
+main{
+
+    width:90%;
+    max-width:1400px;
+
+    margin:40px auto;
+
+}
+
+.botao-voltar{
+
+    display:inline-block;
+
+    margin-bottom:30px;
+
+    color:#E50914;
+
+    text-decoration:none;
+
+    font-size:18px;
+
+    font-weight:600;
+
+    transition:.3s;
+
+}
+
+.botao-voltar:hover{
+
+    color:white;
+
+}
+
+
+/* =========================
+   LAYOUT
+========================= */
+
+.detalhes-filme{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:80px;
+
+    align-items:center;
+
+}
+
+
+/* =========================
+   POSTER
+========================= */
+
+.poster-container{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+.poster-container img{
+
+    width:100%;
+
+    max-width:420px;
+
+    border-radius:20px;
+
+    object-fit:cover;
+
+    box-shadow:
+        0 15px 35px rgba(0,0,0,.5);
+
+}
+
+
+/* =========================
+   INFORMAÇÕES
+========================= */
+
+.informacoes-container{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.informacoes-container h1{
+
+    font-size:42px;
+
+    margin-bottom:30px;
+
+    font-size:42px;
+
+    border-left:5px solid #E50914;
+
+    padding-left:18px;
+
+}
+
+.informacoes-filme{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:15px;
+
+    margin-bottom:50px;
+
+    background:#111;
+
+    border-radius:18px;
+
+    padding:25px;
+
+    border:1px solid rgba(255,255,255,.08);
+
+}
+
+.informacoes-filme p{
+
+    font-size:20px;
+
+    line-height:1.7;
+
+}
+
+.informacoes-filme strong{
+
+    color:white;
+
+}
+
+
+/* =========================
+   SESSÕES
+========================= */
+
+.sessoes-container h2{
+
+    font-size:28px;
+
+    margin-bottom:25px;
+
+}
+
+.cards-sessoes{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    justify-content:center;
+
+    gap:20px;
+
+}
+
+.sessao-card{
+
+    flex:1 1 280px;
+
+    max-width:420px;
+
+    background:#111;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    border-radius:18px;
+
+    padding:25px;
+
+    transition:.3s;
+
+}
+
+.sessao-card:hover{
+
+    transform:translateY(-5px);
+
+    border-color:#E50914;
+
+}
+
+.sessao-info{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:25px;
+
+}
+
+.data-sessao{
+
+    font-size:20px;
+
+    font-weight:600;
+
+}
+
+.horario-sessao{
+
+    font-size:22px;
+
+    font-weight:bold;
+
+    color:#E50914;
+
+}
+
+.sessao-card button{
+
+    width:100%;
+
+    padding:14px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#E50914;
+
+    color:white;
+
+    font-weight:600;
+
+    font-size:16px;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.sessao-card button:hover{
+
+    background:#bb0810;
+
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+
+footer {
+
+    text-align:center;
+
+    padding:40px 20px;
+
+    color:#777;
+
+}
+
+
+
+/* =========================
+   RESPONSIVIDADE
+========================= */
+
+@media(max-width:1000px){
+
+    .detalhes-filme{
+
+        grid-template-columns:1fr;
+
+        gap:50px;
+
+    }
+
+    .poster-container{
+
+        justify-content:center;
+
+    }
+
+    .informacoes-container{
+
+        text-align:center;
+
+    }
+
+    .cards-sessoes{
+
+        justify-content:center;
+
+    }
+
+}
+
+@media(max-width:600px){
+
+    .informacoes-container h1{
+
+        font-size:34px;
+
+    }
+
+    .informacoes-filme p{
+
+        font-size:18px;
+
+    }
+
+    .sessao-card{
+
+        max-width:none;
+
+    }
+
+}

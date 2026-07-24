@@ -1,0 +1,573 @@
+/* =========================================
+   MODAL DE PAGAMENTO
+========================================= */
+
+.modal-pagamento {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 24px;
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+
+    transition:
+        opacity 0.25s ease,
+        visibility 0.25s ease;
+}
+
+.modal-pagamento.ativo,
+.modal-pagamento.aberto {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+
+/* =========================================
+   FUNDO ESCURO
+========================================= */
+
+.fundo-modal {
+    position: absolute;
+    inset: 0;
+
+    background:
+        rgba(0, 0, 0, 0.55);
+
+}
+
+
+/* =========================================
+   CONTEÚDO PRINCIPAL
+========================================= */
+
+.conteudo-modal {
+    position: relative;
+    z-index: 1;
+
+    width: min(70vw, 1100px);
+    height: min(78vh, 760px);
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 34px 38px 32px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #17171d,
+            #101014
+        );
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 22px;
+
+    box-shadow:
+        0 28px 70px rgba(0, 0, 0, 0.55);
+
+    color: #ffffff;
+
+    overflow: hidden;
+
+    transform: translateY(24px) scale(0.97);
+
+    transition:
+        transform 0.25s ease;
+}
+
+.modal-pagamento.ativo .conteudo-modal,
+.modal-pagamento.aberto .conteudo-modal {
+    transform: translateY(0) scale(1);
+}
+
+
+/* =========================================
+   BOTÃO FECHAR
+========================================= */
+
+.botao-fechar-modal {
+    position: absolute;
+    top: 22px;
+    left: 24px;
+
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    background: rgba(255, 255, 255, 0.07);
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+
+    color: #ffffff;
+
+    font-size: 30px;
+    font-weight: 300;
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.botao-fechar-modal:hover {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.22);
+
+    transform: scale(1.06);
+}
+
+.botao-fechar-modal:active {
+    transform: scale(0.95);
+}
+
+
+/* =========================================
+   TÍTULO DO MODAL
+========================================= */
+
+.conteudo-modal > h2 {
+    margin:
+        8px
+        0
+        8px;
+
+    padding-left: 52px;
+
+    font-size: clamp(1.65rem, 2.5vw, 2.2rem);
+    font-weight: 700;
+    line-height: 1.2;
+
+    color: #ffffff;
+}
+
+.conteudo-modal > p {
+    margin:
+        0
+        0
+        26px;
+
+    padding-left: 52px;
+
+    color: #a9a9b2;
+
+    font-size: 0.98rem;
+}
+
+
+/* =========================================
+   LISTA DE INGRESSOS
+========================================= */
+
+.ingressos-selecionados {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+
+    width: 100%;
+
+    padding-right: 8px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    scrollbar-width: thin;
+    scrollbar-color:
+        rgba(255, 255, 255, 0.25)
+        transparent;
+}
+
+.ingressos-selecionados::-webkit-scrollbar {
+    width: 7px;
+}
+
+.ingressos-selecionados::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.ingressos-selecionados::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.22);
+    border-radius: 10px;
+}
+
+.ingressos-selecionados::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.35);
+}
+
+
+/* =========================================
+   CARD DE CADA INGRESSO
+========================================= */
+
+.ingresso-selecionado {
+    flex-shrink: 0;
+
+    width: 100%;
+
+    display: grid;
+    grid-template-columns:
+        minmax(180px, 1.5fr)
+        repeat(3, minmax(110px, 1fr))
+        minmax(90px, auto);
+
+    align-items: center;
+    gap: 20px;
+
+    min-height: 112px;
+
+    padding: 20px 24px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.075),
+            rgba(255, 255, 255, 0.035)
+        );
+
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+
+    transition:
+        border-color 0.2s ease,
+        background-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+/* =========================================
+   INFORMAÇÕES DO CARD
+========================================= */
+
+.dado-ingresso {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.rotulo-ingresso {
+    color: #8d8d98;
+
+    font-size: 0.72rem;
+    font-weight: 600;
+
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.valor-ingresso {
+    color: #ffffff;
+
+    font-size: 0.96rem;
+    font-weight: 600;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dado-filme .valor-ingresso {
+    font-size: 1.05rem;
+}
+
+.dado-assento .valor-ingresso {
+    color: #ff4f58;
+
+    font-size: 1.18rem;
+    font-weight: 700;
+}
+
+.dado-preco {
+    align-items: flex-end;
+    text-align: right;
+}
+
+.dado-preco .valor-ingresso {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+
+/* =========================================
+   TOTAL
+========================================= */
+
+.total-modal {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-top: 22px;
+    padding-top: 20px;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.total-modal span {
+    color: #b6b6bf;
+
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.total-modal strong {
+    color: #ffffff;
+
+    font-size: 1.7rem;
+    font-weight: 800;
+}
+
+
+/* =========================================
+   BOTÃO FINALIZAR PAGAMENTO
+========================================= */
+
+.botao-pagar {
+    align-self: center;
+
+    min-width: 310px;
+
+    margin-top: 22px;
+    padding: 15px 32px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #e50914,
+            #b80710
+        );
+
+    border: none;
+    border-radius: 12px;
+
+    box-shadow:
+        0 10px 28px rgba(229, 9, 20, 0.28);
+
+    color: #ffffff;
+
+    font-size: 1rem;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        filter 0.2s ease;
+}
+
+.botao-pagar:hover:not(:disabled) {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 14px 34px rgba(229, 9, 20, 0.38);
+
+    filter: brightness(1.08);
+}
+
+.botao-pagar:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.botao-pagar:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.botao-pagar.carregando {
+    pointer-events: none;
+    opacity: 0.75;
+}
+
+.botao-pagar.carregando::after {
+    content: "";
+
+    display: inline-block;
+
+    width: 15px;
+    height: 15px;
+
+    margin-left: 10px;
+
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+
+    vertical-align: middle;
+
+    animation: girar-carregamento 0.7s linear infinite;
+}
+
+@keyframes girar-carregamento {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* =========================================
+   ESTADO DE CARREGAMENTO
+========================================= */
+
+.botao-pagar.carregando {
+    pointer-events: none;
+    opacity: 0.75;
+}
+
+.botao-pagar.carregando::after {
+    content: "";
+
+    display: inline-block;
+
+    width: 15px;
+    height: 15px;
+
+    margin-left: 10px;
+
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+
+    vertical-align: middle;
+
+    animation:
+        girar-carregamento 0.7s linear infinite;
+}
+
+@keyframes girar-carregamento {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* =========================================
+   BLOQUEIO DA PÁGINA
+========================================= */
+
+body.modal-aberto {
+    overflow: hidden;
+}
+
+
+/* =========================================
+   RESPONSIVIDADE
+========================================= */
+
+@media (max-width: 1160px) {
+    .conteudo-modal {
+        width: min(88vw, 900px);
+    }
+
+    .ingresso-selecionado {
+        grid-template-columns:
+            minmax(180px, 1.5fr)
+            repeat(2, minmax(100px, 1fr));
+    }
+
+    .dado-preco {
+        align-items: flex-start;
+        text-align: left;
+    }
+}
+
+@media (max-width: 720px) {
+    .modal-pagamento {
+        padding: 12px;
+    }
+
+    .conteudo-modal {
+        width: 100%;
+        height: 90vh;
+
+        padding:
+            28px
+            20px
+            24px;
+
+        border-radius: 18px;
+    }
+
+    .botao-fechar-modal {
+        top: 18px;
+        left: 18px;
+
+        width: 38px;
+        height: 38px;
+    }
+
+    .conteudo-modal > h2 {
+        padding-left: 45px;
+
+        font-size: 1.45rem;
+    }
+
+    .conteudo-modal > p {
+        padding-left: 45px;
+        margin-bottom: 20px;
+
+        font-size: 0.9rem;
+    }
+
+    .ingresso-selecionado {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 18px;
+
+        padding: 18px;
+    }
+
+    .dado-filme {
+        grid-column: 1 / -1;
+    }
+
+    .dado-preco {
+        align-items: flex-start;
+        text-align: left;
+    }
+
+    .botao-pagar {
+        width: 100%;
+        min-width: 0;
+    }
+}
+
+@media (max-width: 450px) {
+    .ingresso-selecionado {
+        grid-template-columns: 1fr;
+    }
+
+    .dado-filme {
+        grid-column: auto;
+    }
+
+    .valor-ingresso {
+        white-space: normal;
+    }
+
+    .total-modal strong {
+        font-size: 1.45rem;
+    }
+}

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Escolha seus assentos | Cinema</title>
+
+    <link
+        rel="stylesheet"
+        href="/Frontend/css/pages/cliente/assentos.css">
+    <link
+        rel="stylesheet"
+        href="/Frontend/css/pages/cliente/modal-pagamento.css">
+
+</head>
+
+<body>
+
+    <header class="navbar">
+
+    <div class="logo">
+
+        <a href="home.html">
+
+            <img src="../../assets/logos/logo.png" alt="Cinema">
+
+        </a>
+
+    </div>
+
+    <div class="usuario-container">
+
+        <button
+            class="usuario-btn"
+            id="usuarioBtn">
+
+            <span id="nomeUsuario">
+
+                Usuário
+
+            </span>
+
+            <span>
+
+                ▼
+
+            </span>
+
+        </button>
+
+        <div
+            class="menu-usuario"
+            id="menuUsuario">
+
+            <a href="meus-ingressos.html">
+                🎟 Meus ingressos
+            </a>
+
+            <a href="perfil.html">
+                👤 Meu perfil
+            </a>
+
+            <a
+                href="#"
+                id="logoutBtn">
+
+                🚪 Sair
+
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+    <main class="pagina-assentos">
+
+        <section class="cabecalho-sessao">
+
+            <a
+                href="javascript:history.back()"
+                class="botao-voltar">
+
+                ← Voltar
+
+            </a>
+
+    <section class="informacoes-sessao">
+    
+        <div class="informacoes-filme">
+        
+            <div class="titulo-filme-container">
+                <span class="rotulo-informacao">
+                    Você está escolhendo assentos para
+                </span>
+            
+                <h1 id="titulo-filme">
+                    Carregando filme...
+                </h1>
+            </div>
+        
+            <div class="detalhes-sessao">
+            
+                <div class="detalhe-sessao">
+                    <span class="icone-detalhe">📅</span>
+                
+                    <div>
+                        <span class="rotulo-informacao">
+                            Data
+                        </span>
+                    
+                        <strong id="data-sessao">
+                            --/--/----
+                        </strong>
+                    </div>
+                </div>
+            
+                <div class="detalhe-sessao">
+                    <span class="icone-detalhe">🕒</span>
+                
+                    <div>
+                        <span class="rotulo-informacao">
+                            Horário
+                        </span>
+                    
+                        <strong id="horario-sessao">
+                            --:--
+                        </strong>
+                    </div>
+                </div>
+            
+            </div>
+        
+        </div>
+    
+        <div class="estatisticas-assentos">
+        
+            <div class="estatistica-assento disponiveis">
+                <span class="mini-assento"></span>
+            
+                <div>
+                    <strong id="quantidade-disponiveis">
+                        0
+                    </strong>
+                
+                    <span>Disponíveis</span>
+                </div>
+            </div>
+        
+            <div class="estatistica-assento ocupados">
+                <span class="mini-assento"></span>
+            
+                <div>
+                    <strong id="quantidade-ocupados">
+                        0
+                    </strong>
+                
+                    <span>Ocupados</span>
+                </div>
+            </div>
+        
+            <div class="estatistica-assento selecionados">
+                <span class="mini-assento"></span>
+            
+                <div>
+                    <strong id="quantidade-selecionados">
+                        0
+                    </strong>
+                
+                    <span>Selecionados</span>
+                </div>
+            </div>
+        
+        </div>
+    
+    </section>
+
+        </section>
+
+        <section class="conteudo-assentos">
+
+            <section class="sala-cinema">
+
+                <div
+                    id="mapaAssentos"
+                    class="mapa-assentos">
+
+                    <p class="mensagem-carregamento">
+                        Carregando assentos...
+                    </p>
+
+                </div>
+
+                <div class="tela-container">
+                    <div class="tela-cinema">
+                        <span>TELA</span>
+                    </div>
+                </div>
+
+            </section>
+
+        </section>
+
+        <section class="resumo-selecao">
+
+            <div class="assentos-escolhidos">
+
+                <span class="titulo-resumo">
+                    Assentos selecionados
+                </span>
+
+                <div
+                    id="listaAssentosSelecionados"
+                    class="lista-assentos-selecionados">
+
+                    <span class="nenhum-assento">
+                        Nenhum assento selecionado
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="preco-total">
+
+                <span>
+                    Total
+                </span>
+
+                <strong id="valorTotal">
+                    R$ 0,00
+                </strong>
+
+            </div>
+
+            <button
+                type="button"
+                id="botaoContinuar"
+                class="botao-continuar"
+                disabled>
+
+                Continuar para pagamento
+
+            </button>
+
+        </section>
+
+    </main>
+
+    <div
+        id="modalPagamento"
+        class="modal-pagamento"
+        aria-hidden="true">
+
+        <div class="fundo-modal"></div>
+
+        <section
+            class="conteudo-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="tituloModal">
+
+            <button
+                type="button"
+                id="botaoFecharModal"
+                class="botao-fechar-modal"
+                aria-label="Fechar modal">
+
+                ×
+
+            </button>
+
+            <h2 id="tituloModal">
+                Confirmar pagamento
+            </h2>
+
+            <p>
+                Confira os dados antes de finalizar.
+            </p>
+
+            <div
+                id="ingressosSelecionados"
+                class="ingressos-selecionados">
+            </div>
+
+            <div class="total-modal">
+
+                <span>
+                    Total
+                </span>
+
+                <strong id="valorTotalModal">
+                    R$ 0,00
+                </strong>
+
+            </div>
+
+            <button
+                type="button"
+                id="botaoPagar"
+                class="botao-pagar">
+
+                Finalizar pagamento
+
+            </button>
+
+        </section>
+
+    </div>
+
+    <script src="/Frontend/js/config.js"></script>
+    <script src="/Frontend/js/api.js"></script>
+    <script src="/Frontend/js/pages/cliente/navbar.js"></script>
+    <script
+        type="module"
+        src="/Frontend/js/pages/cliente/modal-pagamento.js">
+    </script>
+
+</body>
+
+</html>

@@ -67,6 +67,18 @@ public class SessaoService : ISessaoService
         return sessoes.Select(ConverterParaDTO).ToList();
     }
 
+    public async Task<List<SessaoResponseDTO>> ListarPorFilmeAsync(int filmeId)
+    {
+        var sessoes = await _context.Sessoes
+            .Include(s => s.Filme)
+            .Where(s => s.FilmeId == filmeId && s.Ativa == true)
+            .ToListAsync();
+
+        return sessoes
+            .Select(ConverterParaDTO)
+            .ToList();
+    }
+
     public async Task<SessaoResponseDTO?> BuscarPorIdAsync(int id)
     {
         var sessao = await _context.Sessoes

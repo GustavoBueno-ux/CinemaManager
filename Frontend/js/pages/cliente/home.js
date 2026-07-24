@@ -139,37 +139,10 @@ function configurarLogout(){
 // FILMES
 // =========================
 
-function obterClassificacao(numero){
 
-    switch(numero){
-
-        case 0:
-            return "Livre";
-
-        case 1:
-            return "10 anos";
-
-        case 2:
-            return "12 anos";
-
-        case 3:
-            return "14 anos";
-
-        case 4:
-            return "16 anos";
-
-        case 5:
-            return "18 anos";
-
-        default:
-            return "Não informada";
-
-    }
-
-}
 
 async function carregarFilmes() {
-    const resposta = await apiRequest("/Filme");
+    const resposta = await apiRequest("/Filme/ativos");
 
     if(!resposta.ok){
 
@@ -214,7 +187,7 @@ async function mostrarFilmes() {
 
         card.innerHTML = `
 
-            <img src="/Frontend/assets/posters/layout tela matricula desenho.jpeg" alt="Poster do filme ${filme.titulo}">
+            <img src="/Frontend/assets/posters/${filme.posterUrl}" alt="Poster do filme ${filme.titulo}">
 
             <h3>
                 ${filme.titulo}
@@ -250,7 +223,7 @@ async function mostrarFilmes() {
 async function carregarSessoes(){
 
 
-    const resposta = await apiRequest("/Sessao");
+    const resposta = await apiRequest("/Sessao/ativas");
 
 
     if(!resposta.ok){
