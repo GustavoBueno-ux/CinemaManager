@@ -99,7 +99,7 @@ public class IngressoService : IIngressoService
                 .ThenInclude(s => s.Filme)
             .Include(i => i.Assento)
             .Include(i => i.Usuario)
-            .OrderByDescending(i => i.Sessao.DataHora)
+            .OrderByDescending(i => i.DataCompra)
             .ToListAsync();
     
         return ingressos
@@ -108,20 +108,26 @@ public class IngressoService : IIngressoService
     }
 
 
-    public async Task<IngressoResponseDTO?> BuscarPorIdAsync(int id)
-    {
-        var ingresso = await _context.Ingressos
-            .Include(i => i.Sessao)
-                .ThenInclude(s => s.Filme)
-            .Include(i => i.Assento)
-            .Include(i => i.Usuario)
-            .FirstOrDefaultAsync(i => i.Id == id);
+    public async Task<IngressoResponseDTO?> BuscarPorIdAsync(
+    int ingressoId,
+    int usuarioId
+)
+{
+    var ingresso = await _context.Ingressos
+        .AsNoTracking()
+        .Include(i => i.Sessao)
+            .ThenInclude(s => s.Filme)
+        .Include(i => i.Assento)
+        .Include(i => i.Usuario)
+        .FirstOrDefaultAsync(i =>
+            i.Id == ingressoId &&
+            i.UsuarioId == usuarioId
+        );
 
-        if (ingresso == null)
-            return null;
-
-        return ConverterParaDTO(ingresso);
-    }
+    return ingresso is null
+        ? null
+        : ConverterParaDTO(ingresso);
+}
 
 
     public async Task<ValidacaoIngressoResponseDTO> ValidarAsync(ValidarIngressoDTO dto)
@@ -156,7 +162,7 @@ public class IngressoService : IIngressoService
             return new ValidacaoIngressoResponseDTO
             {
                 Sucesso = false,
-                Mensagem = "A sessão está desativada."
+                Mensagem = "A sessão já aconteceu.."
             };
         }
 

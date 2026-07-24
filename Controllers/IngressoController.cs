@@ -82,13 +82,38 @@ public class IngressoController : ControllerBase
     }
 
 
-    [HttpGet("{id}")]
+    [Authorize]
+    [HttpGet("{id:int}")]
     public async Task<IActionResult> BuscarPorId(int id)
     {
-        var ingresso = await _service.BuscarPorIdAsync(id);
-
-        if (ingresso == null) return NotFound();
-
+        var usuarioIdClaim = User.FindFirst(
+            ClaimTypes.NameIdentifier
+        )?.Value;
+    
+        if (
+            string.IsNullOrWhiteSpace(usuarioIdClaim) ||
+            !int.TryParse(usuarioIdClaim, out var usuarioId)
+        )
+        {
+            return Unauthorized(new
+            {
+                mensagem = "Token inválido ou usuário não identificado."
+            });
+        }
+    
+        var ingresso = await _service.BuscarPorIdAsync(
+            id,
+            usuarioId
+        );
+    
+        if (ingresso is null)
+        {
+            return NotFound(new
+            {
+                mensagem = "Ingresso não encontrado."
+            });
+        }
+    
         return Ok(ingresso);
     }
 

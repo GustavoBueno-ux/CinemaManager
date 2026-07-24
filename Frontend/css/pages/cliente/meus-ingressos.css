@@ -1,0 +1,413 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+
+    background-color: #0d0d0d;
+    color: #ffffff;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+}
+
+button {
+    font: inherit;
+}
+
+
+/* =========================
+   NAVBAR
+========================= */
+
+
+.navbar {
+
+    height: 75px;
+
+    width: 100%;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 0 6%;
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 10;
+
+    background: rgba(7,7,7,0.85);
+
+    backdrop-filter: blur(15px);
+
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+
+}
+
+
+
+.logo img {
+
+    width: 55px;
+
+    cursor: pointer;
+
+}
+
+
+
+.usuario-container {
+
+    position: relative;
+
+}
+
+
+
+.usuario-btn {
+
+    background: transparent;
+
+    border: none;
+
+    color: white;
+
+    cursor: pointer;
+
+    font-size: 15px;
+
+    display: flex;
+
+    gap: 10px;
+
+    align-items: center;
+
+}
+
+
+
+.menu-usuario {
+
+    position: absolute;
+
+    right: 0;
+
+    top: 45px;
+
+    width: 200px;
+
+    background: #111;
+
+    border-radius: 15px;
+
+    padding: 10px;
+
+    display: none;
+
+    flex-direction: column;
+
+    border: 1px solid rgba(255,255,255,.1);
+
+    box-shadow: 0 10px 30px rgba(0,0,0,.5);
+
+}
+
+
+.menu-usuario.ativo {
+
+    display:flex;
+
+}
+
+
+
+.menu-usuario a {
+
+    color: white;
+
+    text-decoration: none;
+
+    padding: 12px;
+
+    border-radius: 10px;
+
+    transition: .3s;
+
+}
+
+
+
+.menu-usuario a:hover {
+
+    background: rgba(229,9,20,.15);
+
+}
+
+
+/* =========================
+   PÁGINA
+========================= */
+
+.pagina-ingressos {
+    width: 100%;
+    min-height: calc(100vh - 70px);
+
+    padding: 32px 20px 60px;
+}
+
+.conteudo-ingressos {
+    width: 100%;
+    max-width: 1300px;
+
+    margin: 0 auto;
+}
+
+/* =========================
+   BOTÃO VOLTAR
+========================= */
+
+.botao-voltar{
+
+    display:inline-block;
+
+    margin-bottom:30px;
+
+    color:#E50914;
+
+    background: none;
+
+    border: none;
+
+    text-decoration:none;
+
+    font-size:18px;
+
+    font-weight:600;
+
+    transition:.3s;
+
+}
+
+.botao-voltar:hover{
+
+    color:white;
+
+}
+
+/* =========================
+   TÍTULO
+========================= */
+
+.conteudo-ingressos h1 {
+    margin-bottom: 28px;
+
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.1;
+}
+
+/* =========================
+   LISTA
+========================= */
+
+.lista-ingressos {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+
+    width: 100%;
+}
+
+/* =========================
+   CARD
+========================= */
+
+.ingresso-card {
+    display: grid;
+    grid-template-columns:
+        minmax(220px, 1fr)
+        minmax(380px, 1.4fr)
+        auto;
+
+    align-items: center;
+    gap: 28px;
+
+    width: 100%;
+    padding: 24px 28px;
+
+    border: 1px solid #2d2d2d;
+    border-radius: 14px;
+
+    background-color: #181818;
+}
+
+.ingresso-filme {
+    min-width: 0;
+}
+
+.ingresso-filme h2 {
+    overflow-wrap: anywhere;
+
+    font-size: 1.35rem;
+    line-height: 1.3;
+}
+
+/* =========================
+   INFORMAÇÕES
+========================= */
+
+.ingresso-informacoes {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+}
+
+.ingresso-informacao {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.ingresso-informacao span {
+    color: #a8a8a8;
+
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.ingresso-informacao strong {
+    color: #ffffff;
+
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+/* =========================
+   BOTÃO QR CODE
+========================= */
+
+.botao-qr-code {
+    min-width: 150px;
+    padding: 12px 20px;
+
+    border: none;
+    border-radius: 8px;
+
+    background-color: #e50914;
+    color: #ffffff;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+/* =========================
+   MENSAGENS
+========================= */
+
+.mensagem-status {
+    width: 100%;
+    padding: 26px;
+
+    border: 1px solid #2d2d2d;
+    border-radius: 12px;
+
+    background-color: #181818;
+    color: #cfcfcf;
+
+    text-align: center;
+}
+
+.mensagem-status.erro {
+    border-color: #7f1d1d;
+    color: #ffb4b4;
+}
+
+.mensagem-status[hidden] {
+    display: none;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+
+footer {
+
+    text-align:center;
+
+    padding:40px 20px;
+
+    color:#777;
+
+}
+
+
+/* =========================
+   RESPONSIVIDADE
+========================= */
+
+
+@media (max-width: 1100px) {
+
+    .ingresso-card {
+        grid-template-columns: 1fr;
+    }
+
+    .ingresso-informacoes {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .botao-qr-code {
+        width: 100%;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .ingresso-informacoes {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+@media (max-width: 900px) {
+
+    .ingresso-card {
+        grid-template-columns: 1fr;
+        gap: 22px;
+    }
+
+    .botao-qr-code {
+        width: 100%;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .pagina-ingressos {
+        padding: 24px 14px 40px;
+    }
+
+    .conteudo-ingressos h1 {
+        margin-bottom: 22px;
+    }
+
+    .ingresso-card {
+        padding: 22px 18px;
+    }
+
+}

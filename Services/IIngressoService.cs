@@ -10,7 +10,7 @@ public interface IIngressoService
 
     Task<List<IngressoResponseDTO>> ListarDoUsuarioAsync(int usuarioId);
 
-    Task<IngressoResponseDTO?> BuscarPorIdAsync(int id);
+    Task<IngressoResponseDTO?> BuscarPorIdAsync(int ingressoId, int usuarioId);
 
     Task<ValidacaoIngressoResponseDTO> ValidarAsync(ValidarIngressoDTO dto);
 

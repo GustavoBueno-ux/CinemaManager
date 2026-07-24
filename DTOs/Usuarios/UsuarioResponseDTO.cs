@@ -11,4 +11,6 @@ public class UsuarioResponseDTO
     public string TipoUsuario { get; set; } = string.Empty;
 
     public DateTime DataCadastro { get; set; }
+    
+    public int QuantidadeIngressos { get; set; }
 }

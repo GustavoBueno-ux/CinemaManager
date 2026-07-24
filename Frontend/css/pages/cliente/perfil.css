@@ -1,0 +1,457 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #0f0f0f;
+    color: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+button,
+a {
+    font-family: inherit;
+}
+
+/* =========================
+   NAVBAR
+========================= */
+
+.navbar {
+
+    height: 75px;
+
+    width: 100%;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 0 6%;
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 10;
+
+    background: rgba(7,7,7,.85);
+
+    backdrop-filter: blur(15px);
+
+    border-bottom: 1px solid rgba(255,255,255,.08);
+
+}
+
+.logo img {
+
+    width: 55px;
+
+    cursor: pointer;
+
+}
+
+.usuario-container {
+
+    position: relative;
+
+}
+
+.usuario-btn {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    border: none;
+
+    background: transparent;
+
+    color: white;
+
+    cursor: pointer;
+
+    font-size: 15px;
+
+}
+
+.menu-usuario {
+
+    position: absolute;
+
+    top: 45px;
+
+    right: 0;
+
+    width: 200px;
+
+    display: none;
+
+    flex-direction: column;
+
+    padding: 10px;
+
+    background: #111;
+
+    border: 1px solid rgba(255,255,255,.1);
+
+    border-radius: 15px;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,.5);
+
+}
+
+.menu-usuario.ativo {
+
+    display: flex;
+
+}
+
+.menu-usuario a {
+
+    padding: 12px;
+
+    color: white;
+
+    text-decoration: none;
+
+    border-radius: 10px;
+
+    transition: .3s;
+
+}
+
+.menu-usuario a:hover {
+
+    background: rgba(229,9,20,.15);
+
+}
+
+
+/* =========================
+   VOLTAR
+========================= */
+
+.botao-voltar {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: 30px;
+
+    border: none;
+
+    background: transparent;
+
+    color: #E50914;
+
+    font-size: 18px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: .3s;
+
+}
+
+.botao-voltar:hover {
+
+    color: white;
+
+}
+
+.botao-voltar span {
+
+    font-size: 22px;
+
+}
+
+
+/*=========================
+   PÁGINA DE PERFIL
+========================= */
+
+.pagina-perfil {
+    width: 100%;
+    flex: 1;
+    padding: 45px 6% 70px;
+}
+
+.conteudo-perfil {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.mensagem-status {
+    padding: 24px;
+    text-align: center;
+    color: #bdbdbd;
+    font-size: 16px;
+}
+
+.perfil-card {
+    overflow: hidden;
+    background-color: #191919;
+    border: 1px solid #2d2d2d;
+    border-radius: 18px;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
+}
+
+.perfil-resumo {
+    padding: 35px 40px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    background: linear-gradient(
+        135deg,
+        #222222,
+        #171717
+    );
+    border-bottom: 1px solid #2d2d2d;
+}
+
+.perfil-avatar {
+    width: 92px;
+    height: 92px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: #c62828;
+    color: #ffffff;
+    font-size: 38px;
+    font-weight: bold;
+    text-transform: uppercase;
+    box-shadow: 0 10px 25px rgba(198, 40, 40, 0.25);
+}
+
+.perfil-identidade {
+    min-width: 0;
+}
+
+.perfil-identidade h1 {
+    margin-bottom: 8px;
+    font-size: 30px;
+    line-height: 1.2;
+    word-break: break-word;
+}
+
+.perfil-identidade p {
+    color: #b7b7b7;
+    font-size: 16px;
+    word-break: break-word;
+}
+
+.perfil-informacoes {
+    padding: 35px 40px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.perfil-informacao {
+    min-height: 105px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 9px;
+    background-color: #212121;
+    border: 1px solid #303030;
+    border-radius: 12px;
+}
+
+.perfil-informacao span {
+    color: #9f9f9f;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+}
+
+.perfil-informacao strong {
+    color: #ffffff;
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+.acoes-perfil {
+    padding: 0 40px 35px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.botao-editar-perfil {
+    min-width: 160px;
+    padding: 13px 22px;
+    border: none;
+    border-radius: 9px;
+    background-color: #c62828;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.botao-editar-perfil:hover {
+    background-color: #e03131;
+    transform: translateY(-1px);
+}
+
+.botao-editar-perfil:active {
+    transform: translateY(0);
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+
+    padding: 40px 20px;
+
+    text-align: center;
+
+    color: #777;
+
+}
+
+
+[hidden] {
+    display: none !important;
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        min-height: 64px;
+        padding: 0 20px;
+    }
+
+    .logo img {
+        width: 110px;
+    }
+
+    .pagina-perfil {
+        padding: 30px 20px 50px;
+    }
+
+    .botao-voltar {
+        margin-bottom: 22px;
+    }
+
+    .perfil-resumo {
+        padding: 28px 24px;
+    }
+
+    .perfil-avatar {
+        width: 76px;
+        height: 76px;
+        font-size: 31px;
+    }
+
+    .perfil-identidade h1 {
+        font-size: 24px;
+    }
+
+    .perfil-identidade p {
+        font-size: 14px;
+    }
+
+    .perfil-informacoes {
+        padding: 25px 24px;
+        grid-template-columns: 1fr;
+    }
+
+    .acoes-perfil {
+        padding: 0 24px 28px;
+    }
+
+    .botao-editar-perfil {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .usuario-btn {
+        padding: 9px;
+    }
+
+    #nomeUsuario {
+        max-width: 100px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .menu-usuario {
+        width: 180px;
+    }
+
+    .pagina-perfil {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .perfil-resumo {
+        padding: 25px 20px;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .perfil-avatar {
+        width: 82px;
+        height: 82px;
+    }
+
+    .perfil-identidade {
+        width: 100%;
+    }
+
+    .perfil-identidade h1 {
+        font-size: 22px;
+    }
+
+    .perfil-informacoes {
+        padding: 20px;
+        gap: 14px;
+    }
+
+    .perfil-informacao {
+        min-height: 95px;
+        padding: 17px;
+    }
+
+    .perfil-informacao strong {
+        font-size: 16px;
+    }
+
+    .acoes-perfil {
+        padding: 0 20px 24px;
+    }
+
+    footer {
+        padding: 20px 15px;
+        font-size: 13px;
+    }
+}

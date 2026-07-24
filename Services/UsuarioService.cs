@@ -46,11 +46,18 @@ public class UsuarioService : IUsuarioService
     {
         var usuario = await _context.Usuarios
             .FirstOrDefaultAsync(u => u.Id == id);
-
+    
         if (usuario == null)
             return null;
-
-        return ConverterParaDTO(usuario);
+    
+        var quantidadeIngressos = await _context.Ingressos
+            .CountAsync(i => i.UsuarioId == id);
+    
+        var dto = ConverterParaDTO(usuario);
+    
+        dto.QuantidadeIngressos = quantidadeIngressos;
+    
+        return dto;
     }
 
     public async Task<List<UsuarioResponseDTO>> ListarTodosAsync()

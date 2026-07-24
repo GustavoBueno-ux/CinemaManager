@@ -1,7 +1,8 @@
+using System.Security.Claims;
 using CinemaAPI.DTOs.Usuarios;
 using CinemaAPI.Services;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CinemaAPI.Controllers;
 
@@ -17,7 +18,9 @@ public class UsuarioController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CriarUsuario(CriarUsuarioDTO dto)
+    public async Task<IActionResult> CriarUsuario(
+        [FromBody] CriarUsuarioDTO dto
+    )
     {
         var usuario = await _usuarioService.CriarAsync(dto);
 
@@ -25,12 +28,19 @@ public class UsuarioController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login(LoginDTO dto)
+    public async Task<IActionResult> Login(
+        [FromBody] LoginDTO dto
+    )
     {
         var usuario = await _usuarioService.LoginAsync(dto);
 
-        if (usuario == null)
-            return Unauthorized();
+        if (usuario is null)
+        {
+            return Unauthorized(new
+            {
+                mensagem = "E-mail ou senha inválidos."
+            });
+        }
 
         return Ok(usuario);
     }
@@ -45,37 +55,81 @@ public class UsuarioController : ControllerBase
     }
 
     [Authorize]
-    [HttpGet("{id}")]
-    public async Task<IActionResult> BuscarUsuarioPorId(int id)
+    [HttpGet("perfil")]
+    public async Task<IActionResult> BuscarUsuarioAutenticado()
     {
-        var usuario = await _usuarioService.BuscarPorIdAsync(id);
-
-        if (usuario == null)
-            return NotFound();
-
+        if (!TentarObterUsuarioId(out var usuarioId))
+        {
+            return Unauthorized(new
+            {
+                mensagem = "Token inválido ou usuário não identificado."
+            });
+        }
+    
+        var usuario = await _usuarioService.BuscarPorIdAsync(usuarioId);
+    
+        if (usuario is null)
+        {
+            return NotFound(new
+            {
+                mensagem = "Usuário não encontrado."
+            });
+        }
+    
         return Ok(usuario);
     }
 
-    [HttpPatch("{id}")]
-    public async Task<IActionResult> AtualizarUsuario(int id, PatchUsuarioDTO dto)
+    [Authorize]
+    [HttpPatch("perfil")]
+    public async Task<IActionResult> AtualizarUsuarioAutenticado(
+        [FromBody] PatchUsuarioDTO dto
+    )
     {
-        var atualizado = await _usuarioService.PatchAsync(id, dto);
+        if (!TentarObterUsuarioId(out var usuarioId))
+        {
+            return Unauthorized(new
+            {
+                mensagem = "Token inválido ou usuário não identificado."
+            });
+        }
+
+        var atualizado = await _usuarioService
+            .PatchAsync(usuarioId, dto);
 
         if (!atualizado)
-            return NotFound();
+        {
+            return NotFound(new
+            {
+                mensagem = "Usuário não encontrado."
+            });
+        }
 
         return NoContent();
     }
 
     [Authorize]
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:int}")]
     public async Task<IActionResult> ExcluirUsuario(int id)
     {
         var excluido = await _usuarioService.ExcluirAsync(id);
 
         if (!excluido)
-            return NotFound();
+        {
+            return NotFound(new
+            {
+                mensagem = "Usuário não encontrado."
+            });
+        }
 
         return NoContent();
+    }
+
+    private bool TentarObterUsuarioId(out int usuarioId)
+    {
+        var usuarioIdClaim = User.FindFirst(
+            ClaimTypes.NameIdentifier
+        )?.Value;
+
+        return int.TryParse(usuarioIdClaim, out usuarioId);
     }
 }

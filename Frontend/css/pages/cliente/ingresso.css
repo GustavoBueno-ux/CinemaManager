@@ -1,0 +1,527 @@
+* {
+
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+
+}
+
+body {
+
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+
+    background-color: #0d0d0d;
+    color: #ffffff;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+}
+
+button {
+
+    font: inherit;
+
+}
+
+/* =========================
+   NAVBAR
+========================= */
+
+.navbar {
+
+    height: 75px;
+
+    width: 100%;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 0 6%;
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 10;
+
+    background: rgba(7,7,7,.85);
+
+    backdrop-filter: blur(15px);
+
+    border-bottom: 1px solid rgba(255,255,255,.08);
+
+}
+
+.logo img {
+
+    width: 55px;
+
+    cursor: pointer;
+
+}
+
+.usuario-container {
+
+    position: relative;
+
+}
+
+.usuario-btn {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    border: none;
+
+    background: transparent;
+
+    color: white;
+
+    cursor: pointer;
+
+    font-size: 15px;
+
+}
+
+.menu-usuario {
+
+    position: absolute;
+
+    top: 45px;
+
+    right: 0;
+
+    width: 200px;
+
+    display: none;
+
+    flex-direction: column;
+
+    padding: 10px;
+
+    background: #111;
+
+    border: 1px solid rgba(255,255,255,.1);
+
+    border-radius: 15px;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,.5);
+
+}
+
+.menu-usuario.ativo {
+
+    display: flex;
+
+}
+
+.menu-usuario a {
+
+    padding: 12px;
+
+    color: white;
+
+    text-decoration: none;
+
+    border-radius: 10px;
+
+    transition: .3s;
+
+}
+
+.menu-usuario a:hover {
+
+    background: rgba(229,9,20,.15);
+
+}
+
+/* =========================
+   PÁGINA
+========================= */
+
+.pagina-ingresso {
+
+    flex: 1;
+
+    width: 100%;
+
+    padding: 35px 20px 60px;
+
+}
+
+.conteudo-ingresso {
+
+    max-width: 1250px;
+
+    margin: 0 auto;
+
+}
+
+/* =========================
+   VOLTAR
+========================= */
+
+.botao-voltar {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: 30px;
+
+    border: none;
+
+    background: transparent;
+
+    color: #E50914;
+
+    font-size: 18px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: .3s;
+
+}
+
+.botao-voltar:hover {
+
+    color: white;
+
+}
+
+.botao-voltar span {
+
+    font-size: 22px;
+
+}
+
+/* =========================
+   CARD
+========================= */
+
+.ingresso-card {
+
+    display: grid;
+
+    grid-template-columns: 380px 1fr;
+
+    gap: 50px;
+
+    align-items: center;
+
+    width: 100%;
+
+    padding: 35px;
+
+    border: 1px solid #2d2d2d;
+
+    border-radius: 18px;
+
+    background: #181818;
+
+}
+
+/* =========================
+   QR CODE
+========================= */
+
+.area-qr-code {
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 20px;
+
+}
+
+.qr-code-container {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    width: 340px;
+
+    height: 340px;
+
+    padding: 20px;
+
+    border-radius: 18px;
+
+    background: white;
+
+}
+
+.qr-code-container canvas,
+.qr-code-container img {
+
+    width: 100% !important;
+
+    height: auto !important;
+
+}
+
+.qr-code-aviso {
+
+    color: #bcbcbc;
+
+    text-align: center;
+
+    line-height: 1.5;
+
+    font-size: .95rem;
+
+}
+
+/* =========================
+   INFORMAÇÕES
+========================= */
+
+.informacoes-ingresso {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 35px;
+
+}
+
+.ingresso-label {
+
+    color: #9d9d9d;
+
+    font-size: .95rem;
+
+    text-transform: uppercase;
+
+    letter-spacing: 2px;
+
+}
+
+.cabecalho-ingresso h1 {
+
+    margin-top: 8px;
+
+    font-size: clamp(2rem,4vw,3rem);
+
+    line-height: 1.15;
+
+}
+
+.detalhes-ingresso {
+
+    display: grid;
+
+    grid-template-columns: repeat(2,1fr);
+
+    gap: 24px;
+
+}
+
+.detalhe-ingresso {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+}
+
+.detalhe-ingresso span {
+
+    color: #a7a7a7;
+
+    font-size: .9rem;
+
+}
+
+.detalhe-ingresso strong {
+
+    font-size: 1.1rem;
+
+    font-weight: 700;
+
+}
+
+/* =========================
+   STATUS
+========================= */
+
+.status-ingresso {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+}
+
+.status-ingresso::before {
+
+    content: "";
+
+    width: 10px;
+
+    height: 10px;
+
+    border-radius: 50%;
+
+    background: currentColor;
+
+}
+
+.status-valido {
+
+    color: #22c55e;
+
+}
+
+.status-utilizado {
+
+    color: #3b82f6;
+
+}
+
+.status-expirado {
+
+    color: #ef4444;
+
+}
+
+/* =========================
+   MENSAGENS
+========================= */
+
+.mensagem-status {
+
+    padding: 28px;
+
+    border: 1px solid #2d2d2d;
+
+    border-radius: 12px;
+
+    background: #181818;
+
+    color: #d3d3d3;
+
+    text-align: center;
+
+}
+
+.mensagem-status.erro {
+
+    border-color: #7f1d1d;
+
+    color: #ffb4b4;
+
+}
+
+.mensagem-status[hidden] {
+
+    display: none;
+
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+
+    padding: 40px 20px;
+
+    text-align: center;
+
+    color: #777;
+
+}
+
+/* =========================
+   RESPONSIVIDADE
+========================= */
+
+@media (max-width: 1000px) {
+
+    .ingresso-card {
+
+        grid-template-columns: 1fr;
+
+        gap: 35px;
+
+    }
+
+    .area-qr-code {
+
+        order: -1;
+
+    }
+
+    .detalhes-ingresso {
+
+        grid-template-columns: repeat(2,1fr);
+
+    }
+
+}
+
+@media (max-width: 650px) {
+
+    .pagina-ingresso {
+
+        padding: 25px 14px 40px;
+
+    }
+
+    .ingresso-card {
+
+        padding: 22px;
+
+    }
+
+    .qr-code-container {
+
+        width: min(100%, 300px);
+
+        height: auto;
+
+        aspect-ratio: 1;
+
+    }
+
+    .detalhes-ingresso {
+
+        grid-template-columns: 1fr;
+
+    }
+
+    .cabecalho-ingresso h1 {
+
+        font-size: 2rem;
+
+    }
+
+}

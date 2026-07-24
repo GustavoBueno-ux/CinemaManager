@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Ingresso</title>
+
+    <link
+        rel="stylesheet"
+        href="/Frontend/css/pages/cliente/ingresso.css">
+
+</head>
+
+<body>
+
+    <header class="navbar">
+
+        <div class="logo">
+
+            <a href="home.html">
+
+                <img src="../../assets/logos/logo.png" alt="Cinema">
+
+            </a>
+
+        </div>
+
+        <div class="usuario-container">
+
+            <button
+                class="usuario-btn"
+                id="usuarioBtn">
+
+                <span id="nomeUsuario">
+
+                    Usuário
+
+                </span>
+
+                <span>
+
+                    ▼
+
+                </span>
+
+            </button>
+
+            <div
+                class="menu-usuario"
+                id="menuUsuario">
+
+                <a href="meus-ingressos.html">
+                    🎟 Meus ingressos
+                </a>
+
+                <a href="perfil.html">
+                    👤 Meu perfil
+                </a>
+
+                <a
+                    href="#"
+                    id="logoutBtn">
+
+                    🚪 Sair
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </header>
+
+    <main class="pagina-ingresso">
+
+        <section class="conteudo-ingresso">
+
+            <button
+                type="button"
+                class="botao-voltar"
+                id="botao-voltar">
+
+                <span>←</span>
+
+                Voltar
+
+            </button>
+
+            <p
+                class="mensagem-status"
+                id="mensagem-status">
+
+                Carregando ingresso...
+
+            </p>
+
+            <article
+                class="ingresso-card"
+                id="ingresso-card"
+                hidden>
+
+                <section class="area-qr-code">
+
+                    <div
+                        class="qr-code-container"
+                        id="qr-code">
+
+                    </div>
+
+                    <p class="qr-code-aviso">
+                        Apresente este QR Code na entrada da sessão.
+                    </p>
+
+                </section>
+
+                <section class="informacoes-ingresso">
+
+                    <div class="cabecalho-ingresso">
+
+                        <p class="ingresso-label">
+                            Ingresso
+                        </p>
+
+                        <h1 id="filme-titulo">
+                            Nome do filme
+                        </h1>
+
+                    </div>
+
+                    <div class="detalhes-ingresso">
+
+                        <div class="detalhe-ingresso">
+
+                            <span>
+                                Data da sessão
+                            </span>
+
+                            <strong id="data-sessao">
+                                --
+                            </strong>
+
+                        </div>
+
+                        <div class="detalhe-ingresso">
+
+                            <span>
+                                Horário
+                            </span>
+
+                            <strong id="horario-sessao">
+                                --
+                            </strong>
+
+                        </div>
+
+                        <div class="detalhe-ingresso">
+
+                            <span>
+                                Assento
+                            </span>
+
+                            <strong id="codigo-assento">
+                                --
+                            </strong>
+
+                        </div>
+
+                        <div class="detalhe-ingresso">
+
+                            <span>
+                                Comprado em
+                            </span>
+
+                            <strong id="data-compra">
+                                --
+                            </strong>
+
+                        </div>
+
+                        <div class="detalhe-ingresso">
+
+                            <span>
+                                Valor pago
+                            </span>
+
+                            <strong id="valor-pago">
+                                --
+                            </strong>
+
+                        </div>
+
+                        <div class="detalhe-ingresso">
+
+                            <span>
+                                Status
+                            </span>
+
+                            <strong
+                                class="status-ingresso"
+                                id="status-ingresso">
+
+                                --
+
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </article>
+
+        </section>
+
+    </main>
+
+    <footer>
+
+        <p>
+            © 2026 Cinema. Todos os direitos reservados.
+        </p>
+
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+
+
+    <script src="/Frontend/js/config.js"></script>
+    <script src="/Frontend/js/api.js"></script>
+    <script src="/Frontend/js/pages/cliente/navbar.js"></script>
+    <script src="/Frontend/js/pages/cliente/ingresso.js"></script>
+
+</body>
+
+</html>
