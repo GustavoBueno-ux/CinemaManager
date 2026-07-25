@@ -97,8 +97,12 @@ async function cadastrarUsuario(event) {
                 errorMessage.textContent =
                     "Já existe uma conta com este e-mail.";
 
-            }
-            else {
+            } else if (cadastro.status === 409) {
+
+                errorMessage.textContent =
+                    "Já existe uma conta com este e-mail.";
+                    
+            } else {
 
                 errorMessage.textContent =
                     "Não foi possível criar a conta.";

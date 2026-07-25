@@ -23,7 +23,7 @@ public class UsuarioService : IUsuarioService
             .AnyAsync(u => u.Email == dto.Email);
 
         if (emailExiste)
-            throw new Exception("Já existe um usuário com esse email.");
+            throw new InvalidOperationException("Já existe um usuário com esse email.");
 
         var senhaHash = BCrypt.Net.BCrypt.HashPassword(dto.Senha);
 

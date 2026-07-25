@@ -263,51 +263,127 @@ function formatarHorarioSeparado(sessao) {
 
 
 /* =========================================
+   CONFIGURAÇÃO DAS RESERVAS
+========================================= */
+
+const INTERVALO_ATUALIZACAO_MS = 5000;
+
+let operacaoAssentoEmAndamento = false;
+let intervaloAtualizacao = null;
+let paginaAtiva = true;
+
+
+/* =========================================
    CARREGAMENTO DOS ASSENTOS
 ========================================= */
 
 async function carregarAssentos() {
-    try {
-        const sessaoId =
-            obterSessaoId();
+    await sincronizarAssentosComServidor({
+        exibirCarregamento: true,
+        exibirErro: true
+    });
+}
 
-        const resposta = await apiRequest(
-            `/Assento/sessao/${sessaoId}`
+export async function sincronizarAssentosComServidor(
+    opcoes = {}
+) {
+    const {
+        exibirCarregamento = false,
+        exibirErro = false
+    } = opcoes;
+
+    if (exibirCarregamento && mapaAssentos) {
+        mapaAssentos.innerHTML = `
+            <p class="mensagem-carregamento">
+                Carregando assentos...
+            </p>
+        `;
+    }
+
+    try {
+        const sessaoId = obterSessaoIdNumerico();
+
+        const resposta = await requisicaoReserva(
+            `/ReservaAssento/sessao/${sessaoId}`
         );
 
-        if (!resposta.ok) {
-            throw new Error(
-                resposta.message
-                ?? "Não foi possível carregar os assentos."
-            );
-        }
-
-        if (!Array.isArray(resposta.data)) {
+        if (!Array.isArray(resposta)) {
             throw new Error(
                 "A API não retornou uma lista de assentos."
             );
         }
 
-        todosAssentos =
-            resposta.data;
-
-        mostrarAssentos(
-            todosAssentos
+        todosAssentos = resposta.map(
+            normalizarStatusAssento
         );
+
+        assentosSelecionados = todosAssentos
+            .filter(assento =>
+                assento.status === "reservado"
+                && assento.reservadoPeloUsuarioAtual
+            );
+
+        mostrarAssentos(todosAssentos);
+
+        return todosAssentos;
     } catch (erro) {
         console.error(
-            "Erro ao carregar assentos:",
+            "Erro ao carregar o status dos assentos:",
             erro
         );
 
-        if (mapaAssentos) {
+        if (exibirErro && mapaAssentos) {
             mapaAssentos.innerHTML = `
                 <p class="mensagem-erro">
                     Não foi possível carregar os assentos.
                 </p>
             `;
         }
+
+        if (erro.status === 401) {
+            redirecionarParaLogin();
+        }
+
+        throw erro;
     }
+}
+
+function normalizarStatusAssento(assento) {
+    const id = Number(
+        assento.assentoId
+        ?? assento.AssentoId
+        ?? assento.id
+        ?? assento.Id
+    );
+
+    const codigo = String(
+        assento.codigo
+        ?? assento.Codigo
+        ?? ""
+    );
+
+    const status = String(
+        assento.status
+        ?? assento.Status
+        ?? "disponivel"
+    ).toLowerCase();
+
+    const reservadoPeloUsuarioAtual = Boolean(
+        assento.reservadoPeloUsuarioAtual
+        ?? assento.ReservadoPeloUsuarioAtual
+    );
+
+    return {
+        id,
+        assentoId: id,
+        codigo,
+        status,
+        reservadoPeloUsuarioAtual,
+        reservaExpiraEm:
+            assento.reservaExpiraEm
+            ?? assento.ReservaExpiraEm
+            ?? null
+    };
 }
 
 function mostrarAssentos(assentos) {
@@ -321,9 +397,7 @@ function mostrarAssentos(assentos) {
 
     mapaAssentos.innerHTML = "";
 
-    atualizarContadores(
-        assentos
-    );
+    atualizarContadores(assentos);
 
     const assentosPorFileira =
         organizarAssentosPorFileira(assentos);
@@ -349,26 +423,24 @@ function mostrarAssentos(assentos) {
             return;
         }
 
-        const fileira =
+        mapaAssentos.appendChild(
             criarFileira(
                 letraFileira,
                 assentosFileira
-            );
-
-        mapaAssentos.appendChild(
-            fileira
+            )
         );
     });
+
+    atualizarResumoSelecao();
 }
 
 function organizarAssentosPorFileira(assentos) {
     const assentosPorFileira = {};
 
     assentos.forEach(assento => {
-        const letraFileira =
-            assento.codigo
-                .charAt(0)
-                .toUpperCase();
+        const letraFileira = assento.codigo
+            .charAt(0)
+            .toUpperCase();
 
         if (!assentosPorFileira[letraFileira]) {
             assentosPorFileira[letraFileira] = [];
@@ -380,22 +452,19 @@ function organizarAssentosPorFileira(assentos) {
 
     Object.values(assentosPorFileira)
         .forEach(fileira => {
-            fileira.sort((a, b) => {
-                return (
-                    obterNumeroAssento(a.codigo)
-                    - obterNumeroAssento(b.codigo)
-                );
-            });
+            fileira.sort((a, b) =>
+                obterNumeroAssento(a.codigo)
+                - obterNumeroAssento(b.codigo)
+            );
         });
 
     return assentosPorFileira;
 }
 
 function obterNumeroAssento(codigo) {
-    return Number(
-        codigo.substring(1)
-    );
+    return Number(codigo.substring(1));
 }
+
 
 /* =========================================
    CRIAÇÃO DAS FILEIRAS
@@ -433,14 +502,11 @@ function criarFileira(
         const elementoAssento =
             criarAssento(assento);
 
-        const coluna =
+        elementoAssento.style.gridColumn =
             obterColunaAssento(
                 letraFileira,
                 numeroAssento
             );
-
-        elementoAssento.style.gridColumn =
-            coluna;
 
         areaAssentos.appendChild(
             elementoAssento
@@ -452,15 +518,9 @@ function criarFileira(
             letraFileira
         );
 
-    fileira.appendChild(
-        identificadorEsquerdo
-    );
-
-    fileira.appendChild(
-        areaAssentos
-    );
-
-    fileira.appendChild(
+    fileira.append(
+        identificadorEsquerdo,
+        areaAssentos,
         identificadorDireito
     );
 
@@ -522,80 +582,191 @@ function criarAssento(assento) {
             assento.codigo
         );
 
-    botao.title =
-        `Assento ${assento.codigo}`;
-
     botao.dataset.assentoId =
         assento.id;
 
     botao.dataset.codigo =
         assento.codigo;
 
-    if (assento.ocupado) {
+    const reservadoPeloUsuario =
+        assento.status === "reservado"
+        && assento.reservadoPeloUsuarioAtual;
+
+    const indisponivel =
+        assento.status === "ocupado"
+        || (
+            assento.status === "reservado"
+            && !assento.reservadoPeloUsuarioAtual
+        );
+
+    if (reservadoPeloUsuario) {
+        botao.classList.add(
+            "selecionado"
+        );
+
+        botao.title =
+            `Assento ${assento.codigo} selecionado`;
+
+        botao.addEventListener(
+            "click",
+            () => {
+                cancelarSelecaoAssento(
+                    assento
+                );
+            }
+        );
+    } else if (indisponivel) {
         botao.classList.add(
             "ocupado"
         );
 
         botao.disabled = true;
+
+        botao.title =
+            `Assento ${assento.codigo} indisponível`;
     } else {
         botao.classList.add(
             "disponivel"
         );
 
+        botao.title =
+            `Assento ${assento.codigo} disponível`;
+
         botao.addEventListener(
             "click",
             () => {
-                alternarSelecaoAssento(
-                    assento,
-                    botao
+                reservarAssento(
+                    assento
                 );
             }
         );
     }
 
+    if (operacaoAssentoEmAndamento) {
+        botao.disabled = true;
+    }
+
     return botao;
 }
 
-function alternarSelecaoAssento(
-    assento,
-    elementoAssento
-) {
-    const indiceAssento =
-        assentosSelecionados.findIndex(
-            item => item.id === assento.id
-        );
-
-    const jaSelecionado =
-        indiceAssento !== -1;
-
-    if (jaSelecionado) {
-        assentosSelecionados.splice(
-            indiceAssento,
-            1
-        );
-
-        elementoAssento.classList.remove(
-            "selecionado"
-        );
-
-        elementoAssento.classList.add(
-            "disponivel"
-        );
-    } else {
-        assentosSelecionados.push(
-            assento
-        );
-
-        elementoAssento.classList.remove(
-            "disponivel"
-        );
-
-        elementoAssento.classList.add(
-            "selecionado"
-        );
+async function reservarAssento(assento) {
+    if (operacaoAssentoEmAndamento) {
+        return;
     }
 
-    atualizarResumoSelecao();
+    const assentoIds = [
+        ...assentosSelecionados.map(
+            item => item.id
+        ),
+        assento.id
+    ];
+
+    await executarOperacaoAssento(
+        async () => {
+            await requisicaoReserva(
+                "/ReservaAssento/lote",
+                {
+                    method: "POST",
+
+                    body: JSON.stringify({
+                        sessaoId:
+                            obterSessaoIdNumerico(),
+
+                        assentoIds
+                    })
+                }
+            );
+        }
+    );
+}
+
+async function cancelarSelecaoAssento(
+    assento
+) {
+    if (operacaoAssentoEmAndamento) {
+        return;
+    }
+
+    await executarOperacaoAssento(
+        async () => {
+            const parametros =
+                new URLSearchParams({
+                    sessaoId: String(
+                        obterSessaoIdNumerico()
+                    ),
+
+                    assentoId: String(
+                        assento.id
+                    )
+                });
+
+            await requisicaoReserva(
+                `/ReservaAssento?${parametros.toString()}`,
+                {
+                    method: "DELETE"
+                }
+            );
+        }
+    );
+}
+
+async function executarOperacaoAssento(
+    operacao
+) {
+    definirEstadoOperacaoAssento(true);
+
+    try {
+        await operacao();
+    } catch (erro) {
+        console.error(
+            "Erro ao alterar a reserva do assento:",
+            erro
+        );
+
+        if (erro.status === 401) {
+            redirecionarParaLogin();
+            return;
+        }
+
+        window.alert(
+            erro.message
+            ?? "Não foi possível atualizar a seleção."
+        );
+    } finally {
+        try {
+            await sincronizarAssentosComServidor();
+        } catch {
+            /*
+             * O erro já foi tratado pela função
+             * de sincronização.
+             */
+        }
+
+        definirEstadoOperacaoAssento(false);
+    }
+}
+
+function definirEstadoOperacaoAssento(
+    emAndamento
+) {
+    operacaoAssentoEmAndamento =
+        emAndamento;
+
+    mapaAssentos
+        ?.querySelectorAll("button.assento")
+        .forEach(botao => {
+            botao.disabled =
+                emAndamento
+                || botao.classList.contains(
+                    "ocupado"
+                );
+        });
+
+    if (botaoContinuar) {
+        botaoContinuar.disabled =
+            emAndamento
+            || assentosSelecionados.length === 0;
+    }
 }
 
 
@@ -606,12 +777,19 @@ function alternarSelecaoAssento(
 function atualizarContadores(assentos) {
     const totalDisponiveis =
         assentos.filter(
-            assento => !assento.ocupado
+            assento =>
+                assento.status === "disponivel"
         ).length;
 
     const totalOcupados =
         assentos.filter(
-            assento => assento.ocupado
+            assento =>
+                assento.status === "ocupado"
+                || (
+                    assento.status === "reservado"
+                    && !assento
+                        .reservadoPeloUsuarioAtual
+                )
         ).length;
 
     if (quantidadeDisponiveis) {
@@ -623,8 +801,6 @@ function atualizarContadores(assentos) {
         quantidadeOcupados.textContent =
             totalOcupados;
     }
-
-    atualizarResumoSelecao();
 }
 
 function atualizarResumoSelecao() {
@@ -660,25 +836,23 @@ function atualizarResumoSelecao() {
     }
 
     assentosSelecionados.sort(
-        (assentoA, assentoB) => {
-            return assentoA.codigo.localeCompare(
+        (assentoA, assentoB) =>
+            assentoA.codigo.localeCompare(
                 assentoB.codigo,
                 "pt-BR",
                 {
                     numeric: true
                 }
-            );
-        }
+            )
     );
 
     if (listaAssentosSelecionados) {
-        const codigosAssentos =
-            assentosSelecionados
-                .map(assento => assento.codigo)
-                .join(" - ");
-
         listaAssentosSelecionados.textContent =
-            codigosAssentos;
+            assentosSelecionados
+                .map(
+                    assento => assento.codigo
+                )
+                .join(" - ");
     }
 
     if (valorTotal) {
@@ -689,7 +863,8 @@ function atualizarResumoSelecao() {
     }
 
     if (botaoContinuar) {
-        botaoContinuar.disabled = false;
+        botaoContinuar.disabled =
+            operacaoAssentoEmAndamento;
     }
 
     notificarAlteracaoSelecao();
@@ -701,7 +876,7 @@ function atualizarResumoSelecao() {
 ========================================= */
 
 function notificarAlteracaoSelecao() {
-    const evento =
+    document.dispatchEvent(
         new CustomEvent(
             "assentos:selecao-alterada",
             {
@@ -716,12 +891,225 @@ function notificarAlteracaoSelecao() {
                         obterValorTotal()
                 }
             }
-        );
-
-    document.dispatchEvent(
-        evento
+        )
     );
 }
+
+
+/* =========================================
+   COMUNICAÇÃO COM A API
+========================================= */
+
+function obterSessaoIdNumerico() {
+    const sessaoId =
+        Number(obterSessaoId());
+
+    if (
+        !Number.isInteger(sessaoId)
+        || sessaoId <= 0
+    ) {
+        throw new Error(
+            "Não foi possível identificar a sessão."
+        );
+    }
+
+    return sessaoId;
+}
+
+async function requisicaoReserva(
+    endpoint,
+    options = {}
+) {
+    const token =
+        localStorage.getItem("token");
+
+    if (!token) {
+        const erro =
+            new Error(
+                "Sua sessão expirou. Faça login novamente."
+            );
+
+        erro.status = 401;
+
+        throw erro;
+    }
+
+    const headers = {
+        Accept: "application/json",
+
+        Authorization:
+            `Bearer ${token}`,
+
+        ...(
+            options.body
+                ? {
+                    "Content-Type":
+                        "application/json"
+                }
+                : {}
+        ),
+
+        ...(options.headers ?? {})
+    };
+
+    let resposta;
+
+    try {
+        resposta = await fetch(
+            `${API_URL}${endpoint}`,
+            {
+                ...options,
+                headers
+            }
+        );
+    } catch {
+        throw new Error(
+            "Não foi possível conectar à API."
+        );
+    }
+
+    const dados =
+        await lerRespostaApi(resposta);
+
+    if (!resposta.ok) {
+        const erro =
+            new Error(
+                obterMensagemResposta(dados)
+                ?? "Não foi possível concluir a operação."
+            );
+
+        erro.status =
+            resposta.status;
+
+        erro.dados =
+            dados;
+
+        throw erro;
+    }
+
+    return dados;
+}
+
+async function lerRespostaApi(resposta) {
+    if (resposta.status === 204) {
+        return null;
+    }
+
+    const tipoConteudo =
+        resposta.headers.get(
+            "content-type"
+        ) ?? "";
+
+    if (
+        tipoConteudo.includes(
+            "application/json"
+        )
+    ) {
+        return await resposta.json();
+    }
+
+    const texto =
+        await resposta.text();
+
+    return texto || null;
+}
+
+function obterMensagemResposta(dados) {
+    if (!dados) {
+        return null;
+    }
+
+    if (typeof dados === "string") {
+        return dados;
+    }
+
+    if (
+        dados.errors
+        && typeof dados.errors === "object"
+    ) {
+        return Object.values(
+            dados.errors
+        )
+            .flat()
+            .filter(Boolean)
+            .join("\n");
+    }
+
+    return (
+        dados.mensagem
+        ?? dados.message
+        ?? dados.title
+        ?? dados.erro
+        ?? dados.error
+        ?? null
+    );
+}
+
+function redirecionarParaLogin() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("usuario");
+
+    window.location.href =
+        "../../index.html";
+}
+
+
+/* =========================================
+   ATUALIZAÇÃO AUTOMÁTICA
+========================================= */
+
+function iniciarAtualizacaoAutomatica() {
+    pararAtualizacaoAutomatica();
+
+    intervaloAtualizacao =
+        window.setInterval(
+            async () => {
+                if (
+                    !paginaAtiva
+                    || document.hidden
+                    || operacaoAssentoEmAndamento
+                ) {
+                    return;
+                }
+
+                try {
+                    await sincronizarAssentosComServidor();
+                } catch {
+                    /*
+                     * Não mostra alertas repetidos durante
+                     * a atualização automática.
+                     */
+                }
+            },
+            INTERVALO_ATUALIZACAO_MS
+        );
+}
+
+function pararAtualizacaoAutomatica() {
+    if (intervaloAtualizacao !== null) {
+        window.clearInterval(
+            intervaloAtualizacao
+        );
+
+        intervaloAtualizacao = null;
+    }
+}
+
+window.addEventListener(
+    "pagehide",
+    () => {
+        paginaAtiva = false;
+        pararAtualizacaoAutomatica();
+    }
+);
+
+window.addEventListener(
+    "pageshow",
+    () => {
+        paginaAtiva = true;
+        iniciarAtualizacaoAutomatica();
+    }
+);
 
 
 /* =========================================
@@ -750,6 +1138,13 @@ async function inicializarAssentos() {
         carregarDadosSessao(),
         carregarAssentos()
     ]);
+
+    iniciarAtualizacaoAutomatica();
 }
 
-inicializarAssentos();
+inicializarAssentos().catch(erro => {
+    console.error(
+        "Erro ao inicializar a tela de assentos:",
+        erro
+    );
+});

@@ -4,6 +4,7 @@ using CinemaAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CinemaAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260724231141_AdicionarIndiceUnicoIngressoSessaoAssento")]
+    partial class AdicionarIndiceUnicoIngressoSessaoAssento
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -127,41 +130,6 @@ namespace CinemaAPI.Migrations
                     b.ToTable("Ingressos");
                 });
 
-            modelBuilder.Entity("CinemaAPI.Models.ReservaAssento", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AssentoId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("CriadaEm")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime>("ExpiraEm")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("SessaoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AssentoId");
-
-                    b.HasIndex("UsuarioId");
-
-                    b.HasIndex("SessaoId", "AssentoId")
-                        .IsUnique();
-
-                    b.ToTable("ReservasAssentos");
-                });
-
             modelBuilder.Entity("CinemaAPI.Models.Sessao", b =>
                 {
                     b.Property<int>("Id")
@@ -223,33 +191,6 @@ namespace CinemaAPI.Migrations
                 });
 
             modelBuilder.Entity("CinemaAPI.Models.Ingresso", b =>
-                {
-                    b.HasOne("CinemaAPI.Models.Assento", "Assento")
-                        .WithMany()
-                        .HasForeignKey("AssentoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CinemaAPI.Models.Sessao", "Sessao")
-                        .WithMany()
-                        .HasForeignKey("SessaoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CinemaAPI.Models.Usuario", "Usuario")
-                        .WithMany()
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Assento");
-
-                    b.Navigation("Sessao");
-
-                    b.Navigation("Usuario");
-                });
-
-            modelBuilder.Entity("CinemaAPI.Models.ReservaAssento", b =>
                 {
                     b.HasOne("CinemaAPI.Models.Assento", "Assento")
                         .WithMany()

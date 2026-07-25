@@ -26,9 +26,72 @@ public class IngressoController : ControllerBase
             var ingresso = await _service.CriarAsync(dto);
             return Ok(ingresso);
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             return BadRequest(ex.Message);
+        }
+    }
+    
+
+    [Authorize]
+    [HttpPost("online/lote")]
+    public async Task<IActionResult> ComprarIngressosEmLote(
+        [FromBody] CriarIngressosEmLoteDTO dto
+    )
+    {
+        var usuarioIdClaim = User.FindFirst(
+            ClaimTypes.NameIdentifier
+        )?.Value;
+
+        if (!int.TryParse(usuarioIdClaim, out var usuarioId))
+        {
+            return Unauthorized(new
+            {
+                mensagem = "Token inválido ou usuário não identificado."
+            });
+        }
+
+        try
+        {
+            var ingressos = await _service.CriarEmLoteAsync(
+                usuarioId,
+                dto
+            );
+
+            return Created(
+                string.Empty,
+                new
+                {
+                    quantidade = ingressos.Count,
+
+                    valorTotal = ingressos.Sum(
+                        i => i.ValorPago
+                    ),
+
+                    ingressos
+                }
+            );
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new
+            {
+                mensagem = ex.Message
+            });
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new
+            {
+                mensagem = ex.Message
+            });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new
+            {
+                mensagem = ex.Message
+            });
         }
     }
 

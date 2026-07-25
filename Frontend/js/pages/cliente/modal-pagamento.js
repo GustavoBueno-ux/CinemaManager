@@ -4,7 +4,8 @@ import {
     obterAssentosSelecionados,
     obterDadosSessaoAtual,
     obterSessaoId,
-    obterValorTotal
+    obterValorTotal,
+    sincronizarAssentosComServidor
 } from "./assentos-logica.js";
 
 
@@ -549,9 +550,6 @@ async function finalizarPagamento() {
     const sessaoId =
         Number(obterSessaoId());
 
-    const usuarioId =
-        obterUsuarioId();
-
     if (
         !Number.isInteger(sessaoId)
         || sessaoId <= 0
@@ -563,34 +561,15 @@ async function finalizarPagamento() {
         return;
     }
 
-    if (
-        !Number.isInteger(usuarioId)
-        || usuarioId <= 0
-    ) {
-        exibirErroPagamento(
-            "Não foi possível identificar o usuário. Faça login novamente."
+    const assentoIds =
+        assentos.map(
+            assento => obterAssentoId(assento)
         );
 
-        return;
-    }
-
-    const ingressos =
-        assentos.map(assento => ({
-            sessaoId,
-            assentoId:
-                obterAssentoId(assento),
-            usuarioId
-        }));
-
     const possuiAssentoInvalido =
-        ingressos.some(ingresso => {
-            return (
-                !Number.isInteger(
-                    ingresso.assentoId
-                )
-                || ingresso.assentoId <= 0
-            );
-        });
+        assentoIds.some(id =>
+            !Number.isInteger(id) || id <= 0
+        );
 
     if (possuiAssentoInvalido) {
         exibirErroPagamento(
@@ -603,13 +582,17 @@ async function finalizarPagamento() {
     definirEstadoPagamento(true);
 
     try {
-        await comprarIngressos(
-            ingressos
+
+        await comprarIngressosEmLote(
+            sessaoId,
+            assentoIds
         );
 
         window.location.href =
             "meus-ingressos.html";
+
     } catch (erro) {
+
         console.error(
             "Erro ao finalizar a compra:",
             erro
@@ -617,50 +600,64 @@ async function finalizarPagamento() {
 
         exibirErroPagamento(
             erro.message
-            || "Não foi possível finalizar a compra."
+            ?? "Não foi possível finalizar a compra."
         );
+
+        if (
+            erro.status === 401
+            || erro.status === 409
+        ) {
+            try {
+                await sincronizarAssentosComServidor();
+            } catch (erroSincronizacao) {
+                console.error(
+                    "Erro ao atualizar os assentos após a falha da compra:",
+                    erroSincronizacao
+                );
+            }
+        }
 
         definirEstadoPagamento(false);
     }
 }
 
-async function comprarIngressos(ingressos) {
-    for (const ingresso of ingressos) {
-        await comprarIngresso(
-            ingresso
-        );
-    }
-}
 
-async function comprarIngresso(
-    dadosIngresso
+async function comprarIngressosEmLote(
+    sessaoId,
+    assentoIds
 ) {
+
     const resposta =
         await fetch(
-            `${API_URL}/Ingresso/online`,
+            `${API_URL}/Ingresso/online/lote`,
             {
                 method: "POST",
 
                 headers:
                     criarCabecalhosCompra(),
 
-                body:
-                    JSON.stringify(
-                        dadosIngresso
-                    )
+                body: JSON.stringify({
+                    sessaoId,
+                    assentoIds
+                })
             }
         );
 
     if (!resposta.ok) {
+
         const mensagem =
             await obterMensagemErroApi(
                 resposta
             );
 
-        throw new Error(
+        const erro = new Error(
             mensagem
-            || "A API recusou a compra do ingresso."
+            ?? "Não foi possível concluir a compra."
         );
+
+        erro.status = resposta.status;
+
+        throw erro;
     }
 
     return await lerRespostaApi(
@@ -687,40 +684,6 @@ function criarCabecalhosCompra() {
     }
 
     return cabecalhos;
-}
-
-function obterUsuarioId() {
-    const usuarioSalvo =
-        localStorage.getItem("usuario");
-
-    if (!usuarioSalvo) {
-        return null;
-    }
-
-    try {
-        const usuario =
-            JSON.parse(usuarioSalvo);
-
-        const valor =
-            usuario.id
-            ?? usuario.Id
-            ?? usuario.usuarioId
-            ?? usuario.UsuarioId;
-
-        const usuarioId =
-            Number(valor);
-
-        return Number.isInteger(usuarioId)
-            ? usuarioId
-            : null;
-    } catch (erro) {
-        console.error(
-            "Erro ao ler usuário do localStorage:",
-            erro
-        );
-
-        return null;
-    }
 }
 
 

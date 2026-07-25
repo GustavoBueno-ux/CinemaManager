@@ -19,12 +19,7 @@ function configurarBotaoVoltar() {
         "click",
         () => {
 
-            if (window.history.length > 1) {
-                window.history.back();
-                return;
-            }
-
-            window.location.href = "index.html";
+            window.location.href = "/Frontend/pages/public/home.html";
 
         }
     );

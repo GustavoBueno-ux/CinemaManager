@@ -5,22 +5,27 @@ namespace CinemaAPI.Data;
 
 public class AppDbContext : DbContext
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options)
-        : base(options)
+    public AppDbContext(
+        DbContextOptions<AppDbContext> options
+    ) : base(options)
     {
     }
 
-    public DbSet<Usuario> Usuarios { get; set; }
+    public DbSet<Usuario> Usuarios { get; set; } = null!;
 
-    public DbSet<Filme> Filmes { get; set; }
+    public DbSet<Filme> Filmes { get; set; } = null!;
 
-    public DbSet<Sessao> Sessoes { get; set; }
+    public DbSet<Sessao> Sessoes { get; set; } = null!;
 
-    public DbSet<Assento> Assentos { get; set; }
+    public DbSet<Assento> Assentos { get; set; } = null!;
 
-    public DbSet<Ingresso> Ingressos { get; set; }
+    public DbSet<Ingresso> Ingressos { get; set; } = null!;
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    public DbSet<ReservaAssento> ReservasAssentos { get; set; } = null!;
+
+    protected override void OnModelCreating(
+        ModelBuilder modelBuilder
+    )
     {
         base.OnModelCreating(modelBuilder);
 
@@ -29,7 +34,37 @@ public class AppDbContext : DbContext
             .IsUnique();
 
         modelBuilder.Entity<Ingresso>()
-            .HasIndex(i => new { i.SessaoId, i.AssentoId })
+            .HasIndex(i => new
+            {
+                i.SessaoId,
+                i.AssentoId
+            })
             .IsUnique();
+
+        modelBuilder.Entity<ReservaAssento>()
+            .HasIndex(r => new
+            {
+                r.SessaoId,
+                r.AssentoId
+            })
+            .IsUnique();
+
+        modelBuilder.Entity<ReservaAssento>()
+            .HasOne(r => r.Sessao)
+            .WithMany()
+            .HasForeignKey(r => r.SessaoId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<ReservaAssento>()
+            .HasOne(r => r.Assento)
+            .WithMany()
+            .HasForeignKey(r => r.AssentoId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<ReservaAssento>()
+            .HasOne(r => r.Usuario)
+            .WithMany()
+            .HasForeignKey(r => r.UsuarioId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

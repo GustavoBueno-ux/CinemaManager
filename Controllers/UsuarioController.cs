@@ -22,9 +22,15 @@ public class UsuarioController : ControllerBase
         [FromBody] CriarUsuarioDTO dto
     )
     {
-        var usuario = await _usuarioService.CriarAsync(dto);
-
-        return Ok(usuario);
+        try
+        {
+            var usuario = await _usuarioService.CriarAsync(dto);
+            return Ok(usuario);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new { mensagem = ex.Message });
+        }
     }
 
     [HttpPost("login")]
