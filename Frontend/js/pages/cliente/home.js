@@ -187,7 +187,7 @@ async function mostrarFilmes() {
 
         card.innerHTML = `
 
-            <img src="/Frontend/assets/posters/${filme.posterUrl}" alt="Poster do filme ${filme.titulo}">
+            <img src="${filme.posterUrl}" alt="Poster do filme ${filme.titulo}">
 
             <h3>
                 ${filme.titulo}

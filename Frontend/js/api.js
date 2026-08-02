@@ -2,14 +2,36 @@ async function apiRequest(endpoint, options = {}) {
 
     try {
 
+        const token = localStorage.getItem("token");
+
+        const headers = {
+            "Content-Type": "application/json",
+            ...(options.headers || {})
+        };
+
+        if (token) {
+            headers.Authorization = `Bearer ${token}`;
+        }
+
         const response = await fetch(
             `${API_URL}${endpoint}`,
-            options
+            {
+                ...options,
+                headers
+            }
         );
 
+        let data = null;
 
-        const data = await response.json();
+        const contentType =
+            response.headers.get("content-type");
 
+        if (
+            contentType &&
+            contentType.includes("application/json")
+        ) {
+            data = await response.json();
+        }
 
         return {
             ok: response.ok,
@@ -17,13 +39,15 @@ async function apiRequest(endpoint, options = {}) {
             data
         };
 
+    } catch (error) {
 
-    } catch(error) {
+        console.error("Erro ao acessar a API:", error);
 
         return {
-            ok:false,
-            error:true,
-            data:null
+            ok: false,
+            status: 0,
+            error: true,
+            data: null
         };
 
     }

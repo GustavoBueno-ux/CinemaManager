@@ -4,6 +4,7 @@ using CinemaAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,7 +25,39 @@ builder.Services.AddCors(options =>
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition(
+        "Bearer",
+        new OpenApiSecurityScheme
+        {
+            Name = "Authorization",
+            Type = SecuritySchemeType.Http,
+            Scheme = "bearer",
+            BearerFormat = "JWT",
+            In = ParameterLocation.Header,
+            Description = "Digite apenas o token JWT."
+        }
+    );
+
+    options.AddSecurityRequirement(
+        new OpenApiSecurityRequirement
+        {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    }
+                },
+                Array.Empty<string>()
+            }
+        }
+    );
+});
 
 // Banco de dados
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -49,6 +82,16 @@ builder.Services.AddScoped<IAssentoService, AssentoService>();
 builder.Services.AddScoped<
     IReservaAssentoService,
     ReservaAssentoService
+>();
+
+builder.Services.AddScoped<
+    IDashboardService,
+    DashboardService
+>();
+
+builder.Services.AddScoped<
+    IPosterService,
+    PosterService
 >();
 
 // Serviços executados em segundo plano
@@ -100,6 +143,7 @@ using (var scope = app.Services.CreateScope())
     await DbInitializer.PopularAssentosAsync(context);
 }
 
+// Swagger
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -107,6 +151,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Permite servir arquivos da pasta wwwroot.
+app.UseStaticFiles();
 
 app.UseCors("AllowFrontend");
 

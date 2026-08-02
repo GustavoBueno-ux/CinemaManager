@@ -97,7 +97,7 @@ form.addEventListener("submit", async (event) => {
     if(usuario.tipoUsuario === "Funcionario"){
 
         window.location.href =
-            "admin/dashboard.html";
+            "pages/admin/home-admin.html";
 
     }
     else{

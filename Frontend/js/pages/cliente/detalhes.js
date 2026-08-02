@@ -154,7 +154,7 @@ function mostrarFilme() {
     classificacaoFilme.textContent = obterClassificacao(filme.classificacao);
 
     //posterFilme.src = filme.posterUrl;
-    posterFilme.src = "../../assets/posters/layout tela matricula desenho.jpeg";
+    posterFilme.src = filme.posterUrl;
 
 }
 

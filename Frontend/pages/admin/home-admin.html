@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Painel administrativo do cinema"
+    >
+
+    <title>Painel do Funcionário | Cinema</title>
+
+    <link
+        rel="stylesheet"
+        href="/Frontend/css/pages/admin/navbar-admin.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="/Frontend/css/pages/admin/home-admin.css"
+    >
+
+</head>
+
+<body>
+
+    <div class="admin-layout">
+
+        <!-- SIDEBAR -->
+        <aside
+            class="sidebar"
+            id="sidebar"
+        >
+
+            <div class="sidebar-header">
+
+                <a
+                    href="home-admin.html"
+                    class="sidebar-logo"
+                    aria-label="Ir para a página inicial do painel"
+                >
+
+                    <span
+                        class="sidebar-logo-icon"
+                        aria-hidden="true"
+                    >
+                        C
+                    </span>
+
+                    <span class="sidebar-logo-text">
+                        Cinema
+                    </span>
+
+                </a>
+
+                <button
+                    type="button"
+                    class="sidebar-close-button"
+                    id="sidebar-close-button"
+                    aria-label="Fechar menu lateral"
+                >
+                    &times;
+                </button>
+
+            </div>
+
+
+            <nav
+                class="sidebar-navigation"
+                aria-label="Navegação administrativa"
+            >
+
+                <ul class="sidebar-menu">
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="home-admin.html"
+                            class="sidebar-link active"
+                            aria-current="page"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                ⌂
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Início
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="filmes.html"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                🎬
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Filmes
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="sessoes.html"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                📅
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Sessões
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="venda-ingressos.html"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                🎟️
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Vender ingressos
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="escanear-ingresso.html"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                ▣
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Escanear QR Code
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="relatorios.html"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                📊
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Relatórios
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="perfil.html"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                👤
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Perfil
+                            </span>
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </nav>
+
+
+            <div class="sidebar-footer">
+
+                <div class="sidebar-user">
+
+                    <div
+                        class="sidebar-user-avatar"
+                        id="sidebar-user-avatar"
+                        aria-hidden="true"
+                    >
+                        F
+                    </div>
+
+                    <div class="sidebar-user-information">
+
+                        <strong
+                            class="sidebar-user-name"
+                            id="sidebar-user-name"
+                        >
+                            Funcionário
+                        </strong>
+
+                        <span class="sidebar-user-role">
+                            Funcionário
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="logout-button"
+                    id="logout-button"
+                >
+
+                    <span aria-hidden="true">
+                        ↪
+                    </span>
+
+                    <span>
+                        Sair
+                    </span>
+
+                </button>
+
+            </div>
+
+        </aside>
+
+
+        <!-- FUNDO ESCURO DA SIDEBAR NO MOBILE -->
+        <div
+            class="sidebar-overlay"
+            id="sidebar-overlay"
+            aria-hidden="true"
+        ></div>
+
+
+        <!-- CONTEÚDO PRINCIPAL -->
+        <div class="admin-content">
+
+            <!-- CABEÇALHO MOBILE -->
+            <header class="mobile-header">
+
+                <button
+                    type="button"
+                    class="sidebar-open-button"
+                    id="sidebar-open-button"
+                    aria-label="Abrir menu lateral"
+                    aria-controls="sidebar"
+                    aria-expanded="false"
+                >
+                    ☰
+                </button>
+
+                <a
+                    href="home-admin.html"
+                    class="mobile-logo"
+                >
+                    Cinema
+                </a>
+
+            </header>
+
+
+            <main class="dashboard-main">
+
+                <!-- CABEÇALHO DA PÁGINA -->
+                <section
+                    class="dashboard-heading"
+                    aria-labelledby="dashboard-title"
+                >
+
+                    <div>
+
+                        <p class="dashboard-heading-label">
+                            Painel administrativo
+                        </p>
+
+                        <h1 id="dashboard-title">
+
+                            Olá,
+                            <span id="employee-first-name">
+                                funcionário
+                            </span>!
+
+                        </h1>
+
+                        <p class="dashboard-heading-description">
+                            Aqui está o resumo das atividades do cinema hoje.
+                        </p>
+
+                    </div>
+
+
+                    <div class="dashboard-date-container">
+
+                        <span
+                            class="dashboard-date-icon"
+                            aria-hidden="true"
+                        >
+                            📅
+                        </span>
+
+                        <time
+                            class="dashboard-date"
+                            id="current-date"
+                            datetime=""
+                        >
+                            Carregando data...
+                        </time>
+
+                    </div>
+
+                </section>
+
+
+                <!-- MENSAGEM GERAL DE ERRO -->
+                <section
+                    class="dashboard-error hidden"
+                    id="dashboard-error"
+                    role="alert"
+                >
+
+                    <div>
+
+                        <strong>
+                            Não foi possível carregar o painel.
+                        </strong>
+
+                        <p id="dashboard-error-message">
+                            Verifique sua conexão e tente novamente.
+                        </p>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="retry-button"
+                        id="retry-button"
+                    >
+                        Tentar novamente
+                    </button>
+
+                </section>
+
+
+                <!-- CARDS DE RESUMO -->
+                <section
+                    class="dashboard-summary"
+                    aria-labelledby="summary-title"
+                >
+
+                    <h2
+                        class="visually-hidden"
+                        id="summary-title"
+                    >
+                        Resumo do cinema hoje
+                    </h2>
+
+
+                    <article class="summary-card">
+
+                        <div class="summary-card-header">
+
+                            <div>
+
+                                <p class="summary-card-label">
+                                    Sessões hoje
+                                </p>
+
+                                <strong
+                                    class="summary-card-value"
+                                    id="today-sessions-count"
+                                >
+                                    --
+                                </strong>
+
+                            </div>
+
+                            <span
+                                class="summary-card-icon"
+                                aria-hidden="true"
+                            >
+                                📅
+                            </span>
+
+                        </div>
+
+                        <p class="summary-card-description">
+                            Sessões programadas para hoje
+                        </p>
+
+                    </article>
+
+
+                    <article class="summary-card">
+
+                        <div class="summary-card-header">
+
+                            <div>
+
+                                <p class="summary-card-label">
+                                    Ingressos vendidos
+                                </p>
+
+                                <strong
+                                    class="summary-card-value"
+                                    id="today-tickets-count"
+                                >
+                                    --
+                                </strong>
+
+                            </div>
+
+                            <span
+                                class="summary-card-icon"
+                                aria-hidden="true"
+                            >
+                                🎟️
+                            </span>
+
+                        </div>
+
+                        <p class="summary-card-description">
+                            Vendas realizadas hoje
+                        </p>
+
+                    </article>
+
+
+                    <article class="summary-card">
+
+                        <div class="summary-card-header">
+
+                            <div>
+
+                                <p class="summary-card-label">
+                                    Faturamento hoje
+                                </p>
+
+                                <strong
+                                    class="summary-card-value summary-card-value-money"
+                                    id="today-revenue"
+                                >
+                                    R$ --,--
+                                </strong>
+
+                            </div>
+
+                            <span
+                                class="summary-card-icon"
+                                aria-hidden="true"
+                            >
+                                R$
+                            </span>
+
+                        </div>
+
+                        <p class="summary-card-description">
+                            Total recebido em ingressos
+                        </p>
+
+                    </article>
+
+
+                    <article class="summary-card next-session-card">
+
+                        <div class="summary-card-header">
+
+                            <div>
+
+                                <p class="summary-card-label">
+                                    Próxima sessão
+                                </p>
+
+                                <strong
+                                    class="summary-card-value"
+                                    id="next-session-time"
+                                >
+                                    --:--
+                                </strong>
+
+                            </div>
+
+                            <span
+                                class="summary-card-icon"
+                                aria-hidden="true"
+                            >
+                                ▶
+                            </span>
+
+                        </div>
+
+                        <div
+                            class="next-session-information"
+                            id="next-session-information"
+                        >
+
+                            <p
+                                class="next-session-movie"
+                                id="next-session-movie"
+                            >
+                                Carregando...
+                            </p>
+
+                            <p class="next-session-details">
+
+                                <span id="next-session-room">
+                                    --
+                                </span>
+
+                            </p>
+
+                        </div>
+
+                    </article>
+
+                </section>
+
+
+                <!-- CONTEÚDO INFERIOR -->
+                <div class="dashboard-grid">
+
+                    <!-- SESSÕES DE HOJE -->
+                    <section
+                        class="dashboard-section sessions-section"
+                        aria-labelledby="today-sessions-title"
+                    >
+
+                        <div class="section-header">
+
+                            <div>
+
+                                <p class="section-label">
+                                    Programação
+                                </p>
+
+                                <h2 id="today-sessions-title">
+                                    Sessões de hoje
+                                </h2>
+
+                            </div>
+
+                            <a
+                                href="sessoes.html"
+                                class="section-link"
+                            >
+                                Ver todas
+                            </a>
+
+                        </div>
+
+
+                        <!-- CARREGAMENTO -->
+                        <div
+                            class="sessions-loading"
+                            id="sessions-loading"
+                            aria-live="polite"
+                        >
+
+                            <div class="loading-spinner"></div>
+
+                            <p>
+                                Carregando sessões...
+                            </p>
+
+                        </div>
+
+
+                        <!-- LISTA PREENCHIDA PELO JAVASCRIPT -->
+                        <div
+                            class="sessions-list hidden"
+                            id="sessions-list"
+                        ></div>
+
+
+                        <!-- ESTADO SEM SESSÕES -->
+                        <div
+                            class="empty-state hidden"
+                            id="sessions-empty-state"
+                        >
+
+                            <span
+                                class="empty-state-icon"
+                                aria-hidden="true"
+                            >
+                                📽️
+                            </span>
+
+                            <h3>
+                                Nenhuma sessão para hoje
+                            </h3>
+
+                            <p>
+                                Ainda não existem sessões programadas para esta data.
+                            </p>
+
+                            <a
+                                href="nova-sessao.html"
+                                class="primary-button"
+                            >
+                                Cadastrar sessão
+                            </a>
+
+                        </div>
+
+
+                        <!-- ERRO ESPECÍFICO DAS SESSÕES -->
+                        <div
+                            class="sessions-error hidden"
+                            id="sessions-error"
+                            role="alert"
+                        >
+
+                            <p>
+                                Não foi possível carregar as sessões de hoje.
+                            </p>
+
+                            <button
+                                type="button"
+                                class="secondary-button"
+                                id="sessions-retry-button"
+                            >
+                                Tentar novamente
+                            </button>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- AÇÕES RÁPIDAS -->
+                    <section
+                        class="dashboard-section quick-actions-section"
+                        aria-labelledby="quick-actions-title"
+                    >
+
+                        <div class="section-header">
+
+                            <div>
+
+                                <p class="section-label">
+                                    Atalhos
+                                </p>
+
+                                <h2 id="quick-actions-title">
+                                    Ações rápidas
+                                </h2>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="quick-actions-grid">
+
+                            <a
+                                href="venda-ingressos.html"
+                                class="quick-action-card"
+                            >
+
+                                <span
+                                    class="quick-action-icon"
+                                    aria-hidden="true"
+                                >
+                                    🎟️
+                                </span>
+
+                                <div>
+
+                                    <h3>
+                                        Vender ingresso
+                                    </h3>
+
+                                    <p>
+                                        Escolha uma sessão e selecione os assentos.
+                                    </p>
+
+                                </div>
+
+                                <span
+                                    class="quick-action-arrow"
+                                    aria-hidden="true"
+                                >
+                                    →
+                                </span>
+
+                            </a>
+
+
+                            <a
+                                href="escanear-ingresso.html"
+                                class="quick-action-card"
+                            >
+
+                                <span
+                                    class="quick-action-icon"
+                                    aria-hidden="true"
+                                >
+                                    ▣
+                                </span>
+
+                                <div>
+
+                                    <h3>
+                                        Escanear QR Code
+                                    </h3>
+
+                                    <p>
+                                        Valide os ingressos na entrada do cinema.
+                                    </p>
+
+                                </div>
+
+                                <span
+                                    class="quick-action-arrow"
+                                    aria-hidden="true"
+                                >
+                                    →
+                                </span>
+
+                            </a>
+
+
+                            <a
+                                href="nova-sessao.html"
+                                class="quick-action-card"
+                            >
+
+                                <span
+                                    class="quick-action-icon"
+                                    aria-hidden="true"
+                                >
+                                    ＋
+                                </span>
+
+                                <div>
+
+                                    <h3>
+                                        Cadastrar sessão
+                                    </h3>
+
+                                    <p>
+                                        Adicione uma nova sessão à programação.
+                                    </p>
+
+                                </div>
+
+                                <span
+                                    class="quick-action-arrow"
+                                    aria-hidden="true"
+                                >
+                                    →
+                                </span>
+
+                            </a>
+
+
+                            <a
+                                href="novo-filme.html"
+                                class="quick-action-card"
+                            >
+
+                                <span
+                                    class="quick-action-icon"
+                                    aria-hidden="true"
+                                >
+                                    🎬
+                                </span>
+
+                                <div>
+
+                                    <h3>
+                                        Cadastrar filme
+                                    </h3>
+
+                                    <p>
+                                        Adicione um novo filme ao catálogo.
+                                    </p>
+
+                                </div>
+
+                                <span
+                                    class="quick-action-arrow"
+                                    aria-hidden="true"
+                                >
+                                    →
+                                </span>
+
+                            </a>
+
+                        </div>
+
+                    </section>
+
+                </div>
+
+            </main>
+
+        </div>
+
+    </div>
+
+
+    <!-- TEMPLATE DE SESSÃO -->
+    <template id="session-item-template">
+
+        <article class="session-item">
+
+            <div class="session-time-container">
+
+                <time class="session-time">
+                    00:00
+                </time>
+
+                <span class="session-status">
+                    Próxima
+                </span>
+
+            </div>
+
+
+            <div class="session-movie-information">
+
+                <h3 class="session-movie-title">
+                    Nome do filme
+                </h3>
+
+                <p class="session-room">
+                    Sala
+                </p>
+
+            </div>
+
+
+            <div class="session-sales-information">
+
+                <div class="session-sales-heading">
+
+                    <span>
+                        Ocupação
+                    </span>
+
+                    <strong class="session-sales-count">
+                        0/0
+                    </strong>
+
+                </div>
+
+                <div
+                    class="session-progress"
+                    role="progressbar"
+                    aria-label="Ocupação da sessão"
+                    aria-valuemin="0"
+                    aria-valuemax="100"
+                    aria-valuenow="0"
+                >
+
+                    <div class="session-progress-value"></div>
+
+                </div>
+
+            </div>
+
+
+            <a
+                href="venda-ingressos.html"
+                class="session-sale-button"
+            >
+                Vender ingresso
+            </a>
+
+        </article>
+
+    </template>
+
+    <footer>
+
+        <p>
+        
+            © 2026 Cinema. Todos os direitos reservados.
+        
+        </p>
+    
+    </footer>
+
+    <script src="/Frontend/js/config.js"></script>
+    <script src="/Frontend/js/api.js"></script>
+    <script src="/Frontend/js/pages/admin/home-admin.js"></script>
+
+</body>
+
+</html>

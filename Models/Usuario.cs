@@ -27,6 +27,5 @@ public class Usuario
 public enum TipoUsuario
 {
     Cliente = 1,
-    Funcionario = 2,
-    Administrador = 3
+    Funcionario = 2
 }
