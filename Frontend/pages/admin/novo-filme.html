@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Cadastro de filmes do cinema"
+    >
+
+    <title>Cadastrar filme | Cinema</title>
+
+    <link
+        rel="stylesheet"
+        href="/Frontend/css/pages/admin/navbar-admin.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="/Frontend/css/pages/admin/novo-filme.css"
+    >
+</head>
+
+<body>
+
+    <div class="admin-layout">
+
+        <!-- =====================================================
+             SIDEBAR
+        ====================================================== -->
+
+        <aside
+            class="sidebar"
+            id="sidebar"
+        >
+
+            <div class="sidebar-header">
+
+                <a
+                    href="home-admin.html"
+                    class="sidebar-logo"
+                    aria-label="Ir para a página inicial do painel"
+                >
+                    <span
+                        class="sidebar-logo-icon"
+                        aria-hidden="true"
+                    >
+                        C
+                    </span>
+
+                    <span class="sidebar-logo-text">
+                        Cinema
+                    </span>
+                </a>
+
+                <button
+                    type="button"
+                    class="sidebar-close-button"
+                    id="sidebar-close-button"
+                    aria-label="Fechar menu lateral"
+                >
+                    &times;
+                </button>
+
+            </div>
+
+            <nav
+                class="sidebar-navigation"
+                aria-label="Navegação administrativa"
+            >
+
+                <ul class="sidebar-menu">
+
+                    <li class="sidebar-menu-item">
+                        <a
+                            href="home-admin.html"
+                            class="sidebar-link"
+                        >
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                ⌂
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Início
+                            </span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-menu-item">
+                        <a
+                            href="filmes.html"
+                            class="sidebar-link active"
+                            aria-current="page"
+                        >
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                🎬
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Filmes
+                            </span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-menu-item">
+                        <a
+                            href="sessoes.html"
+                            class="sidebar-link"
+                        >
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                📅
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Sessões
+                            </span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-menu-item">
+                        <a
+                            href="venda-ingressos.html"
+                            class="sidebar-link"
+                        >
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                🎟️
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Vender ingressos
+                            </span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-menu-item">
+                        <a
+                            href="escanear-ingresso.html"
+                            class="sidebar-link"
+                        >
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                ▣
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Escanear QR Code
+                            </span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-menu-item">
+                        <a
+                            href="relatorios.html"
+                            class="sidebar-link"
+                        >
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                📊
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Relatórios
+                            </span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-menu-item">
+                        <a
+                            href="perfil.html"
+                            class="sidebar-link"
+                        >
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                👤
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Perfil
+                            </span>
+                        </a>
+                    </li>
+
+                </ul>
+
+            </nav>
+
+            <div class="sidebar-footer">
+
+                <div class="sidebar-user">
+
+                    <div
+                        class="sidebar-user-avatar"
+                        id="sidebar-user-avatar"
+                        aria-hidden="true"
+                    >
+                        F
+                    </div>
+
+                    <div class="sidebar-user-information">
+
+                        <strong
+                            class="sidebar-user-name"
+                            id="sidebar-user-name"
+                        >
+                            Funcionário
+                        </strong>
+
+                        <span class="sidebar-user-role">
+                            Funcionário
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <button
+                    type="button"
+                    class="logout-button"
+                    id="logout-button"
+                >
+                    <span aria-hidden="true">
+                        ↪
+                    </span>
+
+                    <span>
+                        Sair
+                    </span>
+                </button>
+
+            </div>
+
+        </aside>
+
+
+        <!-- =====================================================
+             OVERLAY MOBILE
+        ====================================================== -->
+
+        <div
+            class="sidebar-overlay"
+            id="sidebar-overlay"
+            aria-hidden="true"
+        ></div>
+
+
+        <!-- =====================================================
+             CONTEÚDO
+        ====================================================== -->
+
+        <div class="admin-content">
+
+            <!-- HEADER MOBILE -->
+
+            <header class="mobile-header">
+
+                <button
+                    type="button"
+                    class="sidebar-open-button"
+                    id="sidebar-open-button"
+                    aria-label="Abrir menu lateral"
+                    aria-controls="sidebar"
+                    aria-expanded="false"
+                >
+                    ☰
+                </button>
+
+                <a
+                    href="home-admin.html"
+                    class="mobile-logo"
+                >
+                    Cinema
+                </a>
+
+            </header>
+
+
+            <!-- =================================================
+                 CONTEÚDO PRINCIPAL
+            ================================================== -->
+
+            <main class="new-movie-main">
+
+                <!-- CABEÇALHO -->
+
+                <section
+                    class="new-movie-heading"
+                    aria-labelledby="new-movie-title"
+                >
+
+                    <div>
+
+                        <a
+                            href="filmes.html"
+                            class="back-button"
+                        >
+                            <span aria-hidden="true">
+                                ←
+                            </span>
+
+                            Voltar para filmes
+                        </a>
+
+                        <p class="page-label">
+                            Catálogo
+                        </p>
+
+                        <h1 id="new-movie-title">
+                            Cadastrar filme
+                        </h1>
+
+                        <p class="new-movie-description">
+                            Preencha as informações do filme para adicioná-lo ao catálogo do cinema.
+                        </p>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     FORMULÁRIO
+                ================================================== -->
+
+                <section class="new-movie-card">
+
+                    <form
+                        id="new-movie-form"
+                        class="new-movie-form"
+                        novalidate
+                    >
+
+                        <!-- INFORMAÇÕES -->
+
+                        <div class="form-section">
+
+                            <div class="form-section-heading">
+
+                                <p class="form-section-label">
+                                    Informações
+                                </p>
+
+                                <h2>
+                                    Dados do filme
+                                </h2>
+
+                                <p>
+                                    Informe os dados que serão exibidos aos clientes.
+                                </p>
+
+                            </div>
+
+
+                            <div class="form-grid">
+
+                                <!-- TÍTULO -->
+
+                                <div class="form-field form-field-full">
+
+                                    <label for="movie-title">
+                                        Título
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        id="movie-title"
+                                        name="titulo"
+                                        maxlength="100"
+                                        placeholder="Ex: Interestelar"
+                                        autocomplete="off"
+                                        required
+                                    >
+
+                                </div>
+
+
+                                <!-- GÊNERO -->
+
+                                <div class="form-field">
+
+                                    <label for="movie-genre">
+                                        Gênero
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        id="movie-genre"
+                                        name="genero"
+                                        maxlength="80"
+                                        placeholder="Ex: Ficção científica"
+                                        autocomplete="off"
+                                        required
+                                    >
+
+                                </div>
+
+
+                                <!-- DURAÇÃO -->
+
+                                <div class="form-field">
+
+                                    <label for="movie-duration">
+                                        Duração
+                                    </label>
+
+                                    <div class="input-with-suffix">
+
+                                        <input
+                                            type="number"
+                                            id="movie-duration"
+                                            name="duracaoMinutos"
+                                            min="1"
+                                            max="500"
+                                            placeholder="169"
+                                            required
+                                        >
+
+                                        <span>
+                                            minutos
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- CLASSIFICAÇÃO -->
+
+                                <div class="form-field form-field-full">
+
+                                    <label for="movie-classification">
+                                        Classificação indicativa
+                                    </label>
+
+                                    <select
+                                        id="movie-classification"
+                                        name="classificacao"
+                                        required
+                                    >
+                                        <option
+                                            value=""
+                                            selected
+                                            disabled
+                                        >
+                                            Selecione a classificação
+                                        </option>
+
+                                        <option value="0">
+                                            Livre
+                                        </option>
+
+                                        <option value="10">
+                                            10 anos
+                                        </option>
+
+                                        <option value="12">
+                                            12 anos
+                                        </option>
+
+                                        <option value="14">
+                                            14 anos
+                                        </option>
+
+                                        <option value="16">
+                                            16 anos
+                                        </option>
+
+                                        <option value="18">
+                                            18 anos
+                                        </option>
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- =================================================
+                             PÔSTER
+                        ================================================== -->
+
+                        <div class="form-section poster-section">
+
+                            <div class="form-section-heading">
+
+                                <p class="form-section-label">
+                                    Imagem
+                                </p>
+
+                                <h2>
+                                    Pôster do filme
+                                </h2>
+
+                                <p>
+                                    Escolha a imagem que será exibida no catálogo.
+                                </p>
+
+                            </div>
+
+
+                            <div class="poster-upload">
+
+                                <!-- PREVIEW -->
+
+                                <div class="poster-preview">
+
+                                    <img
+                                        id="movie-poster-preview"
+                                        class="poster-preview-image hidden"
+                                        src=""
+                                        alt="Prévia do pôster selecionado"
+                                    >
+
+                                    <div
+                                        class="poster-preview-placeholder"
+                                        id="movie-poster-placeholder"
+                                    >
+                                        <span aria-hidden="true">
+                                            🎬
+                                        </span>
+
+                                        <span>
+                                            Sem pôster
+                                        </span>
+                                    </div>
+
+                                </div>
+
+
+                                <!-- SELETOR -->
+
+                                <div class="poster-upload-content">
+
+                                    <label
+                                        for="movie-poster"
+                                        class="poster-upload-button"
+                                    >
+                                        Escolher imagem
+                                    </label>
+
+                                    <input
+                                        type="file"
+                                        id="movie-poster"
+                                        name="poster"
+                                        accept="image/jpeg,image/png,image/webp"
+                                        required
+                                    >
+
+                                    <p class="poster-upload-help">
+                                        JPG, PNG ou WEBP. Máximo de 5 MB.
+                                    </p>
+
+                                    <p
+                                        class="poster-file-name hidden"
+                                        id="poster-file-name"
+                                    ></p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- =================================================
+                             ERRO
+                        ================================================== -->
+
+                        <div
+                            class="form-error hidden"
+                            id="new-movie-error"
+                            role="alert"
+                            aria-live="polite"
+                        >
+                            Não foi possível cadastrar o filme.
+                        </div>
+
+
+                        <!-- =================================================
+                             AÇÕES
+                        ================================================== -->
+
+                        <div class="form-actions">
+
+                            <a
+                                href="filmes.html"
+                                class="cancel-button"
+                            >
+                                Cancelar
+                            </a>
+
+                            <button
+                                type="submit"
+                                class="save-button"
+                                id="save-movie-button"
+                            >
+                                Cadastrar filme
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </section>
+
+            </main>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         FOOTER
+    ========================================================== -->
+
+    <footer>
+        <p>
+            © 2026 Cinema. Todos os direitos reservados.
+        </p>
+    </footer>
+
+
+    <!-- =========================================================
+         JAVASCRIPT
+    ========================================================== -->
+
+    <script src="/Frontend/js/config.js"></script>
+    <script src="/Frontend/js/api.js"></script>
+    <script src="/Frontend/js/pages/admin/novo-filme.js"></script>
+
+</body>
+
+</html>
