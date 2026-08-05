@@ -1,0 +1,679 @@
+/* =========================================
+   MODAL DE VENDA
+========================================= */
+
+.modal-pagamento {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 24px;
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+
+    transition:
+        opacity 0.25s ease,
+        visibility 0.25s ease;
+}
+
+.modal-pagamento[hidden] {
+    display: none !important;
+}
+
+.modal-pagamento.ativo,
+.modal-pagamento.aberto {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+/* =========================================
+   FUNDO
+========================================= */
+
+.modal-pagamento .fundo-modal {
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        rgba(0, 0, 0, 0.55);
+}
+
+/* =========================================
+   CONTEÚDO
+========================================= */
+
+.modal-pagamento .conteudo-modal {
+    position: relative;
+
+    z-index: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    width: min(70vw, 1100px);
+    height: min(84vh, 820px);
+
+    padding: 34px 38px 32px;
+
+    border: 1px solid
+        rgba(255, 255, 255, 0.1);
+
+    border-radius: 22px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #17171d,
+            #101014
+        );
+
+    box-shadow:
+        0 28px 70px
+        rgba(0, 0, 0, 0.55);
+
+    color: #ffffff;
+
+    overflow: hidden;
+
+    transform:
+        translateY(24px)
+        scale(0.97);
+
+    transition:
+        transform 0.25s ease;
+}
+
+.modal-pagamento.ativo
+.conteudo-modal,
+.modal-pagamento.aberto
+.conteudo-modal {
+    transform:
+        translateY(0)
+        scale(1);
+}
+
+/* =========================================
+   BOTÃO FECHAR
+========================================= */
+
+.modal-pagamento
+.botao-fechar-modal {
+    position: absolute;
+
+    top: 22px;
+    left: 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 42px;
+    height: 42px;
+
+    padding: 0;
+
+    border: 1px solid
+        rgba(255, 255, 255, 0.1);
+
+    border-radius: 50%;
+
+    background:
+        rgba(255, 255, 255, 0.07);
+
+    color: #ffffff;
+
+    font-size: 30px;
+    font-weight: 300;
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.modal-pagamento
+.botao-fechar-modal:hover {
+    background:
+        rgba(255, 255, 255, 0.14);
+
+    border-color:
+        rgba(255, 255, 255, 0.22);
+
+    transform: scale(1.06);
+}
+
+/* =========================================
+   TÍTULO
+========================================= */
+
+.modal-pagamento
+.conteudo-modal > h2 {
+    margin:
+        8px
+        0
+        8px;
+
+    padding-left: 52px;
+
+    color: #ffffff;
+
+    font-size:
+        clamp(
+            1.65rem,
+            2.5vw,
+            2.2rem
+        );
+
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.modal-pagamento
+.conteudo-modal > p {
+    margin:
+        0
+        0
+        22px;
+
+    padding-left: 52px;
+
+    color: #a9a9b2;
+
+    font-size: 0.95rem;
+}
+
+/* =========================================
+   LISTA DE INGRESSOS
+========================================= */
+
+.ingressos-selecionados {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 14px;
+
+    width: 100%;
+
+    min-height: 0;
+
+    padding-right: 8px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    scrollbar-width: thin;
+
+    scrollbar-color:
+        rgba(255, 255, 255, 0.25)
+        transparent;
+}
+
+.ingressos-selecionados::-webkit-scrollbar {
+    width: 7px;
+}
+
+.ingressos-selecionados::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.ingressos-selecionados::-webkit-scrollbar-thumb {
+    background:
+        rgba(255, 255, 255, 0.22);
+
+    border-radius: 10px;
+}
+
+/* =========================================
+   CARD DO INGRESSO
+========================================= */
+
+.ingresso-selecionado {
+    flex-shrink: 0;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(180px, 1.5fr)
+        repeat(
+            3,
+            minmax(110px, 1fr)
+        )
+        minmax(90px, auto);
+
+    align-items: center;
+
+    gap: 20px;
+
+    width: 100%;
+    min-height: 112px;
+
+    padding: 20px 24px;
+
+    border: 1px solid
+        rgba(255, 255, 255, 0.1);
+
+    border-radius: 16px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.075),
+            rgba(255, 255, 255, 0.035)
+        );
+}
+
+.dado-ingresso {
+    display: flex;
+    flex-direction: column;
+
+    gap: 6px;
+
+    min-width: 0;
+}
+
+.rotulo-ingresso {
+    color: #8d8d98;
+
+    font-size: 0.72rem;
+    font-weight: 600;
+
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.valor-ingresso {
+    overflow: hidden;
+
+    color: #ffffff;
+
+    font-size: 0.96rem;
+    font-weight: 600;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.dado-filme
+.valor-ingresso {
+    font-size: 1.05rem;
+}
+
+/* =========================================
+   FORMA DE PAGAMENTO
+========================================= */
+
+.forma-pagamento {
+    flex-shrink: 0;
+
+    margin-top: 20px;
+    padding-top: 18px;
+
+    border-top:
+        1px solid
+        rgba(255, 255, 255, 0.1);
+}
+
+.titulo-forma-pagamento {
+    display: block;
+
+    margin-bottom: 12px;
+
+    color: #b8b8c0;
+
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.opcoes-pagamento {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 10px;
+}
+
+.opcao-pagamento {
+    position: relative;
+
+    cursor: pointer;
+}
+
+.opcao-pagamento input {
+    position: absolute;
+
+    opacity: 0;
+    pointer-events: none;
+}
+
+.opcao-pagamento-conteudo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    min-height: 52px;
+
+    padding: 10px 12px;
+
+    border: 1px solid
+        rgba(255, 255, 255, 0.1);
+
+    border-radius: 11px;
+
+    background:
+        rgba(255, 255, 255, 0.04);
+
+    color: #c6c6cd;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.opcao-pagamento:hover
+.opcao-pagamento-conteudo {
+    border-color:
+        rgba(255, 255, 255, 0.2);
+
+    background:
+        rgba(255, 255, 255, 0.07);
+
+    color: #ffffff;
+
+    transform: translateY(-1px);
+}
+
+.opcao-pagamento
+input:checked +
+.opcao-pagamento-conteudo {
+    border-color:
+        rgba(229, 9, 20, 0.7);
+
+    background:
+        rgba(229, 9, 20, 0.14);
+
+    color: #ffffff;
+
+    box-shadow:
+        0 0 0 2px
+        rgba(229, 9, 20, 0.08);
+}
+
+.opcao-pagamento
+input:focus-visible +
+.opcao-pagamento-conteudo {
+    outline:
+        2px solid
+        #e50914;
+
+    outline-offset: 3px;
+}
+
+.opcao-pagamento-icone {
+    font-size: 1.05rem;
+}
+
+.opcao-pagamento strong {
+    font-size: 0.8rem;
+}
+
+/* =========================================
+   TOTAL
+========================================= */
+
+.total-modal {
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 100%;
+
+    margin-top: 18px;
+    padding-top: 17px;
+
+    border-top:
+        1px solid
+        rgba(255, 255, 255, 0.1);
+}
+
+.total-modal span {
+    color: #b6b6bf;
+
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.total-modal strong {
+    color: #ffffff;
+
+    font-size: 1.7rem;
+    font-weight: 800;
+}
+
+/* =========================================
+   ERRO DO MODAL
+========================================= */
+
+.mensagem-modal-venda {
+    flex-shrink: 0;
+
+    margin-top: 13px;
+    padding: 11px 13px;
+
+    border: 1px solid
+        rgba(229, 9, 20, 0.32);
+
+    border-radius: 9px;
+
+    background:
+        rgba(229, 9, 20, 0.09);
+
+    color: #ff9096;
+
+    font-size: 0.76rem;
+    line-height: 1.4;
+}
+
+/* =========================================
+   FINALIZAR VENDA
+========================================= */
+
+.botao-pagar {
+    align-self: center;
+
+    flex-shrink: 0;
+
+    min-width: 310px;
+
+    margin-top: 18px;
+    padding: 15px 32px;
+
+    border: none;
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #e50914,
+            #b80710
+        );
+
+    box-shadow:
+        0 10px 28px
+        rgba(229, 9, 20, 0.28);
+
+    color: #ffffff;
+
+    font-size: 1rem;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        filter 0.2s ease;
+}
+
+.botao-pagar:hover:not(:disabled) {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 14px 34px
+        rgba(229, 9, 20, 0.38);
+
+    filter: brightness(1.08);
+}
+
+.botao-pagar:disabled {
+    opacity: 0.55;
+
+    cursor: not-allowed;
+}
+
+/* =========================================
+   RESPONSIVIDADE
+========================================= */
+
+@media (max-width: 1160px) {
+
+    .modal-pagamento
+    .conteudo-modal {
+        width:
+            min(
+                88vw,
+                900px
+            );
+    }
+
+    .ingresso-selecionado {
+        grid-template-columns:
+            repeat(
+                3,
+                minmax(0, 1fr)
+            );
+    }
+
+    .dado-filme {
+        grid-column:
+            span 2;
+    }
+}
+
+@media (max-width: 800px) {
+
+    .opcoes-pagamento {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 720px) {
+
+    .modal-pagamento {
+        padding: 12px;
+    }
+
+    .modal-pagamento
+    .conteudo-modal {
+        width: 100%;
+        height: 92vh;
+
+        padding:
+            28px
+            20px
+            24px;
+
+        border-radius: 18px;
+    }
+
+    .modal-pagamento
+    .botao-fechar-modal {
+        top: 18px;
+        left: 18px;
+
+        width: 38px;
+        height: 38px;
+    }
+
+    .modal-pagamento
+    .conteudo-modal > h2 {
+        padding-left: 45px;
+
+        font-size: 1.45rem;
+    }
+
+    .modal-pagamento
+    .conteudo-modal > p {
+        padding-left: 45px;
+
+        margin-bottom: 20px;
+
+        font-size: 0.9rem;
+    }
+
+    .ingresso-selecionado {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+
+        gap: 18px;
+
+        padding: 18px;
+    }
+
+    .dado-filme {
+        grid-column: 1 / -1;
+    }
+
+    .botao-pagar {
+        width: 100%;
+        min-width: 0;
+    }
+}
+
+@media (max-width: 450px) {
+
+    .ingresso-selecionado {
+        grid-template-columns: 1fr;
+    }
+
+    .dado-filme {
+        grid-column: auto;
+    }
+
+    .valor-ingresso {
+        white-space: normal;
+    }
+
+    .opcoes-pagamento {
+        grid-template-columns: 1fr;
+    }
+
+    .total-modal strong {
+        font-size: 1.45rem;
+    }
+}

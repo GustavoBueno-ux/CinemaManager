@@ -41,7 +41,7 @@ public class ReservaAssentoService : IReservaAssentoService
             );
         }
 
-        var agora = DateTime.UtcNow;
+        var agora = DateTime.Now;
         var expiracaoNovasReservas = agora.AddMinutes(MinutosReserva);
 
         await using var transaction =
@@ -299,7 +299,7 @@ public class ReservaAssentoService : IReservaAssentoService
         CriarReservaAssentoDTO dto
     )
     {
-        var agora = DateTime.UtcNow;
+        var agora = DateTime.Now;
 
         await using var transaction =
             await _context.Database.BeginTransactionAsync(
@@ -468,7 +468,7 @@ public class ReservaAssentoService : IReservaAssentoService
         int usuarioId
     )
     {
-        var agora = DateTime.UtcNow;
+        var agora = DateTime.Now;
 
         var sessaoExiste = await _context.Sessoes
             .AsNoTracking()

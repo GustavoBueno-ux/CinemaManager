@@ -668,7 +668,7 @@ function configurarBotaoComprar(botao, sessao, encerrada) {
     }
 
     botao.href =
-        `../admin/assentos.html?sessaoId=${sessao.id}`;
+        `../admin/venda-ingressos.html?sessaoId=${sessao.id}`;
 }
 
 /* =========================================================

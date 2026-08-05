@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Venda de ingressos e gerenciamento de assentos do cinema"
+    >
+
+    <title>Vender ingressos | Cinema</title>
+
+    <link
+        rel="stylesheet"
+        href="/Frontend/css/pages/admin/assentos.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="/Frontend/css/pages/admin/modal-venda.css"
+    >
+</head>
+
+<body>
+
+    <main class="pagina-assentos">
+
+        <!-- =====================================================
+             CABEÇALHO
+        ====================================================== -->
+
+        <section class="cabecalho-sessao">
+
+            <button
+                type="button"
+                class="botao-voltar"
+                id="botao-voltar"
+            >
+                ← Voltar
+            </button>
+
+
+            <!-- =================================================
+                 INFORMAÇÕES DA SESSÃO
+                 CLICÁVEL PARA TROCAR DE SESSÃO
+            ================================================== -->
+
+            <section class="informacoes-sessao">
+
+                <button
+                    type="button"
+                    class="informacoes-filme informacoes-filme-interativa"
+                    id="botao-alterar-sessao"
+                    aria-label="Alterar sessão"
+                    aria-haspopup="dialog"
+                >
+
+                    <div class="titulo-filme-container">
+
+                        <span class="rotulo-informacao">
+                            Venda de ingressos para
+                        </span>
+
+                        <h1 id="titulo-filme">
+                            Carregando filme...
+                        </h1>
+
+                    </div>
+
+
+                    <div class="detalhes-sessao">
+
+                        <div class="detalhe-sessao">
+
+                            <span
+                                class="icone-detalhe"
+                                aria-hidden="true"
+                            >
+                                📅
+                            </span>
+
+                            <div>
+
+                                <span class="rotulo-informacao">
+                                    Data
+                                </span>
+
+                                <strong id="data-sessao">
+                                    --/--/----
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="detalhe-sessao">
+
+                            <span
+                                class="icone-detalhe"
+                                aria-hidden="true"
+                            >
+                                🕒
+                            </span>
+
+                            <div>
+
+                                <span class="rotulo-informacao">
+                                    Horário
+                                </span>
+
+                                <strong id="horario-sessao">
+                                    --:--
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <span
+                            class="indicador-alterar-sessao"
+                            aria-hidden="true"
+                        >
+                            ›
+                        </span>
+
+                    </div>
+
+                </button>
+
+
+                <!-- =============================================
+                     ESTATÍSTICAS
+                ============================================== -->
+
+                <div class="estatisticas-assentos">
+
+                    <div class="estatistica-assento disponiveis">
+
+                        <span class="mini-assento"></span>
+
+                        <div>
+
+                            <strong id="quantidade-disponiveis">
+                                0
+                            </strong>
+
+                            <span>
+                                Disponíveis
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="estatistica-assento ocupados">
+
+                        <span class="mini-assento"></span>
+
+                        <div>
+
+                            <strong id="quantidade-ocupados">
+                                0
+                            </strong>
+
+                            <span>
+                                Ocupados
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="estatistica-assento selecionados">
+
+                        <span class="mini-assento"></span>
+
+                        <div>
+
+                            <strong id="quantidade-selecionados">
+                                0
+                            </strong>
+
+                            <span>
+                                Selecionados
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </section>
+
+
+        <!-- =====================================================
+             MAPA DA SALA
+
+             ESTRUTURA MANTIDA IGUAL À TELA DO CLIENTE.
+        ====================================================== -->
+
+        <section class="conteudo-assentos">
+
+            <section class="sala-cinema">
+
+                <div
+                    id="mapaAssentos"
+                    class="mapa-assentos"
+                >
+
+                    <p class="mensagem-carregamento">
+                        Carregando assentos...
+                    </p>
+
+                </div>
+
+
+                <div class="tela-container">
+
+                    <div class="tela-cinema">
+                        <span>TELA</span>
+                    </div>
+
+                </div>
+
+            </section>
+
+        </section>
+
+
+        <!-- =====================================================
+             RESUMO DA VENDA
+        ====================================================== -->
+
+        <section class="resumo-selecao">
+
+            <div class="assentos-escolhidos">
+
+                <span class="titulo-resumo">
+                    Assentos selecionados
+                </span>
+
+                <div
+                    id="listaAssentosSelecionados"
+                    class="lista-assentos-selecionados"
+                >
+
+                    <span class="nenhum-assento">
+                        Nenhum assento selecionado
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="preco-total">
+
+                <span>
+                    Total
+                </span>
+
+                <strong id="valorTotal">
+                    R$ 0,00
+                </strong>
+
+            </div>
+
+
+            <button
+                type="button"
+                id="botaoContinuar"
+                class="botao-continuar"
+                disabled
+            >
+                Confirmar venda
+            </button>
+
+        </section>
+
+
+        <!-- =====================================================
+             BLOQUEIO DE ASSENTOS
+        ====================================================== -->
+
+        <section class="acoes-administrativas-assentos">
+
+            <div class="acao-bloqueio-descricao">
+
+                <div>
+
+                    <span class="acao-bloqueio-label">
+                        Gerenciamento da sala
+                    </span>
+
+                    <strong>
+                        Precisa retirar algum assento da venda?
+                    </strong>
+
+                    <p>
+                        Bloqueie temporariamente assentos que não devem
+                        estar disponíveis para esta sessão.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="botao-bloquear-assentos"
+                id="botao-bloquear-assentos"
+            >
+                Bloquear assentos
+            </button>
+
+        </section>
+
+
+        <!-- =====================================================
+             MENSAGEM GERAL
+        ====================================================== -->
+
+        <div
+            class="mensagem-pagina hidden"
+            id="mensagem-pagina"
+            role="status"
+            aria-live="polite"
+        ></div>
+
+    </main>
+
+
+    <!-- =========================================================
+         MODAL - TROCAR SESSÃO
+    ========================================================== -->
+
+    <div
+        class="modal-sessoes"
+        id="modal-sessoes"
+        aria-hidden="true"
+        hidden
+    >
+
+        <div class="fundo-modal"></div>
+
+
+        <section
+            class="conteudo-modal conteudo-modal-sessoes"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="titulo-modal-sessoes"
+        >
+
+            <button
+                type="button"
+                class="botao-fechar-modal"
+                id="botao-fechar-modal-sessoes"
+                aria-label="Fechar seleção de sessão"
+            >
+                ×
+            </button>
+
+
+            <div class="cabecalho-modal-sessoes">
+
+                <span class="modal-label">
+                    Programação
+                </span>
+
+                <h2 id="titulo-modal-sessoes">
+                    Escolher sessão
+                </h2>
+
+                <p>
+                    Selecione outra sessão para continuar a venda.
+                </p>
+
+            </div>
+
+
+            <div class="filtros-modal-sessoes">
+
+                <div class="campo-pesquisa-sessoes">
+
+                    <span aria-hidden="true">
+                        ⌕
+                    </span>
+
+                    <input
+                        type="search"
+                        id="pesquisa-sessao"
+                        placeholder="Pesquisar filme..."
+                        autocomplete="off"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div
+                class="lista-sessoes"
+                id="lista-sessoes"
+            >
+
+                <div class="carregando-sessoes">
+                    Carregando sessões...
+                </div>
+
+                <!--
+                    O JavaScript criará grupos como:
+
+                    <section class="grupo-sessoes-dia">
+
+                        <header class="grupo-sessoes-cabecalho">
+                            <strong>Hoje</strong>
+                            <span>05 de agosto</span>
+                        </header>
+
+                        <div class="grupo-sessoes-lista">
+
+                            <button class="sessao-opcao">
+                                ...
+                            </button>
+
+                        </div>
+
+                    </section>
+                -->
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <!-- =========================================================
+         MODAL - CONFIRMAR VENDA
+    ========================================================== -->
+
+    <div
+        id="modalVenda"
+        class="modal-pagamento"
+        aria-hidden="true"
+        hidden
+    >
+
+        <div class="fundo-modal"></div>
+
+
+        <section
+            class="conteudo-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="tituloModalVenda"
+        >
+
+            <button
+                type="button"
+                id="botaoFecharModalVenda"
+                class="botao-fechar-modal"
+                aria-label="Fechar modal"
+            >
+                ×
+            </button>
+
+
+            <h2 id="tituloModalVenda">
+                Confirmar venda
+            </h2>
+
+            <p>
+                Confira os ingressos e informe a forma de pagamento.
+            </p>
+
+
+            <!-- =============================================
+                 INGRESSOS
+            ============================================== -->
+
+            <div
+                id="ingressosSelecionados"
+                class="ingressos-selecionados"
+            >
+            </div>
+
+
+            <!-- =============================================
+                 FORMA DE PAGAMENTO
+            ============================================== -->
+
+            <section class="forma-pagamento">
+
+                <span class="titulo-forma-pagamento">
+                    Forma de pagamento
+                </span>
+
+
+                <div
+                    class="opcoes-pagamento"
+                    id="opcoes-pagamento"
+                >
+
+                    <label class="opcao-pagamento">
+
+                        <input
+                            type="radio"
+                            name="formaPagamento"
+                            value="Dinheiro"
+                        >
+
+                        <span class="opcao-pagamento-conteudo">
+
+                            <span
+                                class="opcao-pagamento-icone"
+                                aria-hidden="true"
+                            >
+                                💵
+                            </span>
+
+                            <strong>
+                                Dinheiro
+                            </strong>
+
+                        </span>
+
+                    </label>
+
+
+                    <label class="opcao-pagamento">
+
+                        <input
+                            type="radio"
+                            name="formaPagamento"
+                            value="Pix"
+                        >
+
+                        <span class="opcao-pagamento-conteudo">
+
+                            <span
+                                class="opcao-pagamento-icone"
+                                aria-hidden="true"
+                            >
+                                ◆
+                            </span>
+
+                            <strong>
+                                PIX
+                            </strong>
+
+                        </span>
+
+                    </label>
+
+
+                    <label class="opcao-pagamento">
+
+                        <input
+                            type="radio"
+                            name="formaPagamento"
+                            value="Cartao"
+                        >
+
+                        <span class="opcao-pagamento-conteudo">
+
+                            <span
+                                class="opcao-pagamento-icone"
+                                aria-hidden="true"
+                            >
+                                💳
+                            </span>
+
+                            <strong>
+                                Cartão
+                            </strong>
+
+                        </span>
+
+                    </label>
+
+
+                    <label class="opcao-pagamento">
+
+                        <input
+                            type="radio"
+                            name="formaPagamento"
+                            value="Cortesia"
+                        >
+
+                        <span class="opcao-pagamento-conteudo">
+
+                            <span
+                                class="opcao-pagamento-icone"
+                                aria-hidden="true"
+                            >
+                                ★
+                            </span>
+
+                            <strong>
+                                Cortesia
+                            </strong>
+
+                        </span>
+
+                    </label>
+
+                </div>
+
+            </section>
+
+
+            <!-- =============================================
+                 TOTAL
+            ============================================== -->
+
+            <div class="total-modal">
+
+                <span>
+                    Total
+                </span>
+
+                <strong id="valorTotalModal">
+                    R$ 0,00
+                </strong>
+
+            </div>
+
+
+            <!-- =============================================
+                 ERRO
+            ============================================== -->
+
+            <div
+                class="mensagem-modal-venda hidden"
+                id="mensagem-modal-venda"
+                role="alert"
+                aria-live="polite"
+            ></div>
+
+
+            <!-- =============================================
+                 FINALIZAR
+            ============================================== -->
+
+            <button
+                type="button"
+                id="botaoFinalizarVenda"
+                class="botao-pagar"
+            >
+                Finalizar venda
+            </button>
+
+        </section>
+
+    </div>
+
+
+    <!-- =========================================================
+         MODAL - VENDA CONCLUÍDA / IMPRESSÃO
+    ========================================================== -->
+
+    <div
+        class="modal-resultado-venda"
+        id="modal-resultado-venda"
+        aria-hidden="true"
+        hidden
+    >
+
+        <div class="fundo-modal"></div>
+
+
+        <section
+            class="conteudo-modal conteudo-modal-resultado"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="titulo-resultado-venda"
+        >
+
+            <div
+                class="icone-venda-concluida"
+                aria-hidden="true"
+            >
+                ✓
+            </div>
+
+            <h2 id="titulo-resultado-venda">
+                Venda concluída
+            </h2>
+
+            <p id="descricao-resultado-venda">
+                Os ingressos foram registrados com sucesso.
+            </p>
+
+
+            <div
+                class="ids-ingressos-venda"
+                id="ids-ingressos-venda"
+            >
+                <!-- Preenchido pelo JavaScript -->
+            </div>
+
+
+            <div
+                class="status-impressao"
+                id="status-impressao"
+            >
+
+                <span
+                    class="status-impressao-icone"
+                    aria-hidden="true"
+                >
+                    🖨️
+                </span>
+
+                <div>
+
+                    <strong id="status-impressao-titulo">
+                        Preparando impressão...
+                    </strong>
+
+                    <span id="status-impressao-descricao">
+                        Aguarde enquanto os ingressos são enviados para a impressora.
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="acoes-resultado-venda">
+
+                <button
+                    type="button"
+                    class="botao-reimprimir hidden"
+                    id="botao-reimprimir"
+                >
+                    Tentar imprimir novamente
+                </button>
+
+                <button
+                    type="button"
+                    class="botao-nova-venda"
+                    id="botao-nova-venda"
+                >
+                    Nova venda
+                </button>
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <!-- =========================================================
+         MODAL - BLOQUEAR ASSENTOS
+    ========================================================== -->
+
+    <div
+        class="modal-bloqueio"
+        id="modal-bloqueio"
+        aria-hidden="true"
+        hidden
+    >
+
+        <div class="fundo-modal"></div>
+
+
+        <section
+            class="conteudo-modal conteudo-modal-bloqueio"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="titulo-modal-bloqueio"
+        >
+
+            <button
+                type="button"
+                class="botao-fechar-modal"
+                id="botao-fechar-modal-bloqueio"
+                aria-label="Fechar gerenciamento de assentos"
+            >
+                ×
+            </button>
+
+
+            <div class="cabecalho-modal-bloqueio">
+
+                <span class="modal-label">
+                    Gerenciamento da sala
+                </span>
+
+                <h2 id="titulo-modal-bloqueio">
+                    Bloquear assentos
+                </h2>
+
+                <p>
+                    Selecione os assentos que não devem ficar disponíveis
+                    para venda nesta sessão.
+                </p>
+
+            </div>
+
+
+            <div class="legenda-bloqueio">
+
+                <div class="item-legenda-bloqueio">
+                    <span class="mini-assento disponivel"></span>
+                    <span>Disponível</span>
+                </div>
+
+                <div class="item-legenda-bloqueio">
+                    <span class="mini-assento bloqueado"></span>
+                    <span>Bloqueado</span>
+                </div>
+
+                <div class="item-legenda-bloqueio">
+                    <span class="mini-assento ocupado"></span>
+                    <span>Ocupado</span>
+                </div>
+
+            </div>
+
+
+            <div
+                class="mapa-bloqueio-assentos"
+                id="mapa-bloqueio-assentos"
+            >
+                <!-- Será preenchido pelo JS -->
+            </div>
+
+
+            <div class="acoes-modal-bloqueio">
+
+                <button
+                    type="button"
+                    class="botao-cancelar-bloqueio"
+                    id="botao-cancelar-bloqueio"
+                >
+                    Cancelar
+                </button>
+
+                <button
+                    type="button"
+                    class="botao-confirmar-bloqueio"
+                    id="botao-confirmar-bloqueio"
+                    disabled
+                >
+                    Confirmar bloqueio
+                </button>
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <!-- =========================================================
+         FOOTER
+    ========================================================== -->
+
+    <footer>
+
+        <p>
+            © 2026 Cinema. Todos os direitos reservados.
+        </p>
+
+    </footer>
+
+
+    <!-- =========================================================
+         JAVASCRIPT
+    ========================================================== -->
+
+    <script src="/Frontend/js/config.js"></script>
+    <script src="/Frontend/js/api.js"></script>
+
+    <script
+        type="module"
+        src="/Frontend/js/pages/admin/assentos.js"
+    ></script>
+
+</body>
+
+</html>
