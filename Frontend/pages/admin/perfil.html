@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Perfil do funcionário do cinema">
+
+    <title>Perfil | Cinema</title>
+
+    <link rel="stylesheet" href="/Frontend/css/pages/admin/navbar-admin.css">
+    <link rel="stylesheet" href="/Frontend/css/pages/admin/perfil.css">
+</head>
+
+<body>
+
+    <div class="admin-layout">
+
+        <!-- =====================================================
+             SIDEBAR
+        ====================================================== -->
+
+        <aside class="sidebar" id="sidebar">
+
+            <div class="sidebar-header">
+                <a href="home-admin.html" class="sidebar-logo" aria-label="Ir para a página inicial do painel">
+                    <span class="sidebar-logo-icon" aria-hidden="true">C</span>
+                    <span class="sidebar-logo-text">Cinema</span>
+                </a>
+
+                <button
+                    type="button"
+                    class="sidebar-close-button"
+                    id="sidebar-close-button"
+                    aria-label="Fechar menu lateral"
+                >
+                    &times;
+                </button>
+            </div>
+
+            <nav class="sidebar-navigation" aria-label="Navegação administrativa">
+                <ul class="sidebar-menu">
+
+                    <li class="sidebar-menu-item">
+                        <a href="home-admin.html" class="sidebar-link">
+                            <span class="sidebar-link-icon" aria-hidden="true">⌂</span>
+                            <span class="sidebar-link-text">Início</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-menu-item">
+                        <a href="filmes.html" class="sidebar-link">
+                            <span class="sidebar-link-icon" aria-hidden="true">🎬</span>
+                            <span class="sidebar-link-text">Filmes</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-menu-item">
+                        <a href="sessoes.html" class="sidebar-link">
+                            <span class="sidebar-link-icon" aria-hidden="true">📅</span>
+                            <span class="sidebar-link-text">Sessões</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-menu-item">
+                        <a href="venda-ingressos.html" class="sidebar-link">
+                            <span class="sidebar-link-icon" aria-hidden="true">🎟️</span>
+                            <span class="sidebar-link-text">Vender ingressos</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-menu-item">
+                        <a href="escanear-ingresso.html" class="sidebar-link">
+                            <span class="sidebar-link-icon" aria-hidden="true">▣</span>
+                            <span class="sidebar-link-text">Escanear QR Code</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-menu-item">
+                        <a href="relatorios.html" class="sidebar-link">
+                            <span class="sidebar-link-icon" aria-hidden="true">📊</span>
+                            <span class="sidebar-link-text">Relatórios</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-menu-item">
+                        <a
+                            href="perfil.html"
+                            class="sidebar-link active"
+                            aria-current="page"
+                        >
+                            <span class="sidebar-link-icon" aria-hidden="true">👤</span>
+                            <span class="sidebar-link-text">Perfil</span>
+                        </a>
+                    </li>
+
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+
+                <div class="sidebar-user">
+                    <div
+                        class="sidebar-user-avatar"
+                        id="sidebar-user-avatar"
+                        aria-hidden="true"
+                    >
+                        F
+                    </div>
+
+                    <div class="sidebar-user-information">
+                        <strong
+                            class="sidebar-user-name"
+                            id="sidebar-user-name"
+                        >
+                            Funcionário
+                        </strong>
+
+                        <span class="sidebar-user-role">
+                            Funcionário
+                        </span>
+                    </div>
+                </div>
+
+                <button
+                    type="button"
+                    class="logout-button"
+                    id="logout-button"
+                >
+                    <span aria-hidden="true">↪</span>
+                    <span>Sair</span>
+                </button>
+
+            </div>
+
+        </aside>
+
+        <div
+            class="sidebar-overlay"
+            id="sidebar-overlay"
+            aria-hidden="true"
+        ></div>
+
+        <!-- =====================================================
+             CONTEÚDO
+        ====================================================== -->
+
+        <div class="admin-content">
+
+            <header class="mobile-header">
+                <button
+                    type="button"
+                    class="sidebar-open-button"
+                    id="sidebar-open-button"
+                    aria-label="Abrir menu lateral"
+                    aria-controls="sidebar"
+                    aria-expanded="false"
+                >
+                    ☰
+                </button>
+
+                <a href="home-admin.html" class="mobile-logo">
+                    Cinema
+                </a>
+            </header>
+
+            <main class="profile-main">
+
+                <!-- CABEÇALHO -->
+
+                <section
+                    class="profile-heading"
+                    aria-labelledby="profile-title"
+                >
+                    <div>
+                        <p class="page-label">Minha conta</p>
+                        <h1 id="profile-title">Perfil</h1>
+                        <p class="profile-heading-description">
+                            Consulte e atualize suas informações pessoais.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- =================================================
+                     LOADING
+                ================================================== -->
+
+                <section
+                    class="profile-loading"
+                    id="profile-loading"
+                    aria-live="polite"
+                >
+                    <div class="loading-spinner"></div>
+                    <p>Carregando perfil...</p>
+                </section>
+
+                <!-- =================================================
+                     ERRO DE CARREGAMENTO
+                ================================================== -->
+
+                <section
+                    class="profile-error hidden"
+                    id="profile-error"
+                    role="alert"
+                >
+                    <div>
+                        <strong>Não foi possível carregar seu perfil.</strong>
+                        <p id="profile-error-message">
+                            Não foi possível se comunicar com o servidor.
+                        </p>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="retry-button"
+                        id="profile-retry-button"
+                    >
+                        Tentar novamente
+                    </button>
+                </section>
+
+                <!-- =================================================
+                     CONTEÚDO DO PERFIL
+                ================================================== -->
+
+                <div
+                    class="profile-content hidden"
+                    id="profile-content"
+                >
+
+                    <!-- RESUMO DO USUÁRIO -->
+
+                    <section class="profile-card profile-summary-card">
+
+                        <div
+                            class="profile-avatar"
+                            id="profile-avatar"
+                            aria-hidden="true"
+                        >
+                            F
+                        </div>
+
+                        <div class="profile-summary-information">
+                            <h2 id="profile-display-name">
+                                Funcionário
+                            </h2>
+
+                            <p id="profile-display-email">
+                                email@cinema.com
+                            </p>
+
+                            <span class="profile-role">
+                                Funcionário
+                            </span>
+                        </div>
+
+                        <div class="profile-registration">
+                            <span class="profile-registration-label">
+                                Membro desde
+                            </span>
+
+                            <strong id="profile-registration-date">
+                                --/--/----
+                            </strong>
+                        </div>
+
+                    </section>
+
+                    <!-- =================================================
+                         INFORMAÇÕES PESSOAIS
+                    ================================================== -->
+
+                    <section class="profile-card">
+
+                        <header class="profile-card-header">
+                            <div>
+                                <p class="profile-section-label">
+                                    Informações
+                                </p>
+
+                                <h2>Dados pessoais</h2>
+
+                                <p>
+                                    Atualize seu nome ou endereço de e-mail.
+                                </p>
+                            </div>
+                        </header>
+
+                        <form
+                            class="profile-form"
+                            id="profile-form"
+                            novalidate
+                        >
+
+                            <div class="profile-form-grid">
+
+                                <div class="form-field">
+                                    <label for="profile-name">
+                                        Nome
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        id="profile-name"
+                                        name="nome"
+                                        maxlength="100"
+                                        autocomplete="name"
+                                        required
+                                    >
+                                </div>
+
+                                <div class="form-field">
+                                    <label for="profile-email">
+                                        E-mail
+                                    </label>
+
+                                    <input
+                                        type="email"
+                                        id="profile-email"
+                                        name="email"
+                                        maxlength="150"
+                                        autocomplete="email"
+                                        required
+                                    >
+                                </div>
+
+                            </div>
+
+                            <div
+                                class="form-message form-error hidden"
+                                id="profile-form-error"
+                                role="alert"
+                                aria-live="polite"
+                            ></div>
+
+                            <div
+                                class="form-message form-success hidden"
+                                id="profile-form-success"
+                                role="status"
+                                aria-live="polite"
+                            >
+                                Perfil atualizado com sucesso.
+                            </div>
+
+                            <div class="profile-form-actions">
+                                <button
+                                    type="submit"
+                                    class="save-profile-button"
+                                    id="save-profile-button"
+                                >
+                                    Salvar alterações
+                                </button>
+                            </div>
+
+                        </form>
+
+                    </section>
+
+                    <!-- =================================================
+                         EQUIPE
+                    ================================================== -->
+
+                    <section class="profile-card team-card">
+
+                        <div class="team-card-content">
+
+                            <div class="team-card-icon" aria-hidden="true">
+                                👥
+                            </div>
+
+                            <div class="team-card-information">
+                                <p class="profile-section-label">
+                                    Equipe
+                                </p>
+
+                                <h2>Cadastrar funcionário</h2>
+
+                                <p>
+                                    Crie uma conta de acesso para outro funcionário do cinema.
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <button
+                            type="button"
+                            class="new-employee-button"
+                            id="new-employee-button"
+                        >
+                            <span aria-hidden="true">+</span>
+                            <span>Novo funcionário</span>
+                        </button>
+
+                    </section>
+
+                </div>
+
+            </main>
+
+        </div>
+
+    </div>
+
+    <!-- =========================================================
+         MODAL - NOVO FUNCIONÁRIO
+    ========================================================== -->
+
+    <div
+        class="modal-overlay hidden"
+        id="employee-modal"
+        aria-hidden="true"
+    >
+
+        <section
+            class="employee-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="employee-modal-title"
+        >
+
+            <header class="employee-modal-header">
+
+                <div>
+                    <p class="modal-label">
+                        Equipe
+                    </p>
+
+                    <h2 id="employee-modal-title">
+                        Cadastrar funcionário
+                    </h2>
+
+                    <p class="modal-description">
+                        Crie as credenciais de acesso do novo funcionário.
+                    </p>
+                </div>
+
+                <button
+                    type="button"
+                    class="modal-close-button"
+                    id="employee-modal-close-button"
+                    aria-label="Fechar cadastro de funcionário"
+                >
+                    &times;
+                </button>
+
+            </header>
+
+            <form
+                class="employee-form"
+                id="employee-form"
+                novalidate
+            >
+
+                <div class="form-field form-field-full">
+                    <label for="employee-name">
+                        Nome
+                    </label>
+
+                    <input
+                        type="text"
+                        id="employee-name"
+                        name="nome"
+                        maxlength="100"
+                        placeholder="Nome do funcionário"
+                        autocomplete="off"
+                        required
+                    >
+                </div>
+
+                <div class="form-field form-field-full">
+                    <label for="employee-email">
+                        E-mail
+                    </label>
+
+                    <input
+                        type="email"
+                        id="employee-email"
+                        name="email"
+                        maxlength="150"
+                        placeholder="funcionario@cinema.com"
+                        autocomplete="off"
+                        required
+                    >
+                </div>
+
+                <div class="form-field">
+                    <label for="employee-password">
+                        Senha
+                    </label>
+
+                    <input
+                        type="password"
+                        id="employee-password"
+                        name="senha"
+                        minlength="6"
+                        placeholder="Mínimo de 6 caracteres"
+                        autocomplete="new-password"
+                        required
+                    >
+                </div>
+
+                <div class="form-field">
+                    <label for="employee-password-confirmation">
+                        Confirmar senha
+                    </label>
+
+                    <input
+                        type="password"
+                        id="employee-password-confirmation"
+                        placeholder="Repita a senha"
+                        autocomplete="new-password"
+                        required
+                    >
+                </div>
+
+                <p class="employee-form-help">
+                    Esta conta será cadastrada automaticamente com acesso de funcionário.
+                </p>
+
+                <div
+                    class="modal-form-error hidden"
+                    id="employee-form-error"
+                    role="alert"
+                    aria-live="polite"
+                ></div>
+
+                <div
+                    class="modal-form-success hidden"
+                    id="employee-form-success"
+                    role="status"
+                    aria-live="polite"
+                >
+                    Funcionário cadastrado com sucesso.
+                </div>
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        class="modal-cancel-button"
+                        id="employee-modal-cancel-button"
+                    >
+                        Cancelar
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="modal-save-button"
+                        id="save-employee-button"
+                    >
+                        Cadastrar funcionário
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+    </div>
+
+    <!-- =========================================================
+         FOOTER
+    ========================================================== -->
+
+    <footer>
+        <p>© 2026 Cinema. Todos os direitos reservados.</p>
+    </footer>
+
+    <!-- =========================================================
+         JAVASCRIPT
+    ========================================================== -->
+
+    <script src="/Frontend/js/config.js"></script>
+    <script src="/Frontend/js/api.js"></script>
+    <script src="/Frontend/js/pages/admin/perfil.js"></script>
+
+</body>
+
+</html>

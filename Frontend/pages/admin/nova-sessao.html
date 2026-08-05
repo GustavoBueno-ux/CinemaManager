@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Cadastro de sessões do cinema"
+    >
+
+    <title>Nova sessão | Cinema</title>
+
+    <link
+        rel="stylesheet"
+        href="/Frontend/css/pages/admin/navbar-admin.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="/Frontend/css/pages/admin/nova-sessao.css"
+    >
+</head>
+
+<body>
+
+    <div class="admin-layout">
+
+        <!-- =====================================================
+             SIDEBAR
+        ====================================================== -->
+
+        <aside
+            class="sidebar"
+            id="sidebar"
+        >
+
+            <div class="sidebar-header">
+
+                <a
+                    href="home-admin.html"
+                    class="sidebar-logo"
+                    aria-label="Ir para a página inicial do painel"
+                >
+                    <span
+                        class="sidebar-logo-icon"
+                        aria-hidden="true"
+                    >
+                        C
+                    </span>
+
+                    <span class="sidebar-logo-text">
+                        Cinema
+                    </span>
+                </a>
+
+                <button
+                    type="button"
+                    class="sidebar-close-button"
+                    id="sidebar-close-button"
+                    aria-label="Fechar menu lateral"
+                >
+                    &times;
+                </button>
+
+            </div>
+
+
+            <nav
+                class="sidebar-navigation"
+                aria-label="Navegação administrativa"
+            >
+
+                <ul class="sidebar-menu">
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="home-admin.html"
+                            class="sidebar-link"
+                        >
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                ⌂
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Início
+                            </span>
+                        </a>
+
+                    </li>
+
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="filmes.html"
+                            class="sidebar-link"
+                        >
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                🎬
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Filmes
+                            </span>
+                        </a>
+
+                    </li>
+
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="sessoes.html"
+                            class="sidebar-link active"
+                            aria-current="page"
+                        >
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                📅
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Sessões
+                            </span>
+                        </a>
+
+                    </li>
+
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="venda-ingressos.html"
+                            class="sidebar-link"
+                        >
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                🎟️
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Vender ingressos
+                            </span>
+                        </a>
+
+                    </li>
+
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="escanear-ingresso.html"
+                            class="sidebar-link"
+                        >
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                ▣
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Escanear QR Code
+                            </span>
+                        </a>
+
+                    </li>
+
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="relatorios.html"
+                            class="sidebar-link"
+                        >
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                📊
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Relatórios
+                            </span>
+                        </a>
+
+                    </li>
+
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="perfil.html"
+                            class="sidebar-link"
+                        >
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                👤
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Perfil
+                            </span>
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </nav>
+
+
+            <div class="sidebar-footer">
+
+                <div class="sidebar-user">
+
+                    <div
+                        class="sidebar-user-avatar"
+                        id="sidebar-user-avatar"
+                        aria-hidden="true"
+                    >
+                        F
+                    </div>
+
+                    <div class="sidebar-user-information">
+
+                        <strong
+                            class="sidebar-user-name"
+                            id="sidebar-user-name"
+                        >
+                            Funcionário
+                        </strong>
+
+                        <span class="sidebar-user-role">
+                            Funcionário
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <button
+                    type="button"
+                    class="logout-button"
+                    id="logout-button"
+                >
+                    <span aria-hidden="true">
+                        ↪
+                    </span>
+
+                    <span>
+                        Sair
+                    </span>
+                </button>
+
+            </div>
+
+        </aside>
+
+
+        <!-- =====================================================
+             OVERLAY MOBILE
+        ====================================================== -->
+
+        <div
+            class="sidebar-overlay"
+            id="sidebar-overlay"
+            aria-hidden="true"
+        ></div>
+
+
+        <!-- =====================================================
+             CONTEÚDO
+        ====================================================== -->
+
+        <div class="admin-content">
+
+            <!-- HEADER MOBILE -->
+
+            <header class="mobile-header">
+
+                <button
+                    type="button"
+                    class="sidebar-open-button"
+                    id="sidebar-open-button"
+                    aria-label="Abrir menu lateral"
+                    aria-controls="sidebar"
+                    aria-expanded="false"
+                >
+                    ☰
+                </button>
+
+                <a
+                    href="home-admin.html"
+                    class="mobile-logo"
+                >
+                    Cinema
+                </a>
+
+            </header>
+
+
+            <!-- =================================================
+                 CONTEÚDO PRINCIPAL
+            ================================================== -->
+
+            <main class="new-session-main">
+
+                <!-- =================================================
+                     CABEÇALHO
+                ================================================== -->
+
+                <section
+                    class="new-session-heading"
+                    aria-labelledby="new-session-title"
+                >
+
+                    <div>
+
+                        <a
+                            href="sessoes.html"
+                            class="back-button"
+                        >
+                            <span aria-hidden="true">
+                                ←
+                            </span>
+
+                            Voltar para sessões
+                        </a>
+
+                        <p class="page-label">
+                            Programação
+                        </p>
+
+                        <h1 id="new-session-title">
+                            Nova sessão
+                        </h1>
+
+                        <p class="new-session-description">
+                            Escolha o filme, a data e o horário da nova sessão.
+                        </p>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     CARD PRINCIPAL
+                ================================================== -->
+
+                <section class="new-session-card">
+
+                    <form
+                        id="new-session-form"
+                        class="new-session-form"
+                        novalidate
+                    >
+
+                        <!-- =================================================
+                             FILME
+                        ================================================== -->
+
+                        <div class="form-section">
+
+                            <div class="form-section-heading">
+
+                                <p class="form-section-label">
+                                    Filme
+                                </p>
+
+                                <h2>
+                                    Escolha o filme
+                                </h2>
+
+                                <p>
+                                    Pesquise pelo nome e selecione o filme que será exibido nesta sessão.
+                                </p>
+
+                            </div>
+
+
+                            <div class="form-section-content">
+
+                                <div class="form-field">
+
+                                    <label for="session-movie-search">
+                                        Filme
+                                    </label>
+
+                                    <div class="movie-search-container">
+
+                                        <input
+                                            type="text"
+                                            id="session-movie-search"
+                                            class="movie-search-input"
+                                            placeholder="Digite o nome do filme..."
+                                            autocomplete="off"
+                                        >
+
+                                        <input
+                                            type="hidden"
+                                            id="session-movie"
+                                            name="filmeId"
+                                        >
+
+                                        <div
+                                            class="movie-search-results hidden"
+                                            id="session-movie-results"
+                                        >
+                                            <!-- JavaScript -->
+                                        </div>
+
+                                    </div>
+
+                                    <p class="form-field-help">
+                                        Comece a digitar e selecione um dos filmes encontrados.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- =================================================
+                             DATA E HORÁRIO
+                        ================================================== -->
+
+                        <div class="form-section">
+
+                            <div class="form-section-heading">
+
+                                <p class="form-section-label">
+                                    Programação
+                                </p>
+
+                                <h2>
+                                    Data e horário
+                                </h2>
+
+                                <p>
+                                    Defina quando esta sessão será realizada.
+                                </p>
+
+                            </div>
+
+
+                            <div class="form-grid">
+
+                                <!-- DATA -->
+
+                                <div class="form-field">
+
+                                    <label for="session-date">
+                                        Data
+                                    </label>
+
+                                    <input
+                                        type="date"
+                                        id="session-date"
+                                        name="data"
+                                        required
+                                    >
+
+                                </div>
+
+
+                                <!-- HORÁRIO -->
+
+                                <div class="form-field">
+
+                                    <label for="session-time">
+                                        Horário
+                                    </label>
+
+                                    <input
+                                        type="time"
+                                        id="session-time"
+                                        name="horario"
+                                        required
+                                    >
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- =================================================
+                             RESUMO
+                        ================================================== -->
+
+                        <div
+                            class="session-summary hidden"
+                            id="session-summary"
+                        >
+
+                            <div class="session-summary-heading">
+
+                                <p class="form-section-label">
+                                    Resumo
+                                </p>
+
+                                <h2>
+                                    Nova sessão
+                                </h2>
+
+                            </div>
+
+
+                            <div class="session-summary-grid">
+
+                                <div class="session-summary-item">
+
+                                    <span class="session-summary-label">
+                                        Filme
+                                    </span>
+
+                                    <strong id="session-summary-movie">
+                                        --
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="session-summary-item">
+
+                                    <span class="session-summary-label">
+                                        Data
+                                    </span>
+
+                                    <strong id="session-summary-date">
+                                        --/--/----
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="session-summary-item">
+
+                                    <span class="session-summary-label">
+                                        Horário
+                                    </span>
+
+                                    <strong
+                                        class="session-summary-time"
+                                        id="session-summary-time"
+                                    >
+                                        --:--
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- =================================================
+                             ERRO
+                        ================================================== -->
+
+                        <div
+                            class="form-error hidden"
+                            id="new-session-error"
+                            role="alert"
+                            aria-live="polite"
+                        >
+                            Não foi possível cadastrar a sessão.
+                        </div>
+
+
+                        <!-- =================================================
+                             AÇÕES
+                        ================================================== -->
+
+                        <div class="form-actions">
+
+                            <a
+                                href="sessoes.html"
+                                class="cancel-button"
+                            >
+                                Cancelar
+                            </a>
+
+                            <button
+                                type="submit"
+                                class="save-button"
+                                id="save-session-button"
+                            >
+                                Cadastrar sessão
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </section>
+
+            </main>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         FOOTER
+    ========================================================== -->
+
+    <footer>
+
+        <p>
+            © 2026 Cinema. Todos os direitos reservados.
+        </p>
+
+    </footer>
+
+
+    <!-- =========================================================
+         JAVASCRIPT
+    ========================================================== -->
+
+    <script src="/Frontend/js/config.js"></script>
+    <script src="/Frontend/js/api.js"></script>
+    <script src="/Frontend/js/pages/admin/nova-sessao.js"></script>
+
+</body>
+
+</html>

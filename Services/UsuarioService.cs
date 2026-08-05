@@ -42,6 +42,36 @@ public class UsuarioService : IUsuarioService
         return ConverterParaDTO(usuario);
     }
 
+    public async Task<UsuarioResponseDTO> CriarFuncionarioAsync(CriarUsuarioDTO dto)
+    {
+        var emailExiste = await _context.Usuarios
+            .AnyAsync(u => u.Email == dto.Email);
+
+        if (emailExiste)
+        {
+            throw new InvalidOperationException(
+                "Já existe um usuário com esse email."
+            );
+        }
+
+        var senhaHash =
+            BCrypt.Net.BCrypt.HashPassword(dto.Senha);
+
+        var usuario = new Usuario
+        {
+            Nome = dto.Nome,
+            Email = dto.Email,
+            SenhaHash = senhaHash,
+            TipoUsuario = TipoUsuario.Funcionario
+        };
+
+        _context.Usuarios.Add(usuario);
+
+        await _context.SaveChangesAsync();
+
+        return ConverterParaDTO(usuario);
+    }
+
     public async Task<UsuarioResponseDTO?> BuscarPorIdAsync(int id)
     {
         var usuario = await _context.Usuarios

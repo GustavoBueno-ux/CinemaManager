@@ -6,6 +6,8 @@ public interface IUsuarioService
 {
     Task<UsuarioResponseDTO> CriarAsync(CriarUsuarioDTO dto);
 
+    Task<UsuarioResponseDTO> CriarFuncionarioAsync(CriarUsuarioDTO dto);
+
     Task<UsuarioResponseDTO?> BuscarPorIdAsync(int id);
 
     Task<List<UsuarioResponseDTO>> ListarTodosAsync();

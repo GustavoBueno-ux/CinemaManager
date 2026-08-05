@@ -33,6 +33,32 @@ public class UsuarioController : ControllerBase
         }
     }
 
+    [Authorize(Roles = "Funcionario")]
+    [HttpPost("funcionario")]
+    public async Task<IActionResult> CriarFuncionario(
+        [FromBody] CriarUsuarioDTO dto
+    )
+    {
+        try
+        {
+            var funcionario =
+                await _usuarioService
+                    .CriarFuncionarioAsync(dto);
+
+            return Created(
+                string.Empty,
+                funcionario
+            );
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new
+            {
+                mensagem = ex.Message
+            });
+        }
+    }
+
     [HttpPost("login")]
     public async Task<IActionResult> Login(
         [FromBody] LoginDTO dto
