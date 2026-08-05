@@ -15,69 +15,133 @@ public class SessaoController : ControllerBase
         _sessaoService = sessaoService;
     }
 
-    [HttpPost]
-    public async Task<IActionResult> CriarSessao(CriarSessaoDTO dto)
-    {
-        var sessao = await _sessaoService.CriarAsync(dto);
 
-        return Ok(sessao);
+    [HttpPost]
+    public async Task<IActionResult> CriarSessao(
+        CriarSessaoDTO dto
+    )
+    {
+        try
+        {
+            var sessao = await _sessaoService.CriarAsync(dto);
+
+            return Ok(sessao);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new
+            {
+                mensagem = ex.Message
+            });
+        }
     }
+
 
     [HttpGet]
     public async Task<IActionResult> ListarSessoes()
     {
-        var sessoes = await _sessaoService.ListarTodosAsync();
+        var sessoes = await _sessaoService
+            .ListarTodosAsync();
 
         return Ok(sessoes);
     }
+
 
     [HttpGet("ativas")]
     public async Task<IActionResult> ListarAtivas()
     {
-        var sessoes = await _sessaoService.ListarAtivasAsync();
+        var sessoes = await _sessaoService
+            .ListarAtivasAsync();
 
         return Ok(sessoes);
     }
 
 
-    [HttpGet("filme/{filmeId}")]
-    public async Task<IActionResult> ListarPorFilme(int filmeId)
+    [HttpGet("filme/{filmeId:int}")]
+    public async Task<IActionResult> ListarPorFilme(
+        int filmeId
+    )
     {
-        var sessoes = await _sessaoService.ListarPorFilmeAsync(filmeId);    
+        var sessoes = await _sessaoService
+            .ListarPorFilmeAsync(filmeId);
 
         return Ok(sessoes);
     }
 
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> BuscarSessaoPorId(int id)
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> BuscarSessaoPorId(
+        int id
+    )
     {
-        var sessao = await _sessaoService.BuscarPorIdAsync(id);
+        var sessao = await _sessaoService
+            .BuscarPorIdAsync(id);
 
         if (sessao == null)
-            return NotFound();
+        {
+            return NotFound(new
+            {
+                mensagem = "Sessão não encontrada."
+            });
+        }
 
         return Ok(sessao);
     }
 
-    [HttpPatch("{id}")]
-    public async Task<IActionResult> AtualizarSessao(int id, PatchSessaoDTO dto)
+
+    [HttpPatch("{id:int}")]
+    public async Task<IActionResult> AtualizarSessao(
+        int id,
+        PatchSessaoDTO dto
+    )
     {
-        var atualizada = await _sessaoService.PatchAsync(id, dto);
+        try
+        {
+            var atualizada = await _sessaoService
+                .PatchAsync(id, dto);
 
-        if (!atualizada)
-            return NotFound();
+            if (!atualizada)
+            {
+                return NotFound(new
+                {
+                    mensagem = "Sessão não encontrada."
+                });
+            }
 
-        return NoContent();
+            return NoContent();
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new
+            {
+                mensagem = ex.Message
+            });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new
+            {
+                mensagem = ex.Message
+            });
+        }
     }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> ExcluirSessao(int id)
+
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> ExcluirSessao(
+        int id
+    )
     {
-        var excluida = await _sessaoService.ExcluirAsync(id);
+        var excluida = await _sessaoService
+            .ExcluirAsync(id);
 
         if (!excluida)
-            return NotFound();
+        {
+            return NotFound(new
+            {
+                mensagem = "Sessão não encontrada."
+            });
+        }
 
         return NoContent();
     }

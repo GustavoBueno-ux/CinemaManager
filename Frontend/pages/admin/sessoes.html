@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Gerenciamento de sessões do cinema"
+    >
+
+    <title>Sessões | Cinema</title>
+
+    <link
+        rel="stylesheet"
+        href="/Frontend/css/pages/admin/navbar-admin.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="/Frontend/css/pages/admin/sessoes.css"
+    >
+</head>
+
+<body>
+
+    <div class="admin-layout">
+
+        <!-- =====================================================
+             SIDEBAR
+        ====================================================== -->
+
+        <aside
+            class="sidebar"
+            id="sidebar"
+        >
+
+            <div class="sidebar-header">
+
+                <a
+                    href="home-admin.html"
+                    class="sidebar-logo"
+                    aria-label="Ir para a página inicial do painel"
+                >
+                    <span
+                        class="sidebar-logo-icon"
+                        aria-hidden="true"
+                    >
+                        C
+                    </span>
+
+                    <span class="sidebar-logo-text">
+                        Cinema
+                    </span>
+                </a>
+
+                <button
+                    type="button"
+                    class="sidebar-close-button"
+                    id="sidebar-close-button"
+                    aria-label="Fechar menu lateral"
+                >
+                    &times;
+                </button>
+
+            </div>
+
+            <nav
+                class="sidebar-navigation"
+                aria-label="Navegação administrativa"
+            >
+
+                <ul class="sidebar-menu">
+
+                    <li class="sidebar-menu-item">
+                        <a
+                            href="home-admin.html"
+                            class="sidebar-link"
+                        >
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                ⌂
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Início
+                            </span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-menu-item">
+                        <a
+                            href="filmes.html"
+                            class="sidebar-link"
+                        >
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                🎬
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Filmes
+                            </span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-menu-item">
+                        <a
+                            href="sessoes.html"
+                            class="sidebar-link active"
+                            aria-current="page"
+                        >
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                📅
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Sessões
+                            </span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-menu-item">
+                        <a
+                            href="venda-ingressos.html"
+                            class="sidebar-link"
+                        >
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                🎟️
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Vender ingressos
+                            </span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-menu-item">
+                        <a
+                            href="escanear-ingresso.html"
+                            class="sidebar-link"
+                        >
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                ▣
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Escanear QR Code
+                            </span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-menu-item">
+                        <a
+                            href="relatorios.html"
+                            class="sidebar-link"
+                        >
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                📊
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Relatórios
+                            </span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-menu-item">
+                        <a
+                            href="perfil.html"
+                            class="sidebar-link"
+                        >
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                👤
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Perfil
+                            </span>
+                        </a>
+                    </li>
+
+                </ul>
+
+            </nav>
+
+            <div class="sidebar-footer">
+
+                <div class="sidebar-user">
+
+                    <div
+                        class="sidebar-user-avatar"
+                        id="sidebar-user-avatar"
+                        aria-hidden="true"
+                    >
+                        F
+                    </div>
+
+                    <div class="sidebar-user-information">
+
+                        <strong
+                            class="sidebar-user-name"
+                            id="sidebar-user-name"
+                        >
+                            Funcionário
+                        </strong>
+
+                        <span class="sidebar-user-role">
+                            Funcionário
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <button
+                    type="button"
+                    class="logout-button"
+                    id="logout-button"
+                >
+                    <span aria-hidden="true">
+                        ↪
+                    </span>
+
+                    <span>
+                        Sair
+                    </span>
+                </button>
+
+            </div>
+
+        </aside>
+
+
+        <!-- =====================================================
+             OVERLAY MOBILE
+        ====================================================== -->
+
+        <div
+            class="sidebar-overlay"
+            id="sidebar-overlay"
+            aria-hidden="true"
+        ></div>
+
+
+        <!-- =====================================================
+             CONTEÚDO
+        ====================================================== -->
+
+        <div class="admin-content">
+
+            <!-- HEADER MOBILE -->
+
+            <header class="mobile-header">
+
+                <button
+                    type="button"
+                    class="sidebar-open-button"
+                    id="sidebar-open-button"
+                    aria-label="Abrir menu lateral"
+                    aria-controls="sidebar"
+                    aria-expanded="false"
+                >
+                    ☰
+                </button>
+
+                <a
+                    href="home-admin.html"
+                    class="mobile-logo"
+                >
+                    Cinema
+                </a>
+
+            </header>
+
+
+            <!-- =================================================
+                 CONTEÚDO PRINCIPAL
+            ================================================== -->
+
+            <main class="sessions-main">
+
+                <!-- =================================================
+                     CABEÇALHO
+                ================================================== -->
+
+                <section
+                    class="sessions-heading"
+                    aria-labelledby="sessions-title"
+                >
+
+                    <div class="sessions-heading-text">
+
+                        <p class="page-label">
+                            Programação
+                        </p>
+
+                        <h1 id="sessions-title">
+                            Sessões
+                        </h1>
+
+                        <p class="sessions-heading-description">
+                            Consulte e gerencie as sessões programadas pelo cinema.
+                        </p>
+
+                    </div>
+
+                    <a
+                        href="nova-sessao.html"
+                        class="new-session-button"
+                    >
+                        <span
+                            aria-hidden="true"
+                            class="new-session-button-icon"
+                        >
+                            +
+                        </span>
+
+                        <span>
+                            Nova sessão
+                        </span>
+                    </a>
+
+                </section>
+
+
+                <!-- =================================================
+                     PESQUISA E FILTROS
+                ================================================== -->
+
+                <section
+                    class="sessions-controls"
+                    aria-label="Pesquisa e filtros de sessões"
+                >
+
+                    <!-- PESQUISA -->
+
+                    <div class="session-search-container">
+
+                        <span
+                            class="session-search-icon"
+                            aria-hidden="true"
+                        >
+                            ⌕
+                        </span>
+
+                        <input
+                            type="search"
+                            id="session-search"
+                            class="session-search-input"
+                            placeholder="Pesquisar pelo nome do filme..."
+                            autocomplete="off"
+                            aria-label="Pesquisar sessão pelo nome do filme"
+                        >
+
+                    </div>
+
+
+                    <!-- STATUS -->
+
+                    <div
+                        class="session-status-filters"
+                        role="group"
+                        aria-label="Filtrar sessões por período"
+                    >
+
+                        <button
+                            type="button"
+                            class="session-status-button active"
+                            data-status="todas"
+                        >
+                            Todas
+                        </button>
+
+                        <button
+                            type="button"
+                            class="session-status-button"
+                            data-status="futuras"
+                        >
+                            Futuras
+                        </button>
+
+                        <button
+                            type="button"
+                            class="session-status-button"
+                            data-status="encerradas"
+                        >
+                            Encerradas
+                        </button>
+
+                    </div>
+
+
+                    <!-- DATA -->
+
+                    <div class="session-date-filter">
+
+                        <label
+                            for="session-date"
+                            class="session-date-label"
+                        >
+                            Data
+                        </label>
+
+                        <div class="session-date-field">
+
+                            <input
+                                type="date"
+                                id="session-date"
+                                class="session-date-input"
+                            >
+
+                            <button
+                                type="button"
+                                class="clear-date-button hidden"
+                                id="clear-date-button"
+                                aria-label="Limpar filtro de data"
+                            >
+                                &times;
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     RESULTADOS
+                ================================================== -->
+
+                <div class="sessions-results-header">
+
+                    <p
+                        class="sessions-results-count"
+                        id="sessions-results-count"
+                    >
+                        Carregando sessões...
+                    </p>
+
+                </div>
+
+
+                <!-- =================================================
+                     ERRO
+                ================================================== -->
+
+                <section
+                    class="sessions-error hidden"
+                    id="sessions-error"
+                    role="alert"
+                >
+
+                    <div>
+                        <strong>
+                            Não foi possível carregar as sessões.
+                        </strong>
+
+                        <p id="sessions-error-message">
+                            Não foi possível se comunicar com o servidor.
+                        </p>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="retry-button"
+                        id="sessions-retry-button"
+                    >
+                        Tentar novamente
+                    </button>
+
+                </section>
+
+
+                <!-- =================================================
+                     LOADING
+                ================================================== -->
+
+                <section
+                    class="sessions-loading"
+                    id="sessions-loading"
+                    aria-live="polite"
+                >
+
+                    <div class="loading-spinner"></div>
+
+                    <p>
+                        Carregando sessões...
+                    </p>
+
+                </section>
+
+
+                <!-- =================================================
+                     LISTA
+                ================================================== -->
+
+                <section
+                    class="sessions-list-section hidden"
+                    id="sessions-list-section"
+                    aria-labelledby="sessions-list-title"
+                >
+
+                    <h2
+                        id="sessions-list-title"
+                        class="visually-hidden"
+                    >
+                        Lista de sessões
+                    </h2>
+
+                    <div
+                        class="sessions-grid"
+                        id="sessions-list"
+                    >
+                        <!-- Preenchido pelo JavaScript -->
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     EMPTY STATE
+                ================================================== -->
+
+                <section
+                    class="sessions-empty-state hidden"
+                    id="sessions-empty-state"
+                >
+
+                    <span
+                        class="sessions-empty-icon"
+                        aria-hidden="true"
+                    >
+                        📅
+                    </span>
+
+                    <h2>
+                        Nenhuma sessão encontrada
+                    </h2>
+
+                    <p>
+                        Não existem sessões correspondentes aos filtros selecionados.
+                    </p>
+
+                    <button
+                        type="button"
+                        class="clear-filters-button"
+                        id="clear-filters-button"
+                    >
+                        Limpar filtros
+                    </button>
+
+                </section>
+
+            </main>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         TEMPLATE DO CARD
+    ========================================================== -->
+
+    <template id="session-card-template">
+
+        <article class="session-card">
+
+            <!-- TOPO -->
+
+            <header class="session-card-header">
+
+                <div class="session-movie">
+
+                    <span
+                        class="session-movie-icon"
+                        aria-hidden="true"
+                    >
+                        🎬
+                    </span>
+
+                    <div>
+                        <p class="session-card-label">
+                            Filme
+                        </p>
+
+                        <h2 class="session-movie-title">
+                            Nome do filme
+                        </h2>
+                    </div>
+
+                </div>
+
+                <span
+                    class="session-status"
+                    data-status=""
+                >
+                    Status
+                </span>
+
+            </header>
+
+
+            <!-- DATA / HORÁRIO -->
+
+            <div class="session-information">
+
+                <div class="session-information-item">
+
+                    <span class="session-information-label">
+                        Data
+                    </span>
+
+                    <time class="session-date">
+                        --/--/----
+                    </time>
+
+                </div>
+
+                <div class="session-information-item">
+
+                    <span class="session-information-label">
+                        Horário
+                    </span>
+
+                    <time class="session-time">
+                        --:--
+                    </time>
+
+                </div>
+
+            </div>
+
+
+            <!-- AÇÕES -->
+
+            <div class="session-card-actions">
+
+                <button
+                    type="button"
+                    class="edit-session-button"
+                >
+                    <span aria-hidden="true">
+                        ✎
+                    </span>
+
+                    <span>
+                        Editar
+                    </span>
+                </button>
+
+                <a
+                    href="#"
+                    class="buy-ticket-button"
+                >
+                    <span aria-hidden="true">
+                        🎟️
+                    </span>
+
+                    <span>
+                        Comprar ingresso
+                    </span>
+                </a>
+
+            </div>
+
+        </article>
+
+    </template>
+
+
+    <!-- =========================================================
+         MODAL DE EDIÇÃO
+    ========================================================== -->
+
+    <div
+        class="modal-overlay hidden"
+        id="edit-session-modal"
+        aria-hidden="true"
+    >
+
+        <section
+            class="edit-session-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="edit-session-title"
+        >
+
+            <!-- CABEÇALHO -->
+
+            <header class="edit-session-modal-header">
+
+                <div>
+
+                    <p class="modal-label">
+                        Editar sessão
+                    </p>
+
+                    <h2 id="edit-session-title">
+                        Informações da sessão
+                    </h2>
+
+                    <p class="modal-description">
+                        Altere somente as informações necessárias.
+                    </p>
+
+                </div>
+
+                <button
+                    type="button"
+                    class="modal-close-button"
+                    id="edit-session-close-button"
+                    aria-label="Fechar edição"
+                >
+                    &times;
+                </button>
+
+            </header>
+
+
+            <!-- FORMULÁRIO -->
+
+            <form
+                class="edit-session-form"
+                id="edit-session-form"
+            >
+
+                <input
+                    type="hidden"
+                    id="edit-session-id"
+                >
+
+
+                <!-- FILME -->
+
+                <div class="form-field form-field-full">
+                                
+                    <label for="edit-session-movie-search">
+                        Filme
+                    </label>
+                
+                    <div class="movie-search-container">
+                    
+                        <input
+                            type="text"
+                            id="edit-session-movie-search"
+                            class="movie-search-input"
+                            placeholder="Digite o nome do filme..."
+                            autocomplete="off"
+                        >
+                    
+                        <input
+                            type="hidden"
+                            id="edit-session-movie"
+                            name="filmeId"
+                        >
+                    
+                        <div
+                            class="movie-search-results hidden"
+                            id="edit-session-movie-results"
+                        ></div>
+                    
+                    </div>
+                
+                </div>
+
+
+                <!-- DATA -->
+
+                <div class="form-field">
+
+                    <label for="edit-session-date">
+                        Data
+                    </label>
+
+                    <input
+                        type="date"
+                        id="edit-session-date"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- HORÁRIO -->
+
+                <div class="form-field">
+
+                    <label for="edit-session-time">
+                        Horário
+                    </label>
+
+                    <input
+                        type="time"
+                        id="edit-session-time"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- AVISO -->
+
+                <div
+                    class="edit-session-warning hidden"
+                    id="edit-session-warning"
+                >
+                    Esta sessão não pode mais ser editada.
+                </div>
+
+
+                <!-- ERRO -->
+
+                <div
+                    class="modal-form-error hidden"
+                    id="edit-session-error"
+                    role="alert"
+                >
+                    Não foi possível atualizar a sessão.
+                </div>
+
+
+                <!-- AÇÕES -->
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        class="modal-cancel-button"
+                        id="edit-session-cancel-button"
+                    >
+                        Cancelar
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="modal-save-button"
+                        id="edit-session-save-button"
+                    >
+                        Salvar alterações
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+    </div>
+
+
+    <!-- =========================================================
+         FOOTER
+    ========================================================== -->
+
+    <footer>
+        <p>
+            © 2026 Cinema. Todos os direitos reservados.
+        </p>
+    </footer>
+
+
+    <!-- =========================================================
+         JAVASCRIPT
+    ========================================================== -->
+
+    <script src="/Frontend/js/config.js"></script>
+    <script src="/Frontend/js/api.js"></script>
+    <script src="/Frontend/js/pages/admin/sessoes.js"></script>
+
+</body>
+
+</html>

@@ -14,22 +14,41 @@ public class SessaoService : ISessaoService
         _context = context;
     }
 
-    public async Task<SessaoResponseDTO> CriarAsync(CriarSessaoDTO dto)
+
+    public async Task<SessaoResponseDTO> CriarAsync(
+        CriarSessaoDTO dto
+    )
     {
         var filme = await _context.Filmes
-            .FirstOrDefaultAsync(f => f.Id == dto.FilmeId);
+            .FirstOrDefaultAsync(
+                f => f.Id == dto.FilmeId
+            );
 
         if (filme == null)
-            throw new Exception("Filme não encontrado.");
+        {
+            throw new Exception(
+                "Filme não encontrado."
+            );
+        }
 
         if (dto.DataHora <= DateTime.Now)
-            throw new Exception("A sessão deve ser em uma data futura.");
+        {
+            throw new Exception(
+                "A sessão deve ser em uma data futura."
+            );
+        }
 
         var horarioOcupado = await _context.Sessoes
-            .AnyAsync(s => s.DataHora == dto.DataHora);
+            .AnyAsync(
+                s => s.DataHora == dto.DataHora
+            );
 
         if (horarioOcupado)
-            throw new Exception("Já existe uma sessão nesse horário.");
+        {
+            throw new Exception(
+                "Já existe uma sessão nesse horário."
+            );
+        }
 
         var sessao = new Sessao
         {
@@ -46,89 +65,167 @@ public class SessaoService : ISessaoService
         return ConverterParaDTO(sessao);
     }
 
-    public async Task<List<SessaoResponseDTO>> ListarTodosAsync()
-    {
-        var sessoes = await _context.Sessoes
-            .Include(s => s.Filme)
-            .ToListAsync();
 
-        return sessoes
-            .Select(ConverterParaDTO)
-            .ToList();
-    }
-
-    public async Task<List<SessaoResponseDTO>> ListarAtivasAsync()
+    public async Task<List<SessaoResponseDTO>>
+        ListarTodosAsync()
     {
-        var sessoes = await _context.Sessoes
-        .Include(s => s.Filme)
-        .Where(s => s.Ativa == true)
+        return await ProjetarParaDTO(
+            _context.Sessoes
+                .AsNoTracking()
+        )
+        .OrderBy(s => s.DataHora)
         .ToListAsync();
-
-        return sessoes.Select(ConverterParaDTO).ToList();
     }
 
-    public async Task<List<SessaoResponseDTO>> ListarPorFilmeAsync(int filmeId)
+
+    public async Task<List<SessaoResponseDTO>>
+        ListarAtivasAsync()
     {
-        var sessoes = await _context.Sessoes
-            .Include(s => s.Filme)
-            .Where(s => s.FilmeId == filmeId && s.Ativa == true)
-            .ToListAsync();
-
-        return sessoes
-            .Select(ConverterParaDTO)
-            .ToList();
+        return await ProjetarParaDTO(
+            _context.Sessoes
+                .AsNoTracking()
+                .Where(s => s.Ativa)
+        )
+        .OrderBy(s => s.DataHora)
+        .ToListAsync();
     }
 
-    public async Task<SessaoResponseDTO?> BuscarPorIdAsync(int id)
+
+    public async Task<List<SessaoResponseDTO>>
+        ListarPorFilmeAsync(
+            int filmeId
+        )
+    {
+        return await ProjetarParaDTO(
+            _context.Sessoes
+                .AsNoTracking()
+                .Where(s =>
+                    s.FilmeId == filmeId &&
+                    s.Ativa
+                )
+        )
+        .OrderBy(s => s.DataHora)
+        .ToListAsync();
+    }
+
+
+    public async Task<SessaoResponseDTO?>
+        BuscarPorIdAsync(
+            int id
+        )
+    {
+        return await ProjetarParaDTO(
+            _context.Sessoes
+                .AsNoTracking()
+                .Where(s => s.Id == id)
+        )
+        .FirstOrDefaultAsync();
+    }
+
+
+    public async Task<bool> PatchAsync(
+        int id,
+        PatchSessaoDTO dto
+    )
     {
         var sessao = await _context.Sessoes
-            .Include(s => s.Filme)
-            .FirstOrDefaultAsync(s => s.Id == id);
+            .FirstOrDefaultAsync(
+                s => s.Id == id
+            );
 
         if (sessao == null)
-            return null;
-
-        return ConverterParaDTO(sessao);
-    }
-
-    public async Task<bool> PatchAsync(int id, PatchSessaoDTO dto)
-    {
-        var sessao = await _context.Sessoes
-            .FirstOrDefaultAsync(s => s.Id == id);
-
-        if (sessao == null)
+        {
             return false;
+        }
+
+        /*
+         * Uma sessão que já começou não pode
+         * mais ser editada.
+         */
+        if (sessao.DataHora <= DateTime.Now)
+        {
+            throw new InvalidOperationException(
+                "Esta sessão já aconteceu e não pode ser editada."
+            );
+        }
+
+        /*
+         * Se já existir qualquer ingresso relacionado
+         * à sessão, ela não pode mais ser alterada.
+         *
+         * Reservas temporárias não entram nessa regra.
+         */
+        var possuiIngressosVendidos =
+            await _context.Ingressos
+                .AsNoTracking()
+                .AnyAsync(
+                    ingresso =>
+                        ingresso.SessaoId == sessao.Id
+                );
+
+        if (possuiIngressosVendidos)
+        {
+            throw new InvalidOperationException(
+                "Esta sessão possui ingressos vendidos e não pode ser editada."
+            );
+        }
 
         if (dto.FilmeId.HasValue)
         {
             var filmeExiste = await _context.Filmes
-                .AnyAsync(f => f.Id == dto.FilmeId.Value);
+                .AsNoTracking()
+                .AnyAsync(
+                    f =>
+                        f.Id == dto.FilmeId.Value
+                );
 
             if (!filmeExiste)
-                throw new Exception("Filme não encontrado.");
+            {
+                throw new Exception(
+                    "Filme não encontrado."
+                );
+            }
 
-            sessao.FilmeId = dto.FilmeId.Value;
+            sessao.FilmeId =
+                dto.FilmeId.Value;
         }
 
         if (dto.DataHora.HasValue)
         {
-            if (dto.DataHora.Value <= DateTime.Now)
-                throw new Exception("A sessão deve ser em uma data futura.");
+            if (
+                dto.DataHora.Value <=
+                DateTime.Now
+            )
+            {
+                throw new Exception(
+                    "A sessão deve ser em uma data futura."
+                );
+            }
 
-            var horarioOcupado = await _context.Sessoes
-                .AnyAsync(s =>
-                    s.Id != id &&
-                    s.DataHora == dto.DataHora.Value);
+            var horarioOcupado =
+                await _context.Sessoes
+                    .AsNoTracking()
+                    .AnyAsync(s =>
+                        s.Id != id &&
+                        s.DataHora ==
+                            dto.DataHora.Value
+                    );
 
             if (horarioOcupado)
-                throw new Exception("Já existe uma sessão nesse horário.");
+            {
+                throw new Exception(
+                    "Já existe uma sessão nesse horário."
+                );
+            }
 
-            sessao.DataHora = dto.DataHora.Value;
+            sessao.DataHora =
+                dto.DataHora.Value;
         }
 
         if (dto.Ativa.HasValue)
         {
-            sessao.Ativa = dto.Ativa.Value;
+            sessao.Ativa =
+                dto.Ativa.Value;
         }
 
         await _context.SaveChangesAsync();
@@ -136,33 +233,91 @@ public class SessaoService : ISessaoService
         return true;
     }
 
-    public async Task<bool> ExcluirAsync(int id)
+
+    public async Task<bool> ExcluirAsync(
+        int id
+    )
     {
         var sessao = await _context.Sessoes
-            .FirstOrDefaultAsync(s => s.Id == id);
-    
+            .FirstOrDefaultAsync(
+                s => s.Id == id
+            );
+
         if (sessao == null)
+        {
             return false;
-    
+        }
+
         if (!sessao.Ativa)
+        {
             return true;
-    
+        }
+
         sessao.Ativa = false;
-    
+
         await _context.SaveChangesAsync();
-    
+
         return true;
     }
 
-    private static SessaoResponseDTO ConverterParaDTO(Sessao sessao)
+
+    private IQueryable<SessaoResponseDTO>
+        ProjetarParaDTO(
+            IQueryable<Sessao> query
+        )
+    {
+        return query.Select(
+            sessao =>
+                new SessaoResponseDTO
+                {
+                    Id = sessao.Id,
+
+                    FilmeId =
+                        sessao.FilmeId,
+
+                    TituloFilme =
+                        sessao.Filme.Titulo,
+
+                    DataHora =
+                        sessao.DataHora,
+
+                    Ativa =
+                        sessao.Ativa,
+
+                    PossuiIngressosVendidos =
+                        _context.Ingressos
+                            .Any(
+                                ingresso =>
+                                    ingresso.SessaoId ==
+                                    sessao.Id
+                            )
+                }
+        );
+    }
+
+
+    private static SessaoResponseDTO
+        ConverterParaDTO(
+            Sessao sessao
+        )
     {
         return new SessaoResponseDTO
         {
             Id = sessao.Id,
+
             FilmeId = sessao.FilmeId,
-            TituloFilme = sessao.Filme.Titulo,
-            DataHora = sessao.DataHora,
-            Ativa = sessao.Ativa
+
+            TituloFilme =
+                sessao.Filme.Titulo,
+
+            DataHora =
+                sessao.DataHora,
+
+            Ativa =
+                sessao.Ativa,
+
+            PossuiIngressosVendidos =
+                false
         };
     }
 }
