@@ -7,6 +7,11 @@ public class Ingresso
 {
     public int Id { get; set; }
 
+    public int? VendaId { get; set; }
+
+    [ForeignKey(nameof(VendaId))]
+    public Venda? Venda { get; set; }
+
     [Required]
     public int SessaoId { get; set; }
 
@@ -19,11 +24,11 @@ public class Ingresso
     [ForeignKey(nameof(AssentoId))]
     public Assento Assento { get; set; } = null!;
 
-    [Required]
-    public int UsuarioId { get; set; }
+    public int? UsuarioId { get; set; }
 
     [ForeignKey(nameof(UsuarioId))]
-    public Usuario Usuario { get; set; } = null!;
+    public Usuario? Usuario { get; set; }
+
     [Required]
     [Column(TypeName = "decimal(10,2)")]
     public decimal ValorPago { get; set; }
@@ -33,15 +38,8 @@ public class Ingresso
     public string TokenQrCode { get; set; } = string.Empty;
 
     public DateTime DataCompra { get; set; } = DateTime.UtcNow;
-    public OrigemVenda OrigemVenda { get; set; }
 
     public bool Utilizado { get; set; } = false;
 
     public DateTime? DataUtilizacao { get; set; }
-}
-
-public enum OrigemVenda
-{
-    Online = 1,
-    Bilheteria = 2
 }

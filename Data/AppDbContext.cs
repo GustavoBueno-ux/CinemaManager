@@ -23,6 +23,8 @@ public class AppDbContext : DbContext
 
     public DbSet<ReservaAssento> ReservasAssentos { get; set; } = null!;
 
+    public DbSet<Venda> Vendas { get; set; } = null!;
+
     protected override void OnModelCreating(
         ModelBuilder modelBuilder
     )
@@ -66,5 +68,17 @@ public class AppDbContext : DbContext
             .WithMany()
             .HasForeignKey(r => r.UsuarioId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Ingresso>()
+            .HasOne(i => i.Venda)
+            .WithMany(v => v.Ingressos)
+            .HasForeignKey(i => i.VendaId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Venda>()
+            .HasOne(v => v.Funcionario)
+            .WithMany()
+            .HasForeignKey(v => v.FuncionarioId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

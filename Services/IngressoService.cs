@@ -16,6 +16,7 @@ public class IngressoService : IIngressoService
         _context = context;
     }
 
+
     public async Task<IngressoResponseDTO> CriarAsync(
         CriarIngressoDTO dto
     )
@@ -26,7 +27,9 @@ public class IngressoService : IIngressoService
 
         var usuario = await _context.Usuarios
             .AsNoTracking()
-            .FirstOrDefaultAsync(u => u.Id == dto.UsuarioId);
+            .FirstOrDefaultAsync(
+                u => u.Id == dto.UsuarioId
+            );
 
         if (usuario is null)
         {
@@ -37,7 +40,9 @@ public class IngressoService : IIngressoService
 
         var assento = await _context.Assentos
             .AsNoTracking()
-            .FirstOrDefaultAsync(a => a.Id == dto.AssentoId);
+            .FirstOrDefaultAsync(
+                a => a.Id == dto.AssentoId
+            );
 
         if (assento is null)
         {
@@ -60,12 +65,27 @@ public class IngressoService : IIngressoService
             );
         }
 
+        var agora = DateTime.Now;
+
+        var venda = new Venda
+        {
+            DataHora = agora,
+            FormaPagamento = null,
+            OrigemVenda = OrigemVenda.Online,
+            FuncionarioId = null,
+            ValorTotal = ValorIngresso
+        };
+
         var ingresso = CriarIngresso(
             sessaoId: dto.SessaoId,
             assentoId: dto.AssentoId,
             usuarioId: dto.UsuarioId,
-            dataCompra: DateTime.Now
+            valorPago: ValorIngresso,
+            dataCompra: agora,
+            venda: venda
         );
+
+        await _context.Vendas.AddAsync(venda);
 
         await _context.Ingressos.AddAsync(ingresso);
 
@@ -89,12 +109,16 @@ public class IngressoService : IIngressoService
         return ConverterParaDTO(ingresso);
     }
 
+
     public async Task<List<IngressoResponseDTO>> CriarEmLoteAsync(
         int usuarioId,
         CriarIngressosEmLoteDTO dto
     )
     {
-        if (dto.AssentoIds is null || dto.AssentoIds.Count == 0)
+        if (
+            dto.AssentoIds is null ||
+            dto.AssentoIds.Count == 0
+        )
         {
             throw new ArgumentException(
                 "Selecione pelo menos um assento."
@@ -114,6 +138,13 @@ public class IngressoService : IIngressoService
 
         var agora = DateTime.Now;
 
+        /*
+         * As reservas temporárias usam UTC no serviço
+         * de ReservaAssento. Por isso a validade da
+         * reserva é comparada usando UTC.
+         */
+        var agoraUtc = DateTime.UtcNow;
+
         await using var transaction =
             await _context.Database.BeginTransactionAsync();
 
@@ -122,7 +153,9 @@ public class IngressoService : IIngressoService
             var sessao = await _context.Sessoes
                 .AsNoTracking()
                 .Include(s => s.Filme)
-                .FirstOrDefaultAsync(s => s.Id == dto.SessaoId);
+                .FirstOrDefaultAsync(
+                    s => s.Id == dto.SessaoId
+                );
 
             if (sessao is null)
             {
@@ -147,7 +180,9 @@ public class IngressoService : IIngressoService
 
             var usuario = await _context.Usuarios
                 .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.Id == usuarioId);
+                .FirstOrDefaultAsync(
+                    u => u.Id == usuarioId
+                );
 
             if (usuario is null)
             {
@@ -158,7 +193,9 @@ public class IngressoService : IIngressoService
 
             var assentos = await _context.Assentos
                 .AsNoTracking()
-                .Where(a => assentoIds.Contains(a.Id))
+                .Where(a =>
+                    assentoIds.Contains(a.Id)
+                )
                 .ToListAsync();
 
             if (assentos.Count != assentoIds.Count)
@@ -168,23 +205,20 @@ public class IngressoService : IIngressoService
                 );
             }
 
-            /*
-             * Busca somente reservas:
-             * - da sessão informada;
-             * - dos assentos escolhidos;
-             * - pertencentes ao usuário;
-             * - ainda não vencidas.
-             */
-            var reservasValidas = await _context.ReservasAssentos
-                .Where(r =>
-                    r.SessaoId == dto.SessaoId &&
-                    r.UsuarioId == usuarioId &&
-                    assentoIds.Contains(r.AssentoId) &&
-                    r.ExpiraEm > agora
-                )
-                .ToListAsync();
+            var reservasValidas =
+                await _context.ReservasAssentos
+                    .Where(r =>
+                        r.SessaoId == dto.SessaoId &&
+                        r.UsuarioId == usuarioId &&
+                        assentoIds.Contains(r.AssentoId) &&
+                        r.ExpiraEm > agora
+                    )
+                    .ToListAsync();
 
-            if (reservasValidas.Count != assentoIds.Count)
+            if (
+                reservasValidas.Count !=
+                assentoIds.Count
+            )
             {
                 throw new InvalidOperationException(
                     "Uma ou mais reservas expiraram ou não pertencem " +
@@ -192,12 +226,13 @@ public class IngressoService : IIngressoService
                 );
             }
 
-            var assentosJaComprados = await _context.Ingressos
-                .AsNoTracking()
-                .AnyAsync(i =>
-                    i.SessaoId == dto.SessaoId &&
-                    assentoIds.Contains(i.AssentoId)
-                );
+            var assentosJaComprados =
+                await _context.Ingressos
+                    .AsNoTracking()
+                    .AnyAsync(i =>
+                        i.SessaoId == dto.SessaoId &&
+                        assentoIds.Contains(i.AssentoId)
+                    );
 
             if (assentosJaComprados)
             {
@@ -207,25 +242,61 @@ public class IngressoService : IIngressoService
                 );
             }
 
+            var valorTotal =
+                ValorIngresso * assentoIds.Count;
+
+            var venda = new Venda
+            {
+                DataHora = agora,
+                FormaPagamento = null,
+                OrigemVenda = OrigemVenda.Online,
+                FuncionarioId = null,
+                ValorTotal = valorTotal
+            };
+
             var ingressos = assentoIds
-                .Select(assentoId => new Ingresso
-                {
-                    SessaoId = dto.SessaoId,
-                    AssentoId = assentoId,
-                    UsuarioId = usuarioId,
-                    ValorPago = 22m,
-                    TokenQrCode = Guid.NewGuid().ToString("N"),
-                    DataCompra = agora,
-                    Utilizado = false,
-                    DataUtilizacao = null
-                })
+                .Select(assentoId =>
+                    new Ingresso
+                    {
+                        Venda = venda,
+
+                        SessaoId =
+                            dto.SessaoId,
+
+                        AssentoId =
+                            assentoId,
+
+                        UsuarioId =
+                            usuarioId,
+
+                        ValorPago =
+                            ValorIngresso,
+
+                        TokenQrCode =
+                            Guid.NewGuid()
+                                .ToString("N"),
+
+                        DataCompra =
+                            agora,
+
+                        Utilizado =
+                            false,
+
+                        DataUtilizacao =
+                            null
+                    }
+                )
                 .ToList();
 
-            await _context.Ingressos.AddRangeAsync(ingressos);
+            await _context.Vendas.AddAsync(venda);
+
+            await _context.Ingressos
+                .AddRangeAsync(ingressos);
 
             /*
-             * As reservas serão removidas na mesma transação
-             * em que os ingressos serão criados.
+             * A venda, os ingressos e a remoção
+             * das reservas fazem parte da mesma
+             * transação.
              */
             _context.ReservasAssentos.RemoveRange(
                 reservasValidas
@@ -245,16 +316,21 @@ public class IngressoService : IIngressoService
 
             await transaction.CommitAsync();
 
-            var assentosPorId = assentos.ToDictionary(
-                a => a.Id
-            );
+            var assentosPorId =
+                assentos.ToDictionary(
+                    a => a.Id
+                );
 
             foreach (var ingresso in ingressos)
             {
                 ingresso.Sessao = sessao;
+
                 ingresso.Usuario = usuario;
+
                 ingresso.Assento =
-                    assentosPorId[ingresso.AssentoId];
+                    assentosPorId[
+                        ingresso.AssentoId
+                    ];
             }
 
             return ingressos
@@ -272,7 +348,311 @@ public class IngressoService : IIngressoService
         }
     }
 
-    public async Task<List<IngressoResponseDTO>> ListarTodosAsync()
+
+    public async Task<VendaBilheteriaResponseDTO>
+        CriarVendaBilheteriaAsync(
+            int funcionarioId,
+            CriarVendaBilheteriaDTO dto
+        )
+    {
+        if (
+            dto.AssentoIds is null ||
+            dto.AssentoIds.Count == 0
+        )
+        {
+            throw new ArgumentException(
+                "Selecione pelo menos um assento."
+            );
+        }
+
+        var assentoIds = dto.AssentoIds
+            .Distinct()
+            .ToList();
+
+        if (assentoIds.Count != dto.AssentoIds.Count)
+        {
+            throw new ArgumentException(
+                "Existem assentos repetidos na seleção."
+            );
+        }
+
+        if (
+            !Enum.IsDefined(
+                typeof(FormaPagamento),
+                dto.FormaPagamento
+            )
+        )
+        {
+            throw new ArgumentException(
+                "Forma de pagamento inválida."
+            );
+        }
+
+        var agora = DateTime.Now;
+        var agoraUtc = DateTime.UtcNow;
+
+        await using var transaction =
+            await _context.Database.BeginTransactionAsync();
+
+        try
+        {
+            /*
+             * O FuncionarioId é obtido pelo JWT no controller.
+             * Mesmo assim, validamos novamente no service para
+             * não confiar apenas no atributo de autorização.
+             */
+            var funcionario = await _context.Usuarios
+                .AsNoTracking()
+                .FirstOrDefaultAsync(
+                    u => u.Id == funcionarioId
+                );
+
+            if (funcionario is null)
+            {
+                throw new KeyNotFoundException(
+                    "Funcionário não encontrado."
+                );
+            }
+
+            if (
+                funcionario.TipoUsuario !=
+                TipoUsuario.Funcionario
+            )
+            {
+                throw new InvalidOperationException(
+                    "O usuário autenticado não é um funcionário."
+                );
+            }
+
+            var sessao = await _context.Sessoes
+                .AsNoTracking()
+                .Include(s => s.Filme)
+                .FirstOrDefaultAsync(
+                    s => s.Id == dto.SessaoId
+                );
+
+            if (sessao is null)
+            {
+                throw new KeyNotFoundException(
+                    "Sessão não encontrada."
+                );
+            }
+
+            if (!sessao.Ativa)
+            {
+                throw new InvalidOperationException(
+                    "Sessão desativada."
+                );
+            }
+
+            if (agora > sessao.DataHora.AddMinutes(30))
+            {
+                throw new InvalidOperationException(
+                    "O prazo para venda desta sessão foi encerrado."
+                );
+            }
+
+            var assentos = await _context.Assentos
+                .AsNoTracking()
+                .Where(a =>
+                    assentoIds.Contains(a.Id)
+                )
+                .ToListAsync();
+
+            if (assentos.Count != assentoIds.Count)
+            {
+                throw new KeyNotFoundException(
+                    "Um ou mais assentos não foram encontrados."
+                );
+            }
+
+            /*
+             * O funcionário precisa ser o dono atual
+             * das reservas dos assentos escolhidos.
+             */
+            var reservasValidas =
+                await _context.ReservasAssentos
+                    .Where(r =>
+                        r.SessaoId == dto.SessaoId &&
+                        r.UsuarioId == funcionarioId &&
+                        assentoIds.Contains(r.AssentoId) &&
+                        r.ExpiraEm > agora
+                    )
+                    .ToListAsync();
+
+            if (
+                reservasValidas.Count !=
+                assentoIds.Count
+            )
+            {
+                throw new InvalidOperationException(
+                    "Uma ou mais reservas expiraram ou não pertencem " +
+                    "ao funcionário. A venda não foi realizada."
+                );
+            }
+
+            var assentosJaVendidos =
+                await _context.Ingressos
+                    .AsNoTracking()
+                    .AnyAsync(i =>
+                        i.SessaoId == dto.SessaoId &&
+                        assentoIds.Contains(i.AssentoId)
+                    );
+
+            if (assentosJaVendidos)
+            {
+                throw new InvalidOperationException(
+                    "Um ou mais assentos já foram vendidos. " +
+                    "A venda não foi realizada."
+                );
+            }
+
+            var cortesia =
+                dto.FormaPagamento ==
+                FormaPagamento.Cortesia;
+
+            var valorUnitario =
+                cortesia
+                    ? 0m
+                    : ValorIngresso;
+
+            var valorTotal =
+                valorUnitario * assentoIds.Count;
+
+            var venda = new Venda
+            {
+                DataHora = agora,
+
+                FormaPagamento =
+                    dto.FormaPagamento,
+
+                OrigemVenda =
+                    OrigemVenda.Bilheteria,
+
+                FuncionarioId =
+                    funcionarioId,
+
+                ValorTotal =
+                    valorTotal
+            };
+
+            var ingressos = assentoIds
+                .Select(assentoId =>
+                    new Ingresso
+                    {
+                        Venda = venda,
+
+                        SessaoId =
+                            dto.SessaoId,
+
+                        AssentoId =
+                            assentoId,
+
+                        /*
+                         * Venda presencial não possui
+                         * cliente cadastrado associado.
+                         */
+                        UsuarioId =
+                            null,
+
+                        ValorPago =
+                            valorUnitario,
+
+                        TokenQrCode =
+                            Guid.NewGuid()
+                                .ToString("N"),
+
+                        DataCompra =
+                            agora,
+
+                        Utilizado =
+                            false,
+
+                        DataUtilizacao =
+                            null
+                    }
+                )
+                .ToList();
+
+            await _context.Vendas.AddAsync(venda);
+
+            await _context.Ingressos
+                .AddRangeAsync(ingressos);
+
+            _context.ReservasAssentos.RemoveRange(
+                reservasValidas
+            );
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                throw new InvalidOperationException(
+                    "Um ou mais assentos acabaram de ser vendidos " +
+                    "por outra operação. Nenhum ingresso foi gerado."
+                );
+            }
+
+            await transaction.CommitAsync();
+
+            var assentosPorId =
+                assentos.ToDictionary(
+                    a => a.Id
+                );
+
+            foreach (var ingresso in ingressos)
+            {
+                ingresso.Sessao = sessao;
+
+                ingresso.Assento =
+                    assentosPorId[
+                        ingresso.AssentoId
+                    ];
+
+                /*
+                 * Não atribuímos o funcionário a
+                 * ingresso.Usuario.
+                 *
+                 * O funcionário pertence à Venda,
+                 * não é o dono do ingresso.
+                 */
+                ingresso.Usuario = null;
+            }
+
+            var ingressosDto = ingressos
+                .OrderBy(i => i.Assento.Codigo)
+                .Select(ConverterParaDTO)
+                .ToList();
+
+            return new VendaBilheteriaResponseDTO
+            {
+                VendaId = venda.Id,
+
+                FormaPagamento =
+                    dto.FormaPagamento,
+
+                ValorTotal =
+                    valorTotal,
+
+                Ingressos =
+                    ingressosDto
+            };
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+
+            _context.ChangeTracker.Clear();
+
+            throw;
+        }
+    }
+
+
+    public async Task<List<IngressoResponseDTO>>
+        ListarTodosAsync()
     {
         var ingressos = await _context.Ingressos
             .AsNoTracking()
@@ -288,13 +668,17 @@ public class IngressoService : IIngressoService
             .ToList();
     }
 
-    public async Task<List<IngressoResponseDTO>> ListarDoUsuarioAsync(
-        int usuarioId
-    )
+
+    public async Task<List<IngressoResponseDTO>>
+        ListarDoUsuarioAsync(
+            int usuarioId
+        )
     {
         var ingressos = await _context.Ingressos
             .AsNoTracking()
-            .Where(i => i.UsuarioId == usuarioId)
+            .Where(i =>
+                i.UsuarioId == usuarioId
+            )
             .Include(i => i.Sessao)
                 .ThenInclude(s => s.Filme)
             .Include(i => i.Assento)
@@ -307,10 +691,12 @@ public class IngressoService : IIngressoService
             .ToList();
     }
 
-    public async Task<IngressoResponseDTO?> BuscarPorIdAsync(
-        int ingressoId,
-        int usuarioId
-    )
+
+    public async Task<IngressoResponseDTO?>
+        BuscarPorIdAsync(
+            int ingressoId,
+            int usuarioId
+        )
     {
         var ingresso = await _context.Ingressos
             .AsNoTracking()
@@ -328,9 +714,11 @@ public class IngressoService : IIngressoService
             : ConverterParaDTO(ingresso);
     }
 
-    public async Task<ValidacaoIngressoResponseDTO> ValidarAsync(
-        ValidarIngressoDTO dto
-    )
+
+    public async Task<ValidacaoIngressoResponseDTO>
+        ValidarAsync(
+            ValidarIngressoDTO dto
+        )
     {
         var ingresso = await _context.Ingressos
             .Include(i => i.Sessao)
@@ -373,8 +761,9 @@ public class IngressoService : IIngressoService
             );
         }
 
-        var inicioLiberacao = ingresso.Sessao.DataHora
-            .AddMinutes(-30);
+        var inicioLiberacao =
+            ingresso.Sessao.DataHora
+                .AddMinutes(-30);
 
         if (DateTime.Now < inicioLiberacao)
         {
@@ -395,10 +784,15 @@ public class IngressoService : IIngressoService
         );
     }
 
-    public async Task<bool> ExcluirAsync(int id)
+
+    public async Task<bool> ExcluirAsync(
+        int id
+    )
     {
         var ingresso = await _context.Ingressos
-            .FirstOrDefaultAsync(i => i.Id == id);
+            .FirstOrDefaultAsync(
+                i => i.Id == id
+            );
 
         if (ingresso is null)
         {
@@ -412,14 +806,18 @@ public class IngressoService : IIngressoService
         return true;
     }
 
-    private async Task<Sessao> BuscarSessaoDisponivelAsync(
-        int sessaoId
-    )
+
+    private async Task<Sessao>
+        BuscarSessaoDisponivelAsync(
+            int sessaoId
+        )
     {
         var sessao = await _context.Sessoes
             .AsNoTracking()
             .Include(s => s.Filme)
-            .FirstOrDefaultAsync(s => s.Id == sessaoId);
+            .FirstOrDefaultAsync(
+                s => s.Id == sessaoId
+            );
 
         if (sessao is null)
         {
@@ -435,7 +833,8 @@ public class IngressoService : IIngressoService
             );
         }
 
-        var limiteCompra = sessao.DataHora.AddMinutes(30);
+        var limiteCompra =
+            sessao.DataHora.AddMinutes(30);
 
         if (DateTime.Now > limiteCompra)
         {
@@ -447,30 +846,45 @@ public class IngressoService : IIngressoService
         return sessao;
     }
 
+
     private static Ingresso CriarIngresso(
         int sessaoId,
         int assentoId,
         int usuarioId,
-        DateTime dataCompra
+        decimal valorPago,
+        DateTime dataCompra,
+        Venda venda
     )
     {
         return new Ingresso
         {
+            Venda = venda,
+
             SessaoId = sessaoId,
+
             AssentoId = assentoId,
+
             UsuarioId = usuarioId,
-            ValorPago = ValorIngresso,
-            TokenQrCode = Guid.NewGuid().ToString("N"),
+
+            ValorPago = valorPago,
+
+            TokenQrCode =
+                Guid.NewGuid().ToString("N"),
+
             DataCompra = dataCompra,
+
             Utilizado = false,
+
             DataUtilizacao = null
         };
     }
 
-    private static ValidacaoIngressoResponseDTO CriarResultadoValidacao(
-        bool sucesso,
-        string mensagem
-    )
+
+    private static ValidacaoIngressoResponseDTO
+        CriarResultadoValidacao(
+            bool sucesso,
+            string mensagem
+        )
     {
         return new ValidacaoIngressoResponseDTO
         {
@@ -479,9 +893,11 @@ public class IngressoService : IIngressoService
         };
     }
 
-    private static IngressoResponseDTO ConverterParaDTO(
-        Ingresso ingresso
-    )
+
+    private static IngressoResponseDTO
+        ConverterParaDTO(
+            Ingresso ingresso
+        )
     {
         return new IngressoResponseDTO
         {
@@ -489,27 +905,38 @@ public class IngressoService : IIngressoService
 
             SessaoId = ingresso.SessaoId,
 
-            Filme = ingresso.Sessao.Filme.Titulo,
+            Filme =
+                ingresso.Sessao.Filme.Titulo,
 
-            DataSessao = ingresso.Sessao.DataHora,
+            DataSessao =
+                ingresso.Sessao.DataHora,
 
-            AssentoId = ingresso.AssentoId,
+            AssentoId =
+                ingresso.AssentoId,
 
-            CodigoAssento = ingresso.Assento.Codigo,
+            CodigoAssento =
+                ingresso.Assento.Codigo,
 
-            UsuarioId = ingresso.UsuarioId,
+            UsuarioId =
+                ingresso.UsuarioId,
 
-            Usuario = ingresso.Usuario.Nome,
+            Usuario =
+                ingresso.Usuario?.Nome,
 
-            ValorPago = ingresso.ValorPago,
+            ValorPago =
+                ingresso.ValorPago,
 
-            TokenQrCode = ingresso.TokenQrCode,
+            TokenQrCode =
+                ingresso.TokenQrCode,
 
-            DataCompra = ingresso.DataCompra,
+            DataCompra =
+                ingresso.DataCompra,
 
-            Utilizado = ingresso.Utilizado,
+            Utilizado =
+                ingresso.Utilizado,
 
-            DataUtilizacao = ingresso.DataUtilizacao
+            DataUtilizacao =
+                ingresso.DataUtilizacao
         };
     }
 }

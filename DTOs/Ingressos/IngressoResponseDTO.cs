@@ -14,9 +14,9 @@ public class IngressoResponseDTO
 
     public string CodigoAssento { get; set; } = string.Empty;
 
-    public int UsuarioId { get; set; }
+    public int? UsuarioId { get; set; }
 
-    public string Usuario { get; set; } = string.Empty;
+    public string? Usuario { get; set; }
 
     public decimal ValorPago { get; set; }
 

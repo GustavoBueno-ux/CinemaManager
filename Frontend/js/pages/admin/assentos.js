@@ -9,109 +9,63 @@ const INTERVALO_ATUALIZACAO_MS = 5000;
    ELEMENTOS - PÁGINA
 ========================================================= */
 
-const mapaAssentos =
-    document.getElementById("mapaAssentos");
+const mapaAssentos = document.getElementById("mapaAssentos");
+const quantidadeDisponiveis = document.getElementById("quantidade-disponiveis");
+const quantidadeOcupados = document.getElementById("quantidade-ocupados");
+const quantidadeSelecionados = document.getElementById("quantidade-selecionados");
+const listaAssentosSelecionados = document.getElementById("listaAssentosSelecionados");
+const valorTotal = document.getElementById("valorTotal");
+const botaoContinuar = document.getElementById("botaoContinuar");
 
-const quantidadeDisponiveis =
-    document.getElementById("quantidade-disponiveis");
+const tituloFilme = document.getElementById("titulo-filme");
+const dataSessao = document.getElementById("data-sessao");
+const horarioSessao = document.getElementById("horario-sessao");
 
-const quantidadeOcupados =
-    document.getElementById("quantidade-ocupados");
-
-const quantidadeSelecionados =
-    document.getElementById("quantidade-selecionados");
-
-const listaAssentosSelecionados =
-    document.getElementById("listaAssentosSelecionados");
-
-const valorTotal =
-    document.getElementById("valorTotal");
-
-const botaoContinuar =
-    document.getElementById("botaoContinuar");
-
-const tituloFilme =
-    document.getElementById("titulo-filme");
-
-const dataSessao =
-    document.getElementById("data-sessao");
-
-const horarioSessao =
-    document.getElementById("horario-sessao");
-
-const botaoVoltar =
-    document.getElementById("botao-voltar");
-
-const mensagemPagina =
-    document.getElementById("mensagem-pagina");
+const botaoVoltar = document.getElementById("botao-voltar");
+const mensagemPagina = document.getElementById("mensagem-pagina");
 
 /* =========================================================
    ELEMENTOS - TROCA DE SESSÃO
 ========================================================= */
 
-const botaoAlterarSessao =
-    document.getElementById("botao-alterar-sessao");
-
-const modalSessoes =
-    document.getElementById("modal-sessoes");
-
-const botaoFecharModalSessoes =
-    document.getElementById("botao-fechar-modal-sessoes");
-
-const pesquisaSessao =
-    document.getElementById("pesquisa-sessao");
-
-const listaSessoes =
-    document.getElementById("lista-sessoes");
+const botaoAlterarSessao = document.getElementById("botao-alterar-sessao");
+const modalSessoes = document.getElementById("modal-sessoes");
+const botaoFecharModalSessoes = document.getElementById("botao-fechar-modal-sessoes");
+const pesquisaSessao = document.getElementById("pesquisa-sessao");
+const listaSessoes = document.getElementById("lista-sessoes");
 
 /* =========================================================
    ELEMENTOS - VENDA
 ========================================================= */
 
-const modalVenda =
-    document.getElementById("modalVenda");
+const modalVenda = document.getElementById("modalVenda");
+const botaoFecharModalVenda = document.getElementById("botaoFecharModalVenda");
+const ingressosSelecionados = document.getElementById("ingressosSelecionados");
+const valorTotalModal = document.getElementById("valorTotalModal");
+const botaoFinalizarVenda = document.getElementById("botaoFinalizarVenda");
+const mensagemModalVenda = document.getElementById("mensagem-modal-venda");
 
-const botaoFecharModalVenda =
-    document.getElementById("botaoFecharModalVenda");
-
-const ingressosSelecionados =
-    document.getElementById("ingressosSelecionados");
-
-const valorTotalModal =
-    document.getElementById("valorTotalModal");
-
-const botaoFinalizarVenda =
-    document.getElementById("botaoFinalizarVenda");
-
-const mensagemModalVenda =
-    document.getElementById("mensagem-modal-venda");
-
-const opcoesPagamento =
-    document.querySelectorAll(
-        'input[name="formaPagamento"]'
-    );
+const opcoesPagamento = document.querySelectorAll(
+    'input[name="formaPagamento"]'
+);
 
 /* =========================================================
-   ELEMENTOS - BLOQUEIO
+   ELEMENTOS - RESULTADO DA VENDA
 ========================================================= */
 
-const botaoBloquearAssentos =
-    document.getElementById("botao-bloquear-assentos");
+const modalResultadoVenda = document.getElementById("modal-resultado-venda");
+const tituloResultadoVenda = document.getElementById("titulo-resultado-venda");
+const descricaoResultadoVenda = document.getElementById("descricao-resultado-venda");
+const idsIngressosVenda = document.getElementById("ids-ingressos-venda");
 
-const modalBloqueio =
-    document.getElementById("modal-bloqueio");
+const statusImpressao = document.getElementById("status-impressao");
+const statusImpressaoTitulo = document.getElementById("status-impressao-titulo");
+const statusImpressaoDescricao = document.getElementById("status-impressao-descricao");
 
-const botaoFecharModalBloqueio =
-    document.getElementById("botao-fechar-modal-bloqueio");
+const botaoReimprimir = document.getElementById("botao-reimprimir");
+const botaoNovaVenda = document.getElementById("botao-nova-venda");
 
-const mapaBloqueioAssentos =
-    document.getElementById("mapa-bloqueio-assentos");
 
-const botaoCancelarBloqueio =
-    document.getElementById("botao-cancelar-bloqueio");
-
-const botaoConfirmarBloqueio =
-    document.getElementById("botao-confirmar-bloqueio");
 
 /* =========================================================
    ESTADO
@@ -122,23 +76,22 @@ let dadosSessaoAtual = null;
 
 let todosAssentos = [];
 let assentosSelecionados = [];
-
 let sessoesDisponiveis = [];
 
 let operacaoAssentoEmAndamento = false;
+let vendaEmAndamento = false;
+let carregandoTrocaSessao = false;
+
 let intervaloAtualizacao = null;
 let paginaAtiva = true;
 
-let carregandoTrocaSessao = false;
+let ultimaVendaBilheteria = null;
 
 /* =========================================================
    INICIALIZAÇÃO
 ========================================================= */
 
-document.addEventListener(
-    "DOMContentLoaded",
-    inicializarPagina
-);
+document.addEventListener("DOMContentLoaded", inicializarPagina);
 
 async function inicializarPagina() {
     const usuario = obterUsuarioAutenticado();
@@ -157,8 +110,7 @@ async function inicializarPagina() {
     atualizarResumoSelecao();
 
     try {
-        sessaoIdAtual =
-            await resolverSessaoInicial();
+        sessaoIdAtual = await resolverSessaoInicial();
 
         await carregarSessaoCompleta(
             sessaoIdAtual,
@@ -185,20 +137,15 @@ async function inicializarPagina() {
 ========================================================= */
 
 function obterUsuarioAutenticado() {
-    const token =
-        localStorage.getItem("token");
-
-    const usuarioArmazenado =
-        localStorage.getItem("usuario");
+    const token = localStorage.getItem("token");
+    const usuarioArmazenado = localStorage.getItem("usuario");
 
     if (!token || !usuarioArmazenado) {
         return null;
     }
 
     try {
-        return JSON.parse(
-            usuarioArmazenado
-        );
+        return JSON.parse(usuarioArmazenado);
     } catch {
         return null;
     }
@@ -261,35 +208,21 @@ function configurarEventos() {
     opcoesPagamento.forEach(opcao => {
         opcao.addEventListener(
             "change",
-            esconderErroVenda
+            () => {
+                esconderErroVenda();
+                atualizarValoresModalVenda();
+            }
         );
     });
 
-    botaoBloquearAssentos?.addEventListener(
+    botaoNovaVenda?.addEventListener(
         "click",
-        abrirModalBloqueio
+        iniciarNovaVenda
     );
 
-    botaoFecharModalBloqueio?.addEventListener(
+    botaoReimprimir?.addEventListener(
         "click",
-        fecharModalBloqueio
-    );
-
-    botaoCancelarBloqueio?.addEventListener(
-        "click",
-        fecharModalBloqueio
-    );
-
-    modalBloqueio
-        ?.querySelector(".fundo-modal")
-        ?.addEventListener(
-            "click",
-            fecharModalBloqueio
-        );
-
-    botaoConfirmarBloqueio?.addEventListener(
-        "click",
-        confirmarBloqueio
+        tentarReimprimirUltimaVenda
     );
 
     document.addEventListener(
@@ -318,15 +251,13 @@ function configurarEventos() {
 ========================================================= */
 
 async function resolverSessaoInicial() {
-    const parametros =
-        new URLSearchParams(
-            window.location.search
-        );
+    const parametros = new URLSearchParams(
+        window.location.search
+    );
 
-    const sessaoId =
-        Number(
-            parametros.get("sessaoId")
-        );
+    const sessaoId = Number(
+        parametros.get("sessaoId")
+    );
 
     if (
         Number.isInteger(sessaoId) &&
@@ -335,14 +266,7 @@ async function resolverSessaoInicial() {
         return sessaoId;
     }
 
-    /*
-        Se o funcionário entrou por "Vender ingressos"
-        sem uma sessão específica, usamos a próxima
-        sessão futura.
-    */
-
-    const sessoes =
-        await buscarSessoesFuturas();
+    const sessoes = await buscarSessoesFuturas();
 
     if (!sessoes.length) {
         throw new Error(
@@ -350,16 +274,14 @@ async function resolverSessaoInicial() {
         );
     }
 
-    const proximaSessao =
-        sessoes[0];
+    const proximaSessao = sessoes[0];
+    const proximaSessaoId = obterIdSessao(proximaSessao);
 
     atualizarSessaoIdUrl(
-        proximaSessao.id
+        proximaSessaoId
     );
 
-    return Number(
-        proximaSessao.id
-    );
+    return proximaSessaoId;
 }
 
 /* =========================================================
@@ -370,8 +292,7 @@ async function carregarSessaoCompleta(
     sessaoId,
     exibirCarregamento = false
 ) {
-    sessaoIdAtual =
-        Number(sessaoId);
+    sessaoIdAtual = Number(sessaoId);
 
     if (
         !Number.isInteger(sessaoIdAtual) ||
@@ -394,16 +315,10 @@ async function carregarSessaoCompleta(
         buscarStatusAssentos(sessaoIdAtual)
     ]);
 
-    dadosSessaoAtual =
-        sessao;
+    dadosSessaoAtual = sessao;
 
-    mostrarDadosSessao(
-        sessao
-    );
-
-    aplicarStatusAssentos(
-        assentos
-    );
+    mostrarDadosSessao(sessao);
+    aplicarStatusAssentos(assentos);
 
     esconderMensagemPagina();
 }
@@ -413,10 +328,9 @@ async function carregarSessaoCompleta(
 ========================================================= */
 
 async function buscarSessao(sessaoId) {
-    const resposta =
-        await apiRequest(
-            `/Sessao/${sessaoId}`
-        );
+    const resposta = await apiRequest(
+        `/Sessao/${sessaoId}`
+    );
 
     if (!resposta.ok) {
         throw criarErroApiRequest(
@@ -440,30 +354,22 @@ function mostrarDadosSessao(sessao) {
         sessao.TituloFilme ??
         "Filme";
 
-    const dataHora =
-        new Date(
-            sessao.dataHora ??
-            sessao.DataHora
-        );
+    const dataHora = new Date(
+        sessao.dataHora ??
+        sessao.DataHora
+    );
 
     if (tituloFilme) {
-        tituloFilme.textContent =
-            titulo;
+        tituloFilme.textContent = titulo;
     }
 
-    if (
-        Number.isNaN(
-            dataHora.getTime()
-        )
-    ) {
+    if (Number.isNaN(dataHora.getTime())) {
         if (dataSessao) {
-            dataSessao.textContent =
-                "--/--/----";
+            dataSessao.textContent = "--/--/----";
         }
 
         if (horarioSessao) {
-            horarioSessao.textContent =
-                "--:--";
+            horarioSessao.textContent = "--:--";
         }
 
         return;
@@ -569,12 +475,6 @@ function aplicarStatusAssentos(
             normalizarStatusAssento
         );
 
-    /*
-        Exatamente como no cliente:
-        reserva pertencente ao usuário atual
-        = assento selecionado.
-    */
-
     assentosSelecionados =
         todosAssentos.filter(
             assento =>
@@ -590,27 +490,24 @@ function aplicarStatusAssentos(
 function normalizarStatusAssento(
     assento
 ) {
-    const id =
-        Number(
-            assento.assentoId ??
-            assento.AssentoId ??
-            assento.id ??
-            assento.Id
-        );
+    const id = Number(
+        assento.assentoId ??
+        assento.AssentoId ??
+        assento.id ??
+        assento.Id
+    );
 
-    const codigo =
-        String(
-            assento.codigo ??
-            assento.Codigo ??
-            ""
-        );
+    const codigo = String(
+        assento.codigo ??
+        assento.Codigo ??
+        ""
+    );
 
-    const status =
-        String(
-            assento.status ??
-            assento.Status ??
-            "disponivel"
-        ).toLowerCase();
+    const status = String(
+        assento.status ??
+        assento.Status ??
+        "disponivel"
+    ).toLowerCase();
 
     const reservadoPeloUsuarioAtual =
         Boolean(
@@ -623,7 +520,6 @@ function normalizarStatusAssento(
         assentoId: id,
         codigo,
         status,
-
         reservadoPeloUsuarioAtual,
 
         reservaExpiraEm:
@@ -635,8 +531,6 @@ function normalizarStatusAssento(
 
 /* =========================================================
    MAPA
-
-   MANTIDO COM A MESMA LÓGICA DO CLIENTE.
 ========================================================= */
 
 function mostrarAssentos(
@@ -656,11 +550,6 @@ function mostrarAssentos(
         organizarAssentosPorFileira(
             assentos
         );
-
-    /*
-        Mantemos exatamente a ordem da
-        tela do cliente.
-    */
 
     const ordemFileiras = [
         "J",
@@ -805,11 +694,6 @@ function obterColunaAssento(
     letraFileira,
     numeroAssento
 ) {
-    /*
-        Exatamente a lógica existente
-        no mapa do cliente.
-    */
-
     if (letraFileira === "J") {
         return numeroAssento;
     }
@@ -944,7 +828,8 @@ function criarAssento(
     }
 
     if (
-        operacaoAssentoEmAndamento
+        operacaoAssentoEmAndamento ||
+        vendaEmAndamento
     ) {
         botao.disabled = true;
     }
@@ -953,28 +838,18 @@ function criarAssento(
 }
 
 /* =========================================================
-   RESERVA DO ASSENTO
-
-   Ao clicar:
-   → backend cria reserva
-   → reserva dura 10 minutos
-   → mapa sincroniza novamente.
+   RESERVAR ASSENTO
 ========================================================= */
 
 async function reservarAssento(
     assento
 ) {
     if (
-        operacaoAssentoEmAndamento
+        operacaoAssentoEmAndamento ||
+        vendaEmAndamento
     ) {
         return;
     }
-
-    /*
-        Igual ao cliente:
-        mandamos TODOS os selecionados +
-        o novo assento para o endpoint em lote.
-    */
 
     const assentoIds = [
         ...assentosSelecionados.map(
@@ -1010,7 +885,8 @@ async function cancelarSelecaoAssento(
     assento
 ) {
     if (
-        operacaoAssentoEmAndamento
+        operacaoAssentoEmAndamento ||
+        vendaEmAndamento
     ) {
         return;
     }
@@ -1049,6 +925,8 @@ async function executarOperacaoAssento(
 
     try {
         await operacao();
+
+        esconderMensagemPagina();
     } catch (erro) {
         console.error(
             "Erro ao alterar reserva:",
@@ -1069,7 +947,7 @@ async function executarOperacaoAssento(
         try {
             await sincronizarAssentosComServidor();
         } catch {
-            /* sincronização já trata o erro */
+            /* erro já tratado */
         }
 
         definirEstadoOperacaoAssento(
@@ -1091,16 +969,13 @@ function definirEstadoOperacaoAssento(
         .forEach(botao => {
             botao.disabled =
                 emAndamento ||
+                vendaEmAndamento ||
                 botao.classList.contains(
                     "ocupado"
                 );
         });
 
-    if (botaoContinuar) {
-        botaoContinuar.disabled =
-            emAndamento ||
-            assentosSelecionados.length === 0;
-    }
+    atualizarEstadoBotaoContinuar();
 }
 
 /* =========================================================
@@ -1172,11 +1047,7 @@ function atualizarResumoSelecao() {
                 formatarPreco(0);
         }
 
-        if (botaoContinuar) {
-            botaoContinuar.disabled =
-                true;
-        }
-
+        atualizarEstadoBotaoContinuar();
         notificarAlteracaoSelecao();
 
         return;
@@ -1212,12 +1083,19 @@ function atualizarResumoSelecao() {
             );
     }
 
-    if (botaoContinuar) {
-        botaoContinuar.disabled =
-            operacaoAssentoEmAndamento;
+    atualizarEstadoBotaoContinuar();
+    notificarAlteracaoSelecao();
+}
+
+function atualizarEstadoBotaoContinuar() {
+    if (!botaoContinuar) {
+        return;
     }
 
-    notificarAlteracaoSelecao();
+    botaoContinuar.disabled =
+        operacaoAssentoEmAndamento ||
+        vendaEmAndamento ||
+        assentosSelecionados.length === 0;
 }
 
 function obterValorTotal() {
@@ -1255,9 +1133,6 @@ function obterAssentosSelecionados() {
 
 /* =========================================================
    ATUALIZAÇÃO QUASE EM TEMPO REAL
-
-   Mesma frequência do cliente:
-   5 segundos.
 ========================================================= */
 
 function iniciarAtualizacaoAutomatica() {
@@ -1269,7 +1144,8 @@ function iniciarAtualizacaoAutomatica() {
                 if (
                     !paginaAtiva ||
                     document.hidden ||
-                    operacaoAssentoEmAndamento
+                    operacaoAssentoEmAndamento ||
+                    vendaEmAndamento
                 ) {
                     return;
                 }
@@ -1277,11 +1153,7 @@ function iniciarAtualizacaoAutomatica() {
                 try {
                     await sincronizarAssentosComServidor();
                 } catch {
-                    /*
-                        Erro silencioso aqui para não
-                        bombardear o caixa com mensagens
-                        a cada 5 segundos.
-                    */
+                    /* atualização silenciosa */
                 }
             },
             INTERVALO_ATUALIZACAO_MS
@@ -1300,14 +1172,11 @@ function pararAtualizacaoAutomatica() {
         intervaloAtualizacao
     );
 
-    intervaloAtualizacao =
-        null;
+    intervaloAtualizacao = null;
 }
 
 function tratarVisibilidadePagina() {
-    if (
-        document.hidden
-    ) {
+    if (document.hidden) {
         return;
     }
 
@@ -1336,7 +1205,8 @@ function tratarRetornoPagina() {
 
 async function abrirModalSessoes() {
     if (
-        carregandoTrocaSessao
+        carregandoTrocaSessao ||
+        vendaEmAndamento
     ) {
         return;
     }
@@ -1345,16 +1215,19 @@ async function abrirModalSessoes() {
         modalSessoes
     );
 
-    pesquisaSessao.value = "";
+    if (pesquisaSessao) {
+        pesquisaSessao.value = "";
+    }
 
-    listaSessoes.innerHTML = `
-        <div class="carregando-sessoes">
-            Carregando sessões...
-        </div>
-    `;
+    if (listaSessoes) {
+        listaSessoes.innerHTML = `
+            <div class="carregando-sessoes">
+                Carregando sessões...
+            </div>
+        `;
+    }
 
-    carregandoTrocaSessao =
-        true;
+    carregandoTrocaSessao = true;
 
     try {
         sessoesDisponiveis =
@@ -1369,18 +1242,23 @@ async function abrirModalSessoes() {
             erro
         );
 
-        listaSessoes.innerHTML = `
-            <p class="mensagem-erro">
-                Não foi possível carregar as sessões.
-            </p>
-        `;
+        if (listaSessoes) {
+            listaSessoes.innerHTML = `
+                <p class="mensagem-erro">
+                    Não foi possível carregar as sessões.
+                </p>
+            `;
+        }
     } finally {
-        carregandoTrocaSessao =
-            false;
+        carregandoTrocaSessao = false;
     }
 }
 
 function fecharModalSessoes() {
+    if (carregandoTrocaSessao) {
+        return;
+    }
+
     fecharModal(
         modalSessoes
     );
@@ -1409,8 +1287,7 @@ async function buscarSessoesFuturas() {
         );
     }
 
-    const agora =
-        new Date();
+    const agora = new Date();
 
     return resposta.data
         .filter(sessao => {
@@ -1576,14 +1453,13 @@ function criarGrupoSessoes(
         );
 
     dataTexto.textContent =
-        grupo.data
-            .toLocaleDateString(
-                "pt-BR",
-                {
-                    day: "2-digit",
-                    month: "long"
-                }
-            );
+        grupo.data.toLocaleDateString(
+            "pt-BR",
+            {
+                day: "2-digit",
+                month: "long"
+            }
+        );
 
     header.append(
         tituloDia,
@@ -1625,14 +1501,12 @@ function criarOpcaoSessao(
         );
 
     botao.type = "button";
-
     botao.className =
         "sessao-opcao";
 
     const sessaoId =
-        Number(
-            sessao.id ??
-            sessao.Id
+        obterIdSessao(
+            sessao
         );
 
     const dataHora =
@@ -1678,6 +1552,15 @@ function criarOpcaoSessao(
     return botao;
 }
 
+function obterIdSessao(
+    sessao
+) {
+    return Number(
+        sessao.id ??
+        sessao.Id
+    );
+}
+
 /* =========================================================
    EFETIVAR TROCA DE SESSÃO
 ========================================================= */
@@ -1686,26 +1569,16 @@ async function trocarSessao(
     novaSessaoId
 ) {
     if (
-        novaSessaoId ===
-        sessaoIdAtual
+        vendaEmAndamento ||
+        novaSessaoId === sessaoIdAtual
     ) {
         fecharModalSessoes();
         return;
     }
 
-    carregandoTrocaSessao =
-        true;
+    carregandoTrocaSessao = true;
 
     try {
-        /*
-            Primeiro liberamos as reservas
-            do funcionário na sessão anterior.
-
-            Assim ele não deixa lugares presos
-            por 10 minutos ao simplesmente
-            mudar de sessão.
-        */
-
         await liberarReservasSessaoAtual();
 
         assentosSelecionados = [];
@@ -1722,7 +1595,9 @@ async function trocarSessao(
             sessaoIdAtual
         );
 
-        fecharModalSessoes();
+        fecharModal(
+            modalSessoes
+        );
 
         await carregarSessaoCompleta(
             sessaoIdAtual,
@@ -1740,8 +1615,7 @@ async function trocarSessao(
             "erro"
         );
     } finally {
-        carregandoTrocaSessao =
-            false;
+        carregandoTrocaSessao = false;
     }
 }
 
@@ -1758,11 +1632,6 @@ async function liberarReservasSessaoAtual() {
             }
         );
     } catch (erro) {
-        /*
-            Se for autorização, precisamos
-            realmente parar.
-        */
-
         if (erro.status === 401) {
             throw erro;
         }
@@ -1780,12 +1649,14 @@ async function liberarReservasSessaoAtual() {
 
 function abrirModalVenda() {
     if (
-        !assentosSelecionados.length
+        !assentosSelecionados.length ||
+        vendaEmAndamento
     ) {
         return;
     }
 
     esconderErroVenda();
+    limparFormaPagamento();
     preencherResumoVenda();
 
     abrirModal(
@@ -1794,15 +1665,17 @@ function abrirModalVenda() {
 }
 
 function fecharModalVenda() {
+    if (vendaEmAndamento) {
+        return;
+    }
+
     fecharModal(
         modalVenda
     );
 }
 
 function preencherResumoVenda() {
-    if (
-        ingressosSelecionados
-    ) {
+    if (ingressosSelecionados) {
         ingressosSelecionados.replaceChildren();
 
         assentosSelecionados.forEach(
@@ -1816,12 +1689,7 @@ function preencherResumoVenda() {
         );
     }
 
-    if (valorTotalModal) {
-        valorTotalModal.textContent =
-            formatarPreco(
-                obterValorTotal()
-            );
-    }
+    atualizarValoresModalVenda();
 }
 
 function criarResumoIngressoVenda(
@@ -1842,11 +1710,12 @@ function criarResumoIngressoVenda(
         );
 
     const titulo =
-        dadosSessaoAtual
-            ?.tituloFilme ??
-        dadosSessaoAtual
-            ?.TituloFilme ??
+        dadosSessaoAtual?.tituloFilme ??
+        dadosSessaoAtual?.TituloFilme ??
         "Filme";
+
+    artigo.dataset.assentoId =
+        assento.id;
 
     artigo.innerHTML = `
         <div class="dado-ingresso dado-filme">
@@ -1894,7 +1763,9 @@ function criarResumoIngressoVenda(
                 Valor
             </span>
 
-            <strong class="valor-ingresso">
+            <strong
+                class="valor-ingresso valor-ingresso-preco"
+            >
                 ${formatarPreco(PRECO_INGRESSO)}
             </strong>
         </div>
@@ -1903,26 +1774,69 @@ function criarResumoIngressoVenda(
     return artigo;
 }
 
+function atualizarValoresModalVenda() {
+    const formaPagamento =
+        obterFormaPagamentoSelecionada();
+
+    const cortesia =
+        formaPagamento === "Cortesia";
+
+    const valorUnitario =
+        cortesia
+            ? 0
+            : PRECO_INGRESSO;
+
+    const total =
+        valorUnitario *
+        assentosSelecionados.length;
+
+    ingressosSelecionados
+        ?.querySelectorAll(
+            ".valor-ingresso-preco"
+        )
+        .forEach(elemento => {
+            elemento.textContent =
+                formatarPreco(
+                    valorUnitario
+                );
+        });
+
+    if (valorTotalModal) {
+        valorTotalModal.textContent =
+            formatarPreco(
+                total
+            );
+    }
+}
+
+function obterFormaPagamentoSelecionada() {
+    return document.querySelector(
+        'input[name="formaPagamento"]:checked'
+    )?.value ?? null;
+}
+
+function limparFormaPagamento() {
+    opcoesPagamento.forEach(
+        opcao => {
+            opcao.checked = false;
+            opcao.disabled = false;
+        }
+    );
+}
+
 /* =========================================================
    FINALIZAR VENDA
-
-   AQUI O FRONTEND JÁ ESTÁ PREPARADO, MAS NÃO
-   VAMOS CHAMAR UM ENDPOINT INVENTADO.
-
-   O BACKEND ATUAL AINDA PRECISA DE:
-   - venda presencial em lote;
-   - forma de pagamento;
-   - origem bilheteria;
-   - definição correta sobre UsuarioId.
 ========================================================= */
 
 async function finalizarVenda() {
+    if (vendaEmAndamento) {
+        return;
+    }
+
     esconderErroVenda();
 
     const formaPagamento =
-        document.querySelector(
-            'input[name="formaPagamento"]:checked'
-        )?.value;
+        obterFormaPagamentoSelecionada();
 
     if (!formaPagamento) {
         exibirErroVenda(
@@ -1932,9 +1846,7 @@ async function finalizarVenda() {
         return;
     }
 
-    if (
-        !assentosSelecionados.length
-    ) {
+    if (!assentosSelecionados.length) {
         exibirErroVenda(
             "Selecione pelo menos um assento."
         );
@@ -1942,123 +1854,484 @@ async function finalizarVenda() {
         return;
     }
 
-    /*
-        Não chamamos /Ingresso/bilheteria atual.
+    const assentoIds =
+        assentosSelecionados.map(
+            assento =>
+                assento.id
+        );
 
-        Ele recebe CriarIngressoDTO com UsuarioId
-        e cria somente um ingresso. Usá-lo aqui
-        faria uma venda presencial ser registrada
-        incorretamente como pertencente ao
-        funcionário logado.
+    definirEstadoFinalizacaoVenda(
+        true
+    );
 
-        Quando o backend for ajustado, esta função
-        será conectada ao endpoint definitivo.
-    */
+    try {
+        const resultado =
+            await requisicaoAutenticada(
+                "/Ingresso/bilheteria/lote",
+                {
+                    method: "POST",
 
-    exibirErroVenda(
-        "A tela está pronta para a venda, mas o endpoint de venda presencial em lote ainda precisa ser implementado no backend."
+                    body: JSON.stringify({
+                        sessaoId:
+                            sessaoIdAtual,
+
+                        assentoIds,
+
+                        formaPagamento
+                    })
+                }
+            );
+
+        const venda =
+            normalizarRespostaVenda(
+                resultado
+            );
+
+        /*
+            Primeiro validamos a resposta.
+            Só depois fechamos o modal.
+        */
+
+        if (
+            !venda.vendaId ||
+            !Array.isArray(
+                venda.ingressos
+            ) ||
+            !venda.ingressos.length
+        ) {
+            throw new Error(
+                "A venda foi processada, mas o servidor retornou dados inválidos."
+            );
+        }
+
+        fecharModal(
+            modalVenda
+        );
+
+        await processarVendaConcluida(
+            venda
+        );
+    } catch (erro) {
+        console.error(
+            "Erro ao finalizar venda:",
+            erro
+        );
+
+        if (erro.status === 401) {
+            redirecionarParaLogin();
+            return;
+        }
+
+        if (erro.status === 403) {
+            exibirErroVenda(
+                "Você não possui permissão para realizar esta venda."
+            );
+
+            return;
+        }
+
+        exibirErroVenda(
+            erro.message ||
+            "Não foi possível concluir a venda."
+        );
+
+        /*
+            Se a reserva expirou ou algum lugar foi
+            vendido por outra pessoa, atualizamos o
+            mapa imediatamente.
+        */
+
+        try {
+            await sincronizarAssentosComServidor();
+            preencherResumoVenda();
+        } catch {
+            /* erro de sincronização já tratado */
+        }
+    } finally {
+        definirEstadoFinalizacaoVenda(
+            false
+        );
+    }
+}
+
+function definirEstadoFinalizacaoVenda(
+    finalizando
+) {
+    vendaEmAndamento =
+        finalizando;
+
+    if (botaoFinalizarVenda) {
+        botaoFinalizarVenda.disabled =
+            finalizando;
+
+        botaoFinalizarVenda.textContent =
+            finalizando
+                ? "Finalizando venda..."
+                : "Finalizar venda";
+    }
+
+    opcoesPagamento.forEach(
+        opcao => {
+            opcao.disabled =
+                finalizando;
+        }
+    );
+
+    mapaAssentos
+        ?.querySelectorAll(
+            "button.assento"
+        )
+        .forEach(botao => {
+            botao.disabled =
+                finalizando ||
+                botao.classList.contains(
+                    "ocupado"
+                );
+        });
+
+    atualizarEstadoBotaoContinuar();
+}
+
+/* =========================================================
+   RESPOSTA DA VENDA
+========================================================= */
+
+function normalizarRespostaVenda(
+    resultado
+) {
+    if (!resultado) {
+        return {
+            vendaId: null,
+            formaPagamento: null,
+            valorTotal: 0,
+            ingressos: []
+        };
+    }
+
+    const ingressosOriginais =
+        resultado.ingressos ??
+        resultado.Ingressos ??
+        [];
+
+    const ingressos =
+        Array.isArray(
+            ingressosOriginais
+        )
+            ? ingressosOriginais.map(
+                normalizarIngressoVenda
+            )
+            : [];
+
+    return {
+        vendaId:
+            Number(
+                resultado.vendaId ??
+                resultado.VendaId
+            ),
+
+        formaPagamento:
+            resultado.formaPagamento ??
+            resultado.FormaPagamento ??
+            null,
+
+        valorTotal:
+            Number(
+                resultado.valorTotal ??
+                resultado.ValorTotal ??
+                0
+            ),
+
+        ingressos
+    };
+}
+
+function normalizarIngressoVenda(
+    ingresso
+) {
+    return {
+        id:
+            Number(
+                ingresso.id ??
+                ingresso.Id
+            ),
+
+        sessaoId:
+            Number(
+                ingresso.sessaoId ??
+                ingresso.SessaoId
+            ),
+
+        filme:
+            ingresso.filme ??
+            ingresso.Filme ??
+            "",
+
+        dataSessao:
+            ingresso.dataSessao ??
+            ingresso.DataSessao ??
+            null,
+
+        assentoId:
+            Number(
+                ingresso.assentoId ??
+                ingresso.AssentoId
+            ),
+
+        codigoAssento:
+            ingresso.codigoAssento ??
+            ingresso.CodigoAssento ??
+            "",
+
+        usuarioId:
+            ingresso.usuarioId ??
+            ingresso.UsuarioId ??
+            null,
+
+        usuario:
+            ingresso.usuario ??
+            ingresso.Usuario ??
+            null,
+
+        valorPago:
+            Number(
+                ingresso.valorPago ??
+                ingresso.ValorPago ??
+                0
+            ),
+
+        tokenQrCode:
+            ingresso.tokenQrCode ??
+            ingresso.TokenQrCode ??
+            "",
+
+        dataCompra:
+            ingresso.dataCompra ??
+            ingresso.DataCompra ??
+            null,
+
+        utilizado:
+            Boolean(
+                ingresso.utilizado ??
+                ingresso.Utilizado ??
+                false
+            ),
+
+        dataUtilizacao:
+            ingresso.dataUtilizacao ??
+            ingresso.DataUtilizacao ??
+            null
+    };
+}
+
+/* =========================================================
+   VENDA CONCLUÍDA
+========================================================= */
+
+async function processarVendaConcluida(venda) {
+    ultimaVendaBilheteria = venda;
+
+    assentosSelecionados = [];
+
+    limparFormaPagamento();
+
+    try {
+        await sincronizarAssentosComServidor();
+    } catch (erro) {
+        console.warn(
+            "Venda concluída, mas o mapa não pôde ser atualizado:",
+            erro
+        );
+
+        atualizarResumoSelecao();
+    }
+
+    preencherResultadoVenda(venda);
+
+    if (!modalResultadoVenda) {
+        console.error(
+            'O elemento "#modal-resultado-venda" não foi encontrado no HTML.'
+        );
+
+        document.body.classList.remove(
+            "modal-aberto"
+        );
+
+        return;
+    }
+
+    abrirModal(
+        modalResultadoVenda
+    );
+}
+
+function preencherResultadoVenda(venda) {
+    const quantidade =
+        venda.ingressos.length;
+
+    if (tituloResultadoVenda) {
+        tituloResultadoVenda.textContent =
+            "Venda concluída";
+    }
+
+    if (descricaoResultadoVenda) {
+        descricaoResultadoVenda.textContent =
+            quantidade === 1
+                ? "O ingresso foi registrado com sucesso."
+                : `${quantidade} ingressos foram registrados com sucesso.`;
+    }
+
+    renderizarIdsIngressos(venda);
+    prepararStatusImpressao(venda);
+}
+
+function renderizarIdsIngressos(venda) {
+    if (!idsIngressosVenda) {
+        return;
+    }
+
+    idsIngressosVenda.replaceChildren();
+
+    const identificacaoVenda =
+        document.createElement("div");
+
+    identificacaoVenda.className =
+        "identificacao-venda";
+
+    identificacaoVenda.innerHTML = `
+        <span>Venda</span>
+        <strong>#${venda.vendaId}</strong>
+    `;
+
+    idsIngressosVenda.append(
+        identificacaoVenda
+    );
+
+    venda.ingressos.forEach(
+        ingresso => {
+            const item =
+                document.createElement("div");
+
+            item.className =
+                "identificacao-ingresso";
+
+            item.innerHTML = `
+                <span>
+                    ${escaparHtml(ingresso.codigoAssento)}
+                </span>
+
+                <strong>
+                    Ingresso #${ingresso.id}
+                </strong>
+            `;
+
+            idsIngressosVenda.append(
+                item
+            );
+        }
     );
 }
 
 /* =========================================================
-   BLOQUEIO
-
-   Interface preparada. Persistência depende
-   do backend que ainda não existe.
+   IMPRESSÃO - PREPARAÇÃO
 ========================================================= */
 
-function abrirModalBloqueio() {
-    renderizarMapaBloqueio();
+function prepararStatusImpressao(venda) {
+    if (statusImpressao) {
+        statusImpressao.classList.remove(
+            "erro",
+            "sucesso"
+        );
+    }
 
-    abrirModal(
-        modalBloqueio
+    if (statusImpressaoTitulo) {
+        statusImpressaoTitulo.textContent =
+            "Ingressos prontos para impressão";
+    }
+
+    if (statusImpressaoDescricao) {
+        const quantidade =
+            venda.ingressos.length;
+
+        statusImpressaoDescricao.textContent =
+            quantidade === 1
+                ? "O ingresso foi criado e poderá ser impresso quando a integração com a impressora estiver configurada."
+                : "Os ingressos foram criados e poderão ser impressos quando a integração com a impressora estiver configurada.";
+    }
+
+    botaoReimprimir?.classList.add(
+        "hidden"
     );
 }
 
-function fecharModalBloqueio() {
-    fecharModal(
-        modalBloqueio
-    );
-}
-
-function renderizarMapaBloqueio() {
-    if (!mapaBloqueioAssentos) {
+function tentarReimprimirUltimaVenda() {
+    if (!ultimaVendaBilheteria) {
         return;
     }
 
-    mapaBloqueioAssentos.innerHTML = "";
-
     /*
-        Por enquanto apenas mostramos a
-        disponibilidade.
-
-        Não permitimos confirmar algo que o
-        backend ainda não consegue persistir.
+        A impressão será implementada
+        posteriormente.
     */
-
-    const mensagem =
-        document.createElement(
-            "p"
-        );
-
-    mensagem.className =
-        "mensagem-bloqueio-pendente";
-
-    mensagem.textContent =
-        "O bloqueio de assentos será habilitado após a implementação do suporte no backend.";
-
-    mapaBloqueioAssentos.append(
-        mensagem
-    );
-
-    botaoConfirmarBloqueio.disabled =
-        true;
 }
 
-function confirmarBloqueio() {
-    /*
-        Sem endpoint real, não fazemos nada.
-        Isso evita uma falsa sensação de
-        bloqueio que desapareceria ao atualizar.
-    */
+/* =========================================================
+   NOVA VENDA
+========================================================= */
+
+async function iniciarNovaVenda() {
+    fecharModal(
+        modalResultadoVenda
+    );
+
+    ultimaVendaBilheteria = null;
+
+    limparFormaPagamento();
+    esconderErroVenda();
+
+    try {
+        await sincronizarAssentosComServidor();
+    } catch {
+        exibirMensagemPagina(
+            "A venda foi concluída, mas não foi possível atualizar os assentos.",
+            "erro"
+        );
+    }
 }
 
 /* =========================================================
    MODAIS
 ========================================================= */
 
-function abrirModal(
-    modal
-) {
+function abrirModal(modal) {
     if (!modal) {
+        console.error(
+            "Tentativa de abrir um modal inexistente."
+        );
+
+        atualizarBloqueioScroll();
         return;
     }
 
     modal.hidden = false;
-
-    modal.classList.add(
-        "aberto",
-        "ativo"
-    );
 
     modal.setAttribute(
         "aria-hidden",
         "false"
     );
 
-    document.body.classList.add(
-        "modal-aberto"
+    modal.classList.add(
+        "aberto",
+        "ativo"
     );
+
+    atualizarBloqueioScroll();
 }
 
-function fecharModal(
-    modal
-) {
+function fecharModal(modal) {
     if (!modal) {
+        atualizarBloqueioScroll();
         return;
     }
-
-    modal.hidden = true;
 
     modal.classList.remove(
         "aberto",
@@ -2070,41 +2343,62 @@ function fecharModal(
         "true"
     );
 
-    if (
-        !existeModalAberto()
-    ) {
-        document.body.classList.remove(
-            "modal-aberto"
-        );
-    }
+    modal.hidden = true;
+
+    atualizarBloqueioScroll();
+}
+
+function atualizarBloqueioScroll() {
+    const existeModalVisivel = [
+        modalSessoes,
+        modalVenda,
+        modalResultadoVenda
+    ].some(
+        modal =>
+            modal &&
+            !modal.hidden &&
+            (
+                modal.classList.contains("ativo") ||
+                modal.classList.contains("aberto")
+            )
+    );
+
+    document.body.classList.toggle(
+        "modal-aberto",
+        existeModalVisivel
+    );
 }
 
 function existeModalAberto() {
     return [
         modalSessoes,
         modalVenda,
-        modalBloqueio
+        modalResultadoVenda
     ].some(
         modal =>
             modal &&
-            modal.hidden === false
+            !modal.hidden &&
+            (
+                modal.classList.contains("ativo") ||
+                modal.classList.contains("aberto")
+            )
     );
 }
 
-function controlarTeclado(
-    evento
-) {
-    if (
-        evento.key !== "Escape"
-    ) {
+function controlarTeclado(evento) {
+    if (evento.key !== "Escape") {
+        return;
+    }
+
+    if (vendaEmAndamento) {
         return;
     }
 
     if (
-        modalBloqueio &&
-        !modalBloqueio.hidden
+        modalResultadoVenda &&
+        !modalResultadoVenda.hidden
     ) {
-        fecharModalBloqueio();
+        iniciarNovaVenda();
         return;
     }
 
@@ -2129,19 +2423,14 @@ function controlarTeclado(
 ========================================================= */
 
 async function voltarPaginaAnterior() {
-    /*
-        Ao usar o botão explícito de voltar,
-        liberamos as reservas imediatamente.
-
-        O fechamento brusco do navegador não é
-        um problema: o backend expira as reservas
-        sozinho após 10 minutos.
-    */
+    if (vendaEmAndamento) {
+        return;
+    }
 
     try {
         await liberarReservasSessaoAtual();
     } catch {
-        /* não impede a navegação */
+        /* não impede navegação */
     }
 
     if (
@@ -2188,7 +2477,9 @@ async function requisicaoAutenticada(
     options = {}
 ) {
     const token =
-        localStorage.getItem("token");
+        localStorage.getItem(
+            "token"
+        );
 
     if (!token) {
         const erro =
@@ -2221,13 +2512,14 @@ async function requisicaoAutenticada(
     let resposta;
 
     try {
-        resposta = await fetch(
-            `${API_URL}${endpoint}`,
-            {
-                ...options,
-                headers
-            }
-        );
+        resposta =
+            await fetch(
+                `${API_URL}${endpoint}`,
+                {
+                    ...options,
+                    headers
+                }
+            );
     } catch {
         throw new Error(
             "Não foi possível se comunicar com o servidor."
@@ -2316,8 +2608,11 @@ function obterMensagemResposta(
 
     return (
         dados.mensagem ??
+        dados.Mensagem ??
         dados.message ??
+        dados.Message ??
         dados.title ??
+        dados.Title ??
         dados.erro ??
         dados.error ??
         null
@@ -2468,12 +2763,18 @@ function obterChaveDataLocal(
     const mes =
         String(
             data.getMonth() + 1
-        ).padStart(2, "0");
+        ).padStart(
+            2,
+            "0"
+        );
 
     const dia =
         String(
             data.getDate()
-        ).padStart(2, "0");
+        ).padStart(
+            2,
+            "0"
+        );
 
     return `${ano}-${mes}-${dia}`;
 }
@@ -2522,7 +2823,8 @@ function obterNomeRelativoDia(
         .toLocaleDateString(
             "pt-BR",
             {
-                weekday: "long"
+                weekday:
+                    "long"
             }
         )
         .replace(

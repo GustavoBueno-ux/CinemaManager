@@ -1,8 +1,8 @@
 using CinemaAPI.DTOs.Ingressos;
 using CinemaAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
 
 namespace CinemaAPI.Controllers;
 
@@ -12,26 +12,57 @@ public class IngressoController : ControllerBase
 {
     private readonly IIngressoService _service;
 
-    public IngressoController(IIngressoService service)
+    public IngressoController(
+        IIngressoService service
+    )
     {
         _service = service;
     }
 
 
     [HttpPost("online")]
-    public async Task<IActionResult> ComprarOnline(CriarIngressoDTO dto)
+    public async Task<IActionResult> ComprarOnline(
+        CriarIngressoDTO dto
+    )
     {
         try
         {
-            var ingresso = await _service.CriarAsync(dto);
+            var ingresso =
+                await _service.CriarAsync(dto);
+
             return Ok(ingresso);
         }
-        catch (Exception ex)
+        catch (KeyNotFoundException ex)
         {
-            return BadRequest(ex.Message);
+            return NotFound(new
+            {
+                mensagem = ex.Message
+            });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new
+            {
+                mensagem = ex.Message
+            });
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new
+            {
+                mensagem = ex.Message
+            });
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, new
+            {
+                mensagem =
+                    "Ocorreu um erro interno ao realizar a compra."
+            });
         }
     }
-    
+
 
     [Authorize]
     [HttpPost("online/lote")]
@@ -43,30 +74,39 @@ public class IngressoController : ControllerBase
             ClaimTypes.NameIdentifier
         )?.Value;
 
-        if (!int.TryParse(usuarioIdClaim, out var usuarioId))
+        if (
+            !int.TryParse(
+                usuarioIdClaim,
+                out var usuarioId
+            )
+        )
         {
             return Unauthorized(new
             {
-                mensagem = "Token inválido ou usuário não identificado."
+                mensagem =
+                    "Token inválido ou usuário não identificado."
             });
         }
 
         try
         {
-            var ingressos = await _service.CriarEmLoteAsync(
-                usuarioId,
-                dto
-            );
+            var ingressos =
+                await _service.CriarEmLoteAsync(
+                    usuarioId,
+                    dto
+                );
 
             return Created(
                 string.Empty,
                 new
                 {
-                    quantidade = ingressos.Count,
+                    quantidade =
+                        ingressos.Count,
 
-                    valorTotal = ingressos.Sum(
-                        i => i.ValorPago
-                    ),
+                    valorTotal =
+                        ingressos.Sum(
+                            i => i.ValorPago
+                        ),
 
                     ingressos
                 }
@@ -93,20 +133,82 @@ public class IngressoController : ControllerBase
                 mensagem = ex.Message
             });
         }
+        catch (Exception)
+        {
+            return StatusCode(500, new
+            {
+                mensagem =
+                    "Ocorreu um erro interno ao realizar a compra."
+            });
+        }
     }
 
 
-    [HttpPost("bilheteria")]
-    public async Task<IActionResult> VenderBilheteria(CriarIngressoDTO dto)
+    [Authorize(Roles = "Funcionario")]
+    [HttpPost("bilheteria/lote")]
+    public async Task<IActionResult> VenderIngressosBilheteria(
+        [FromBody] CriarVendaBilheteriaDTO dto
+    )
     {
+        var funcionarioIdClaim = User.FindFirst(
+            ClaimTypes.NameIdentifier
+        )?.Value;
+
+        if (
+            !int.TryParse(
+                funcionarioIdClaim,
+                out var funcionarioId
+            )
+        )
+        {
+            return Unauthorized(new
+            {
+                mensagem =
+                    "Token inválido ou funcionário não identificado."
+            });
+        }
+
         try
         {
-            var ingresso = await _service.CriarAsync(dto);
-            return Ok(ingresso);
+            var venda =
+                await _service.CriarVendaBilheteriaAsync(
+                    funcionarioId,
+                    dto
+                );
+
+            return Created(
+                string.Empty,
+                venda
+            );
         }
-        catch(Exception ex)
+        catch (ArgumentException ex)
         {
-            return BadRequest(ex.Message);
+            return BadRequest(new
+            {
+                mensagem = ex.Message
+            });
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new
+            {
+                mensagem = ex.Message
+            });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new
+            {
+                mensagem = ex.Message
+            });
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, new
+            {
+                mensagem =
+                    "Ocorreu um erro interno ao realizar a venda."
+            });
         }
     }
 
@@ -114,7 +216,9 @@ public class IngressoController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> ListarTodos()
     {
-        var ingressos = await _service.ListarTodosAsync();
+        var ingressos =
+            await _service.ListarTodosAsync();
+
         return Ok(ingressos);
     }
 
@@ -128,18 +232,27 @@ public class IngressoController : ControllerBase
         )?.Value;
 
         if (
-            string.IsNullOrWhiteSpace(usuarioIdClaim) ||
-            !int.TryParse(usuarioIdClaim, out var usuarioId)
+            string.IsNullOrWhiteSpace(
+                usuarioIdClaim
+            ) ||
+            !int.TryParse(
+                usuarioIdClaim,
+                out var usuarioId
+            )
         )
         {
             return Unauthorized(new
             {
-                mensagem = "Token inválido ou usuário não identificado."
+                mensagem =
+                    "Token inválido ou usuário não identificado."
             });
         }
 
-        var ingressos = await _service
-            .ListarDoUsuarioAsync(usuarioId);
+        var ingressos =
+            await _service
+                .ListarDoUsuarioAsync(
+                    usuarioId
+                );
 
         return Ok(ingressos);
     }
@@ -147,54 +260,78 @@ public class IngressoController : ControllerBase
 
     [Authorize]
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> BuscarPorId(int id)
+    public async Task<IActionResult> BuscarPorId(
+        int id
+    )
     {
         var usuarioIdClaim = User.FindFirst(
             ClaimTypes.NameIdentifier
         )?.Value;
-    
+
         if (
-            string.IsNullOrWhiteSpace(usuarioIdClaim) ||
-            !int.TryParse(usuarioIdClaim, out var usuarioId)
+            string.IsNullOrWhiteSpace(
+                usuarioIdClaim
+            ) ||
+            !int.TryParse(
+                usuarioIdClaim,
+                out var usuarioId
+            )
         )
         {
             return Unauthorized(new
             {
-                mensagem = "Token inválido ou usuário não identificado."
+                mensagem =
+                    "Token inválido ou usuário não identificado."
             });
         }
-    
-        var ingresso = await _service.BuscarPorIdAsync(
-            id,
-            usuarioId
-        );
-    
+
+        var ingresso =
+            await _service.BuscarPorIdAsync(
+                id,
+                usuarioId
+            );
+
         if (ingresso is null)
         {
             return NotFound(new
             {
-                mensagem = "Ingresso não encontrado."
+                mensagem =
+                    "Ingresso não encontrado."
             });
         }
-    
+
         return Ok(ingresso);
     }
 
 
     [HttpPost("validar")]
-    public async Task<IActionResult> Validar(ValidarIngressoDTO dto)
+    public async Task<IActionResult> Validar(
+        ValidarIngressoDTO dto
+    )
     {
-        var resultado = await _service.ValidarAsync(dto);
+        var resultado =
+            await _service.ValidarAsync(dto);
+
         return Ok(resultado);
     }
 
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Excluir(int id)
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Excluir(
+        int id
+    )
     {
-        var removido = await _service.ExcluirAsync(id);
+        var removido =
+            await _service.ExcluirAsync(id);
 
-        if (!removido) return NotFound();
+        if (!removido)
+        {
+            return NotFound(new
+            {
+                mensagem =
+                    "Ingresso não encontrado."
+            });
+        }
 
         return NoContent();
     }

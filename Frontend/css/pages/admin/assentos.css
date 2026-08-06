@@ -64,21 +64,15 @@ body.modal-aberto {
     display: inline-flex;
     align-items: center;
     gap: 7px;
-
     margin-left: 10%;
     margin-bottom: 30px;
     padding: 0;
-
     border: none;
     background: transparent;
-
     color: #e50914;
-
     font-size: 18px;
     font-weight: 600;
-
     cursor: pointer;
-
     transition: color 0.3s ease;
 }
 
@@ -95,14 +89,10 @@ body.modal-aberto {
     grid-template-columns:
         minmax(0, 1.4fr)
         minmax(360px, 1fr);
-
     align-items: stretch;
-
     gap: 22px;
-
     width: 100%;
     max-width: 1250px;
-
     margin: 0 auto 28px;
 }
 
@@ -110,16 +100,13 @@ body.modal-aberto {
 .estatisticas-assentos {
     border: 1px solid #303030;
     border-radius: 18px;
-
     background:
         linear-gradient(
             145deg,
             rgba(28, 28, 28, 0.98),
             rgba(17, 17, 17, 0.98)
         );
-
-    box-shadow:
-        0 14px 32px rgba(0, 0, 0, 0.28);
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.28);
 }
 
 /* =========================================
@@ -130,22 +117,16 @@ body.modal-aberto {
     display: flex;
     align-items: center;
     justify-content: space-between;
-
     gap: 35px;
-
     width: 100%;
     padding: 26px 30px;
-
     text-align: left;
 }
 
 .informacoes-filme-interativa {
     position: relative;
-
     border: 1px solid #303030;
-
     cursor: pointer;
-
     transition:
         border-color 0.25s ease,
         transform 0.25s ease,
@@ -155,17 +136,13 @@ body.modal-aberto {
 
 .informacoes-filme-interativa:hover {
     border-color: #454545;
-
     background:
         linear-gradient(
             145deg,
             rgba(34, 34, 34, 0.99),
             rgba(20, 20, 20, 0.99)
         );
-
-    box-shadow:
-        0 16px 36px rgba(0, 0, 0, 0.35);
-
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
     transform: translateY(-1px);
 }
 
@@ -181,28 +158,20 @@ body.modal-aberto {
 
 .rotulo-informacao {
     display: block;
-
     margin-bottom: 7px;
-
     color: #929292;
-
     font-size: 0.73rem;
     font-weight: 700;
-
     letter-spacing: 1px;
     text-transform: uppercase;
 }
 
 #titulo-filme {
     overflow: hidden;
-
     margin: 0;
-
     color: #ffffff;
-
     font-size: clamp(1.45rem, 2.5vw, 2.25rem);
     line-height: 1.15;
-
     text-overflow: ellipsis;
 }
 
@@ -210,23 +179,17 @@ body.modal-aberto {
     display: flex;
     align-items: center;
     flex-shrink: 0;
-
     gap: 14px;
 }
 
 .detalhe-sessao {
     display: flex;
     align-items: center;
-
     gap: 11px;
-
     min-width: 130px;
-
     padding: 14px 16px;
-
     border: 1px solid #343434;
     border-radius: 12px;
-
     background: #121212;
 }
 
@@ -234,22 +197,16 @@ body.modal-aberto {
     display: flex;
     align-items: center;
     justify-content: center;
-
     width: 37px;
     height: 37px;
-
     border-radius: 9px;
-
     background: #252525;
-
     font-size: 1.05rem;
 }
 
 .detalhe-sessao strong {
     display: block;
-
     color: #ffffff;
-
     font-size: 0.98rem;
 }
 
@@ -257,21 +214,14 @@ body.modal-aberto {
     display: flex;
     align-items: center;
     justify-content: center;
-
     width: 33px;
     height: 33px;
-
     margin-left: 2px;
-
     border-radius: 50%;
-
     background: rgba(255, 255, 255, 0.06);
-
     color: #aaaaaa;
-
     font-size: 1.7rem;
     font-weight: 300;
-
     transition:
         color 0.2s ease,
         background 0.2s ease,
@@ -282,7 +232,6 @@ body.modal-aberto {
 .indicador-alterar-sessao {
     color: #ffffff;
     background: rgba(229, 9, 20, 0.18);
-
     transform: translateX(2px);
 }
 
@@ -293,9 +242,7 @@ body.modal-aberto {
 .estatisticas-assentos {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-
     gap: 10px;
-
     padding: 17px;
 }
 
@@ -303,38 +250,29 @@ body.modal-aberto {
     display: flex;
     align-items: center;
     justify-content: center;
-
     gap: 11px;
-
     min-width: 0;
-
     padding: 16px 10px;
-
     border: 1px solid #333333;
     border-radius: 13px;
-
     background: #121212;
 }
 
 .estatistica-assento div {
     display: flex;
     flex-direction: column;
-
     min-width: 0;
 }
 
 .estatistica-assento strong {
     color: #ffffff;
-
     font-size: 1.3rem;
     line-height: 1;
 }
 
 .estatistica-assento div > span {
     margin-top: 5px;
-
     color: #a9a9a9;
-
     font-size: 0.72rem;
 }
 
@@ -344,45 +282,32 @@ body.modal-aberto {
 
 .mini-assento {
     position: relative;
-
     display: block;
     flex-shrink: 0;
-
     width: 30px;
     height: 26px;
-
     border-radius: 6px 6px 8px 8px;
 }
 
 .mini-assento::before {
     content: "";
-
     position: absolute;
-
     top: -5px;
     left: 3px;
-
     width: calc(100% - 6px);
     height: 8px;
-
     border-radius: 5px 5px 2px 2px;
-
     background: inherit;
 }
 
 .mini-assento::after {
     content: "";
-
     position: absolute;
-
     bottom: -4px;
     left: 5px;
-
     width: calc(100% - 10px);
     height: 5px;
-
     border-radius: 0 0 5px 5px;
-
     background: rgba(0, 0, 0, 0.4);
 }
 
@@ -400,8 +325,6 @@ body.modal-aberto {
 
 /* =========================================
    ÁREA DA SALA
-
-   IDÊNTICA À TELA DO CLIENTE
 ========================================= */
 
 .conteudo-assentos {
@@ -411,108 +334,74 @@ body.modal-aberto {
 .sala-cinema {
     width: 100%;
     max-width: 1500px;
-
     margin: 0 auto;
-
     padding: 35px 25px 30px;
-
     border: 1px solid #303030;
     border-radius: 20px;
-
     background: rgba(18, 18, 18, 0.95);
-
-    box-shadow:
-        0 20px 50px rgba(0, 0, 0, 0.45);
-
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
     overflow-x: auto;
 }
 
 /* =========================================
    MAPA DE ASSENTOS
-
-   MESMAS REGRAS DO CLIENTE
 ========================================= */
 
 #mapa-assentos,
 .mapa-assentos {
     display: flex;
     flex-direction: column;
-
     gap: 14px;
-
     width: 100%;
     min-width: 720px;
-
     margin: 0 auto;
 }
 
 .fileira {
     display: grid;
-
     grid-template-columns:
         28px
         minmax(650px, 1fr)
         28px;
-
     align-items: center;
-
     gap: 12px;
-
     width: 100%;
 }
 
 .identificador-fileira {
     color: #aaaaaa;
-
     font-size: 0.9rem;
     font-weight: bold;
-
     text-align: center;
 }
 
 .area-assentos-fileira {
     display: grid;
-
-    grid-template-columns:
-        repeat(19, minmax(25px, 1fr));
-
+    grid-template-columns: repeat(19, minmax(25px, 1fr));
     align-items: center;
-
     gap: clamp(4px, 0.7vw, 9px);
-
     width: 100%;
 }
 
 /* =========================================
    ASSENTOS
-
-   MESMO VISUAL DO CLIENTE
 ========================================= */
 
 .assento {
     position: relative;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     width: 100%;
-
     aspect-ratio: 1.08 / 1;
-
     min-width: 25px;
     max-width: 48px;
-
     justify-self: center;
-
     border: none;
     border-radius: 7px 7px 10px 10px;
-
     font-size: clamp(0.58rem, 0.8vw, 0.72rem);
     font-weight: bold;
-
     cursor: pointer;
-
     transition:
         transform 0.2s ease,
         background-color 0.2s ease,
@@ -521,37 +410,25 @@ body.modal-aberto {
 
 .assento::before {
     content: "";
-
     position: absolute;
-
     top: -4px;
     left: 3px;
-
     width: calc(100% - 6px);
     height: 8px;
-
     border-radius: 6px 6px 2px 2px;
-
     background: inherit;
 }
 
 .assento::after {
     content: "";
-
     position: absolute;
-
     bottom: -4px;
     left: 5px;
-
     width: calc(100% - 10px);
     height: 5px;
-
     border-radius: 0 0 5px 5px;
-
     background: rgba(0, 0, 0, 0.35);
 }
-
-/* Disponível */
 
 .assento.disponivel {
     background: #24a148;
@@ -560,79 +437,55 @@ body.modal-aberto {
 
 .assento.disponivel:hover {
     background: #2fbd58;
-
     transform: translateY(-4px);
-
-    box-shadow:
-        0 7px 18px rgba(36, 161, 72, 0.4);
+    box-shadow: 0 7px 18px rgba(36, 161, 72, 0.4);
 }
-
-/* Selecionado */
 
 .assento.selecionado {
     background: #1677ff;
     color: #ffffff;
-
     transform: translateY(-3px);
-
-    box-shadow:
-        0 7px 18px rgba(22, 119, 255, 0.45);
+    box-shadow: 0 7px 18px rgba(22, 119, 255, 0.45);
 }
 
 .assento.selecionado:hover {
     background: #1677ff;
     color: #ffffff;
-
     transform: translateY(-3px);
-
-    box-shadow:
-        0 7px 18px rgba(22, 119, 255, 0.45);
+    box-shadow: 0 7px 18px rgba(22, 119, 255, 0.45);
 }
-
-/* Ocupado */
 
 .assento.ocupado,
 .assento:disabled {
     background: #d32f2f;
     color: #ffffff;
-
     cursor: not-allowed;
-
     opacity: 0.7;
 }
 
 .assento.ocupado:hover,
 .assento:disabled:hover {
     background: #d32f2f;
-
     transform: none;
-
     box-shadow: none;
 }
 
-/* Preparado para o bloqueio futuro */
-
+/* Preparado caso o backend use esse status futuramente */
 .assento.bloqueado {
     background: #8b5cf6;
     color: #ffffff;
-
     opacity: 0.75;
 }
 
 /* =========================================
    TELA DO CINEMA
-
-   MESMO VISUAL DO CLIENTE
 ========================================= */
 
 .tela-container {
     width: 100%;
     min-width: 720px;
-
     margin: 60px auto 5px;
-
     text-align: center;
-
     perspective: 600px;
 }
 
@@ -640,18 +493,13 @@ body.modal-aberto {
     display: flex;
     align-items: center;
     justify-content: center;
-
     width: 75%;
     max-width: 760px;
     min-height: 48px;
-
     margin: 0 auto;
-
     padding: 13px 90px;
-
     border: 2px solid #dddddd;
     border-radius: 50% 50% 12px 12px;
-
     background:
         linear-gradient(
             180deg,
@@ -659,20 +507,16 @@ body.modal-aberto {
             #d7d7d7 55%,
             #9f9f9f 100%
         );
-
     color: #181818;
-
     box-shadow:
         0 8px 20px rgba(255, 255, 255, 0.15),
         0 18px 35px rgba(255, 255, 255, 0.08);
-
     transform: rotateX(-8deg);
 }
 
 .tela-cinema span {
     font-size: 0.82rem;
     font-weight: 800;
-
     letter-spacing: 10px;
     text-indent: 10px;
 }
@@ -687,74 +531,56 @@ body.modal-aberto {
         minmax(0, 1fr)
         auto
         auto;
-
     align-items: center;
-
     gap: 25px;
-
     width: 100%;
     max-width: 1500px;
-
     margin: 30px auto 0;
     padding: 25px;
-
     border: 1px solid #303030;
     border-radius: 16px;
-
     background: #151515;
 }
 
 .assentos-escolhidos {
     display: flex;
     flex-direction: column;
-
     gap: 8px;
-
     min-width: 0;
 }
 
 .titulo-resumo,
 .preco-total > span {
     color: #999999;
-
     font-size: 0.8rem;
     font-weight: 500;
-
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
 .lista-assentos-selecionados {
     min-height: 23px;
-
     color: #ffffff;
-
     font-size: 1rem;
     font-weight: 700;
-
     line-height: 1.45;
 }
 
 .nenhum-assento {
     color: #777777;
-
     font-weight: 400;
 }
 
 .preco-total {
     display: flex;
     flex-direction: column;
-
     gap: 6px;
-
     min-width: 110px;
-
     text-align: right;
 }
 
 #valorTotal {
     color: #ffffff;
-
     font-size: 1.3rem;
     font-weight: 800;
 }
@@ -765,21 +591,14 @@ body.modal-aberto {
 
 .botao-continuar {
     min-width: 180px;
-
     padding: 14px 26px;
-
     border: none;
     border-radius: 8px;
-
     background: #e50914;
-
     color: #ffffff;
-
     font-size: 1rem;
     font-weight: bold;
-
     cursor: pointer;
-
     transition:
         background-color 0.2s ease,
         transform 0.2s ease,
@@ -788,115 +607,14 @@ body.modal-aberto {
 
 .botao-continuar:hover:not(:disabled) {
     background: #ff1722;
-
     transform: translateY(-2px);
 }
 
 .botao-continuar:disabled {
     background: #555555;
     color: #a5a5a5;
-
     cursor: not-allowed;
-
     opacity: 0.65;
-}
-
-/* =========================================
-   BLOQUEAR ASSENTOS
-========================================= */
-
-.acoes-administrativas-assentos {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    gap: 25px;
-
-    width: 100%;
-    max-width: 1500px;
-
-    margin: 18px auto 0;
-    padding: 22px 25px;
-
-    border: 1px solid #303030;
-    border-radius: 16px;
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(23, 23, 23, 0.98),
-            rgba(15, 15, 15, 0.98)
-        );
-}
-
-.acao-bloqueio-descricao {
-    display: flex;
-    align-items: center;
-
-    gap: 15px;
-}
-
-.acao-bloqueio-label {
-    display: block;
-
-    margin-bottom: 5px;
-
-    color: #e50914;
-
-    font-size: 0.7rem;
-    font-weight: 700;
-
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-}
-
-.acao-bloqueio-descricao strong {
-    display: block;
-
-    margin-bottom: 5px;
-
-    color: #ffffff;
-
-    font-size: 0.98rem;
-}
-
-.acao-bloqueio-descricao p {
-    color: #8f8f8f;
-
-    font-size: 0.8rem;
-    line-height: 1.45;
-}
-
-.botao-bloquear-assentos {
-    flex-shrink: 0;
-
-    min-height: 42px;
-
-    padding: 10px 18px;
-
-    border: 1px solid #3d3d3d;
-    border-radius: 9px;
-
-    background: #1b1b1b;
-
-    color: #d8d8d8;
-
-    font-size: 0.82rem;
-    font-weight: 600;
-
-    cursor: pointer;
-
-    transition:
-        background 0.2s ease,
-        border-color 0.2s ease,
-        color 0.2s ease;
-}
-
-.botao-bloquear-assentos:hover {
-    background: #252525;
-    border-color: #555555;
-
-    color: #ffffff;
 }
 
 /* =========================================
@@ -906,9 +624,7 @@ body.modal-aberto {
 .mensagem-carregamento,
 .mensagem-erro {
     width: 100%;
-
     padding: 35px;
-
     text-align: center;
 }
 
@@ -923,25 +639,18 @@ body.modal-aberto {
 .mensagem-pagina {
     width: 100%;
     max-width: 1500px;
-
     margin: 18px auto 0;
     padding: 14px 16px;
-
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 10px;
-
     background: #151515;
-
     color: #cfcfcf;
-
     font-size: 0.82rem;
 }
 
 .mensagem-pagina.erro {
     border-color: rgba(229, 9, 20, 0.35);
-
     background: rgba(229, 9, 20, 0.09);
-
     color: #ff8e94;
 }
 
@@ -950,39 +659,29 @@ body.modal-aberto {
 ========================================= */
 
 .modal-sessoes,
-.modal-bloqueio,
 .modal-resultado-venda {
     position: fixed;
-
     inset: 0;
-
     z-index: 1000;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     padding: 24px;
-
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-
     transition:
         opacity 0.25s ease,
         visibility 0.25s ease;
 }
 
 .modal-sessoes[hidden],
-.modal-bloqueio[hidden],
 .modal-resultado-venda[hidden] {
     display: none !important;
 }
 
 .modal-sessoes.ativo,
 .modal-sessoes.aberto,
-.modal-bloqueio.ativo,
-.modal-bloqueio.aberto,
 .modal-resultado-venda.ativo,
 .modal-resultado-venda.aberto {
     opacity: 1;
@@ -992,63 +691,44 @@ body.modal-aberto {
 
 .fundo-modal {
     position: absolute;
-
     inset: 0;
-
     background: rgba(0, 0, 0, 0.65);
-
     backdrop-filter: blur(3px);
 }
 
 .conteudo-modal {
     position: relative;
-
     z-index: 1;
-
     color: #ffffff;
-
     background:
         linear-gradient(
             145deg,
             #17171d,
             #101014
         );
-
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 22px;
-
-    box-shadow:
-        0 28px 70px rgba(0, 0, 0, 0.55);
+    box-shadow: 0 28px 70px rgba(0, 0, 0, 0.55);
 }
 
 .botao-fechar-modal {
     position: absolute;
-
     top: 22px;
     left: 24px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     width: 42px;
     height: 42px;
-
     padding: 0;
-
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 50%;
-
     background: rgba(255, 255, 255, 0.07);
-
     color: #ffffff;
-
     font-size: 30px;
     font-weight: 300;
     line-height: 1;
-
     cursor: pointer;
-
     transition:
         background-color 0.2s ease,
         border-color 0.2s ease,
@@ -1057,10 +737,7 @@ body.modal-aberto {
 
 .botao-fechar-modal:hover {
     background: rgba(255, 255, 255, 0.14);
-
-    border-color:
-        rgba(255, 255, 255, 0.22);
-
+    border-color: rgba(255, 255, 255, 0.22);
     transform: scale(1.06);
 }
 
@@ -1071,12 +748,9 @@ body.modal-aberto {
 .conteudo-modal-sessoes {
     width: min(820px, 92vw);
     max-height: min(82vh, 760px);
-
     display: flex;
     flex-direction: column;
-
     padding: 30px 32px;
-
     overflow: hidden;
 }
 
@@ -1087,27 +761,21 @@ body.modal-aberto {
 
 .modal-label {
     display: block;
-
     margin-bottom: 5px;
-
     color: #e50914;
-
     font-size: 0.72rem;
     font-weight: 700;
-
     text-transform: uppercase;
     letter-spacing: 0.08em;
 }
 
 .cabecalho-modal-sessoes h2 {
     margin-bottom: 7px;
-
     font-size: clamp(1.5rem, 3vw, 2rem);
 }
 
 .cabecalho-modal-sessoes p {
     color: #9c9ca5;
-
     font-size: 0.9rem;
 }
 
@@ -1122,19 +790,13 @@ body.modal-aberto {
 .campo-pesquisa-sessoes {
     display: flex;
     align-items: center;
-
     gap: 10px;
-
     width: 100%;
     height: 47px;
-
     padding: 0 14px;
-
     border: 1px solid #33333a;
     border-radius: 11px;
-
     background: #0d0d11;
-
     transition:
         border-color 0.2s ease,
         box-shadow 0.2s ease;
@@ -1142,29 +804,21 @@ body.modal-aberto {
 
 .campo-pesquisa-sessoes:focus-within {
     border-color: #e50914;
-
-    box-shadow:
-        0 0 0 3px rgba(229, 9, 20, 0.09);
+    box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.09);
 }
 
 .campo-pesquisa-sessoes > span {
     color: #74747d;
-
     font-size: 1.15rem;
 }
 
 .campo-pesquisa-sessoes input {
     flex: 1;
-
     width: 100%;
-
     border: none;
     outline: none;
-
     background: transparent;
-
     color: #ffffff;
-
     font-size: 0.86rem;
 }
 
@@ -1178,11 +832,8 @@ body.modal-aberto {
 
 .lista-sessoes {
     flex: 1;
-
     min-height: 0;
-
     padding-right: 6px;
-
     overflow-y: auto;
 }
 
@@ -1192,16 +843,13 @@ body.modal-aberto {
 
 .lista-sessoes::-webkit-scrollbar-thumb {
     background: #34343b;
-
     border-radius: 10px;
 }
 
 .carregando-sessoes,
 .nenhuma-sessao {
     padding: 35px 15px;
-
     color: #9999a2;
-
     text-align: center;
 }
 
@@ -1212,57 +860,41 @@ body.modal-aberto {
 .grupo-sessoes-cabecalho {
     display: flex;
     align-items: baseline;
-
     gap: 9px;
-
     margin-bottom: 10px;
 }
 
 .grupo-sessoes-cabecalho strong {
     color: #ffffff;
-
     font-size: 0.9rem;
 }
 
 .grupo-sessoes-cabecalho span {
     color: #74747e;
-
     font-size: 0.74rem;
 }
 
 .grupo-sessoes-lista {
     display: flex;
     flex-direction: column;
-
     gap: 8px;
 }
 
 .sessao-opcao {
     display: grid;
-
     grid-template-columns:
         minmax(0, 1fr)
         auto;
-
     align-items: center;
-
     gap: 20px;
-
     width: 100%;
-
     padding: 14px 16px;
-
     border: 1px solid #303037;
     border-radius: 11px;
-
     background: #111116;
-
     color: #ffffff;
-
     text-align: left;
-
     cursor: pointer;
-
     transition:
         background 0.2s ease,
         border-color 0.2s ease,
@@ -1271,18 +903,13 @@ body.modal-aberto {
 
 .sessao-opcao:hover:not(:disabled) {
     background: #19191f;
-
     border-color: #484850;
-
     transform: translateX(2px);
 }
 
 .sessao-opcao.ativa {
-    border-color:
-        rgba(229, 9, 20, 0.5);
-
-    background:
-        rgba(229, 9, 20, 0.1);
+    border-color: rgba(229, 9, 20, 0.5);
+    background: rgba(229, 9, 20, 0.1);
 }
 
 .sessao-opcao:disabled {
@@ -1291,166 +918,15 @@ body.modal-aberto {
 
 .sessao-opcao-filme {
     overflow: hidden;
-
     font-size: 0.9rem;
     font-weight: 600;
-
     white-space: nowrap;
     text-overflow: ellipsis;
 }
 
 .sessao-opcao-horario {
     color: #e50914;
-
     font-size: 0.95rem;
-}
-
-/* =========================================
-   MODAL BLOQUEIO
-========================================= */
-
-.conteudo-modal-bloqueio {
-    width: min(900px, 94vw);
-    max-height: min(88vh, 800px);
-
-    padding: 30px 32px;
-
-    overflow-y: auto;
-}
-
-.cabecalho-modal-bloqueio {
-    padding-left: 54px;
-    margin-bottom: 22px;
-}
-
-.cabecalho-modal-bloqueio h2 {
-    margin-bottom: 7px;
-
-    font-size: clamp(1.5rem, 3vw, 2rem);
-}
-
-.cabecalho-modal-bloqueio p {
-    max-width: 650px;
-
-    color: #9999a2;
-
-    font-size: 0.87rem;
-    line-height: 1.5;
-}
-
-.legenda-bloqueio {
-    display: flex;
-    flex-wrap: wrap;
-
-    gap: 22px;
-
-    margin-bottom: 20px;
-    padding: 14px 16px;
-
-    border: 1px solid #303037;
-    border-radius: 11px;
-
-    background: #111116;
-}
-
-.item-legenda-bloqueio {
-    display: flex;
-    align-items: center;
-
-    gap: 10px;
-
-    color: #b5b5bc;
-
-    font-size: 0.78rem;
-}
-
-.item-legenda-bloqueio
-.mini-assento.disponivel {
-    background: #24a148;
-}
-
-.item-legenda-bloqueio
-.mini-assento.bloqueado {
-    background: #8b5cf6;
-}
-
-.item-legenda-bloqueio
-.mini-assento.ocupado {
-    background: #d32f2f;
-}
-
-.mapa-bloqueio-assentos {
-    min-height: 180px;
-
-    padding: 22px;
-
-    border: 1px solid #303037;
-    border-radius: 13px;
-
-    background: #0d0d11;
-}
-
-.mensagem-bloqueio-pendente {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    min-height: 135px;
-
-    color: #85858e;
-
-    text-align: center;
-
-    line-height: 1.5;
-}
-
-.acoes-modal-bloqueio {
-    display: flex;
-    justify-content: flex-end;
-
-    gap: 10px;
-
-    margin-top: 20px;
-}
-
-.botao-cancelar-bloqueio,
-.botao-confirmar-bloqueio {
-    min-height: 42px;
-
-    padding: 9px 18px;
-
-    border-radius: 9px;
-
-    font-size: 0.82rem;
-    font-weight: 600;
-
-    cursor: pointer;
-}
-
-.botao-cancelar-bloqueio {
-    border: 1px solid #3a3a42;
-
-    background: transparent;
-
-    color: #c0c0c7;
-}
-
-.botao-confirmar-bloqueio {
-    border: 1px solid #e50914;
-
-    background: #e50914;
-
-    color: #ffffff;
-}
-
-.botao-confirmar-bloqueio:disabled {
-    border-color: #44444a;
-
-    background: #44444a;
-
-    color: #85858c;
-
-    cursor: not-allowed;
 }
 
 /* =========================================
@@ -1459,9 +935,7 @@ body.modal-aberto {
 
 .conteudo-modal-resultado {
     width: min(560px, 92vw);
-
     padding: 35px;
-
     text-align: center;
 }
 
@@ -1469,32 +943,23 @@ body.modal-aberto {
     display: flex;
     align-items: center;
     justify-content: center;
-
     width: 58px;
     height: 58px;
-
     margin: 0 auto 18px;
-
     border-radius: 50%;
-
-    background:
-        rgba(34, 197, 94, 0.14);
-
+    background: rgba(34, 197, 94, 0.14);
     color: #39d875;
-
     font-size: 1.7rem;
     font-weight: bold;
 }
 
 .conteudo-modal-resultado h2 {
     margin-bottom: 8px;
-
     font-size: 1.55rem;
 }
 
 .conteudo-modal-resultado > p {
     color: #9898a1;
-
     font-size: 0.88rem;
     line-height: 1.45;
 }
@@ -1506,17 +971,12 @@ body.modal-aberto {
 .status-impressao {
     display: flex;
     align-items: center;
-
     gap: 13px;
-
     margin-top: 20px;
     padding: 15px;
-
     border: 1px solid #313138;
     border-radius: 11px;
-
     background: #101015;
-
     text-align: left;
 }
 
@@ -1527,7 +987,6 @@ body.modal-aberto {
 .status-impressao div {
     display: flex;
     flex-direction: column;
-
     gap: 3px;
 }
 
@@ -1537,7 +996,6 @@ body.modal-aberto {
 
 .status-impressao span:last-child {
     color: #888891;
-
     font-size: 0.74rem;
     line-height: 1.4;
 }
@@ -1545,39 +1003,29 @@ body.modal-aberto {
 .acoes-resultado-venda {
     display: flex;
     justify-content: center;
-
     gap: 10px;
-
     margin-top: 22px;
 }
 
 .botao-reimprimir,
 .botao-nova-venda {
     min-height: 42px;
-
     padding: 9px 17px;
-
     border-radius: 9px;
-
     font-size: 0.8rem;
     font-weight: 600;
-
     cursor: pointer;
 }
 
 .botao-reimprimir {
     border: 1px solid #3b3b42;
-
     background: transparent;
-
     color: #d0d0d5;
 }
 
 .botao-nova-venda {
     border: 1px solid #e50914;
-
     background: #e50914;
-
     color: #ffffff;
 }
 
@@ -1587,9 +1035,7 @@ body.modal-aberto {
 
 footer {
     padding: 40px 20px;
-
     color: #777777;
-
     text-align: center;
 }
 
@@ -1598,7 +1044,6 @@ footer {
 ========================================= */
 
 @media (max-width: 1024px) {
-
     .informacoes-sessao {
         grid-template-columns: 1fr;
     }
@@ -1606,7 +1051,6 @@ footer {
     .informacoes-filme {
         flex-direction: column;
         align-items: stretch;
-
         padding: 22px;
     }
 
@@ -1624,20 +1068,17 @@ footer {
                 3,
                 minmax(105px, 1fr)
             );
-
         overflow-x: auto;
     }
 
     .indicador-alterar-sessao {
         position: absolute;
-
         top: 16px;
         right: 16px;
     }
 }
 
 @media (max-width: 900px) {
-
     .pagina-assentos {
         padding:
             25px
@@ -1664,22 +1105,11 @@ footer {
 
     .botao-continuar {
         grid-column: 1 / -1;
-
-        width: 100%;
-    }
-
-    .acoes-administrativas-assentos {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .botao-bloquear-assentos {
         width: 100%;
     }
 }
 
 @media (max-width: 800px) {
-
     .pagina-assentos {
         padding:
             25px
@@ -1692,7 +1122,6 @@ footer {
             28px
             12px
             38px;
-
         border-radius: 14px;
     }
 
@@ -1701,7 +1130,6 @@ footer {
             24px
             minmax(650px, 1fr)
             24px;
-
         gap: 7px;
     }
 
@@ -1713,37 +1141,30 @@ footer {
 }
 
 @media (max-width: 600px) {
-
     .resumo-selecao {
         grid-template-columns: 1fr;
     }
 
     .preco-total {
         align-items: flex-start;
-
         text-align: left;
     }
 
-    .conteudo-modal-sessoes,
-    .conteudo-modal-bloqueio {
+    .conteudo-modal-sessoes {
         padding:
             26px
             18px
             22px;
     }
 
-    .cabecalho-modal-sessoes,
-    .cabecalho-modal-bloqueio {
+    .cabecalho-modal-sessoes {
         padding-left: 47px;
     }
 
-    .acoes-modal-bloqueio,
     .acoes-resultado-venda {
         flex-direction: column-reverse;
     }
 
-    .botao-cancelar-bloqueio,
-    .botao-confirmar-bloqueio,
     .botao-reimprimir,
     .botao-nova-venda {
         width: 100%;
@@ -1751,7 +1172,6 @@ footer {
 }
 
 @media (max-width: 520px) {
-
     .detalhes-sessao {
         flex-direction: column;
     }
@@ -1762,7 +1182,6 @@ footer {
 
     .estatistica-assento {
         justify-content: flex-start;
-
         padding-left: 25px;
     }
 
