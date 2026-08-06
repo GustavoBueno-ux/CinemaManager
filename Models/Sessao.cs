@@ -17,5 +17,9 @@ public class Sessao
     [Required]
     public DateTime DataHora { get; set; }
 
+    [Required]
+    [Column(TypeName = "decimal(10,2)")]
+    public decimal PrecoIngresso { get; set; }
+
     public bool Ativa { get; set; } = true;
 }

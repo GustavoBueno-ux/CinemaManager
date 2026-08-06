@@ -10,8 +10,9 @@ public class SessaoResponseDTO
 
     public DateTime DataHora { get; set; }
 
+    public decimal PrecoIngresso { get; set; }
+
     public bool Ativa { get; set; }
 
     public bool PossuiIngressosVendidos { get; set; }
-
 }

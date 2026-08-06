@@ -38,6 +38,13 @@ public class SessaoService : ISessaoService
             );
         }
 
+        if (dto.PrecoIngresso <= 0)
+        {
+            throw new ArgumentException(
+                "O preço do ingresso deve ser maior que zero."
+            );
+        }
+
         var horarioOcupado = await _context.Sessoes
             .AnyAsync(
                 s => s.DataHora == dto.DataHora
@@ -53,7 +60,8 @@ public class SessaoService : ISessaoService
         var sessao = new Sessao
         {
             FilmeId = dto.FilmeId,
-            DataHora = dto.DataHora
+            DataHora = dto.DataHora,
+            PrecoIngresso = dto.PrecoIngresso
         };
 
         _context.Sessoes.Add(sessao);
@@ -153,6 +161,9 @@ public class SessaoService : ISessaoService
          * Se já existir qualquer ingresso relacionado
          * à sessão, ela não pode mais ser alterada.
          *
+         * Isso inclui alteração de filme, data,
+         * horário, status e preço.
+         *
          * Reservas temporárias não entram nessa regra.
          */
         var possuiIngressosVendidos =
@@ -222,6 +233,19 @@ public class SessaoService : ISessaoService
                 dto.DataHora.Value;
         }
 
+        if (dto.PrecoIngresso.HasValue)
+        {
+            if (dto.PrecoIngresso.Value <= 0)
+            {
+                throw new ArgumentException(
+                    "O preço do ingresso deve ser maior que zero."
+                );
+            }
+
+            sessao.PrecoIngresso =
+                dto.PrecoIngresso.Value;
+        }
+
         if (dto.Ativa.HasValue)
         {
             sessao.Ativa =
@@ -281,6 +305,9 @@ public class SessaoService : ISessaoService
                     DataHora =
                         sessao.DataHora,
 
+                    PrecoIngresso =
+                        sessao.PrecoIngresso,
+
                     Ativa =
                         sessao.Ativa,
 
@@ -312,6 +339,9 @@ public class SessaoService : ISessaoService
 
             DataHora =
                 sessao.DataHora,
+
+            PrecoIngresso =
+                sessao.PrecoIngresso,
 
             Ativa =
                 sessao.Ativa,

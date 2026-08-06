@@ -9,4 +9,13 @@ public class CriarSessaoDTO
 
     [Required]
     public DateTime DataHora { get; set; }
+
+    [Required]
+    [Range(
+        typeof(decimal),
+        "0.01",
+        "99999999.99",
+        ErrorMessage = "O preço do ingresso deve ser maior que zero."
+    )]
+    public decimal PrecoIngresso { get; set; }
 }

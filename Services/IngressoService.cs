@@ -7,8 +7,6 @@ namespace CinemaAPI.Services;
 
 public class IngressoService : IIngressoService
 {
-    private const decimal ValorIngresso = 22m;
-
     private readonly AppDbContext _context;
 
     public IngressoService(AppDbContext context)
@@ -73,14 +71,14 @@ public class IngressoService : IIngressoService
             FormaPagamento = null,
             OrigemVenda = OrigemVenda.Online,
             FuncionarioId = null,
-            ValorTotal = ValorIngresso
+            ValorTotal = sessao.PrecoIngresso
         };
 
         var ingresso = CriarIngresso(
             sessaoId: dto.SessaoId,
             assentoId: dto.AssentoId,
             usuarioId: dto.UsuarioId,
-            valorPago: ValorIngresso,
+            valorPago: sessao.PrecoIngresso,
             dataCompra: agora,
             venda: venda
         );
@@ -137,13 +135,6 @@ public class IngressoService : IIngressoService
         }
 
         var agora = DateTime.Now;
-
-        /*
-         * As reservas temporárias usam UTC no serviço
-         * de ReservaAssento. Por isso a validade da
-         * reserva é comparada usando UTC.
-         */
-        var agoraUtc = DateTime.UtcNow;
 
         await using var transaction =
             await _context.Database.BeginTransactionAsync();
@@ -242,8 +233,11 @@ public class IngressoService : IIngressoService
                 );
             }
 
+            var valorUnitario =
+                sessao.PrecoIngresso;
+
             var valorTotal =
-                ValorIngresso * assentoIds.Count;
+                valorUnitario * assentoIds.Count;
 
             var venda = new Venda
             {
@@ -270,7 +264,7 @@ public class IngressoService : IIngressoService
                             usuarioId,
 
                         ValorPago =
-                            ValorIngresso,
+                            valorUnitario,
 
                         TokenQrCode =
                             Guid.NewGuid()
@@ -389,7 +383,6 @@ public class IngressoService : IIngressoService
         }
 
         var agora = DateTime.Now;
-        var agoraUtc = DateTime.UtcNow;
 
         await using var transaction =
             await _context.Database.BeginTransactionAsync();
@@ -511,10 +504,16 @@ public class IngressoService : IIngressoService
                 dto.FormaPagamento ==
                 FormaPagamento.Cortesia;
 
+            /*
+             * O preço oficial sempre vem da sessão.
+             *
+             * Apenas uma cortesia substitui o valor
+             * efetivamente pago por zero.
+             */
             var valorUnitario =
                 cortesia
                     ? 0m
-                    : ValorIngresso;
+                    : sessao.PrecoIngresso;
 
             var valorTotal =
                 valorUnitario * assentoIds.Count;
