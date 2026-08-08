@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Busca e recuperação de ingressos vendidos na bilheteria"
+    >
+
+    <title>Buscar ingresso | Cinema</title>
+
+    <link
+        rel="stylesheet"
+        href="/Frontend/css/pages/admin/navbar-admin.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="/Frontend/css/pages/admin/buscar-ingresso.css"
+    >
+
+</head>
+
+<body>
+
+    <div class="admin-layout">
+
+        <!-- =====================================================
+             SIDEBAR
+        ====================================================== -->
+
+        <aside
+            class="sidebar"
+            id="sidebar"
+        >
+
+            <div class="sidebar-header">
+
+                <a
+                    href="home-admin.html"
+                    class="sidebar-logo"
+                    aria-label="Ir para a página inicial do painel"
+                >
+
+                    <span
+                        class="sidebar-logo-icon"
+                        aria-hidden="true"
+                    >
+                        C
+                    </span>
+
+                    <span class="sidebar-logo-text">
+                        Cinema
+                    </span>
+
+                </a>
+
+                <button
+                    type="button"
+                    class="sidebar-close-button"
+                    id="sidebar-close-button"
+                    aria-label="Fechar menu lateral"
+                >
+                    &times;
+                </button>
+
+            </div>
+
+            <nav
+                class="sidebar-navigation"
+                aria-label="Navegação administrativa"
+            >
+
+                <ul class="sidebar-menu">
+
+                    <!-- INÍCIO -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="home-admin.html"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                ⌂
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Início
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- FILMES -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="filmes.html"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                🎬
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Filmes
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- SESSÕES -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="sessoes.html"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                📅
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Sessões
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- VENDER INGRESSOS -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="venda-ingressos.html"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                🎟️
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Vender ingressos
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- BUSCAR INGRESSO -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="buscar-ingresso.html"
+                            class="sidebar-link active"
+                            aria-current="page"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                🔎
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Buscar ingresso
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- ESCANEAR QR CODE -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="escanear-ingresso.html"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                ▣
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Escanear QR Code
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- RELATÓRIOS -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="relatorios.html"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                📊
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Relatórios
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- PERFIL -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="perfil.html"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                👤
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Perfil
+                            </span>
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </nav>
+
+
+            <!-- USUÁRIO -->
+
+            <div class="sidebar-footer">
+
+                <div class="sidebar-user">
+
+                    <div
+                        class="sidebar-user-avatar"
+                        id="sidebar-user-avatar"
+                        aria-hidden="true"
+                    >
+                        F
+                    </div>
+
+                    <div class="sidebar-user-information">
+
+                        <strong
+                            class="sidebar-user-name"
+                            id="sidebar-user-name"
+                        >
+                            Funcionário
+                        </strong>
+
+                        <span class="sidebar-user-role">
+                            Funcionário
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <button
+                    type="button"
+                    class="logout-button"
+                    id="logout-button"
+                >
+
+                    <span aria-hidden="true">
+                        ↪
+                    </span>
+
+                    <span>
+                        Sair
+                    </span>
+
+                </button>
+
+            </div>
+
+        </aside>
+
+
+        <!-- =====================================================
+             OVERLAY MOBILE
+        ====================================================== -->
+
+        <div
+            class="sidebar-overlay"
+            id="sidebar-overlay"
+            aria-hidden="true"
+        ></div>
+
+
+        <!-- =====================================================
+             CONTEÚDO
+        ====================================================== -->
+
+        <div class="admin-content">
+
+
+            <!-- HEADER MOBILE -->
+
+            <header class="mobile-header">
+
+                <button
+                    type="button"
+                    class="sidebar-open-button"
+                    id="sidebar-open-button"
+                    aria-label="Abrir menu lateral"
+                    aria-controls="sidebar"
+                    aria-expanded="false"
+                >
+                    ☰
+                </button>
+
+                <a
+                    href="home-admin.html"
+                    class="mobile-logo"
+                >
+                    Cinema
+                </a>
+
+            </header>
+
+
+            <!-- =================================================
+                 CONTEÚDO PRINCIPAL
+            ================================================== -->
+
+            <main class="ticket-search-main">
+
+
+                <!-- =================================================
+                     CABEÇALHO
+                ================================================== -->
+
+                <section
+                    class="ticket-search-heading"
+                    aria-labelledby="ticket-search-title"
+                >
+
+                    <p class="page-label">
+                        Bilheteria
+                    </p>
+
+                    <h1 id="ticket-search-title">
+                        Buscar ingresso
+                    </h1>
+
+                    <p class="ticket-search-description">
+                        Localize um ingresso vendido na bilheteria
+                        utilizando o código de recuperação impresso.
+                    </p>
+
+                </section>
+
+
+                <!-- =================================================
+                     PESQUISA
+                ================================================== -->
+
+                <section
+                    class="ticket-search-card"
+                    aria-labelledby="ticket-search-form-title"
+                >
+
+                    <div class="ticket-search-card-heading">
+
+                        <div>
+
+                            <p class="section-label">
+                                Recuperação
+                            </p>
+
+                            <h2 id="ticket-search-form-title">
+                                Código do ingresso
+                            </h2>
+
+                            <p>
+                                Digite o código de 8 caracteres
+                                presente no ingresso.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <form
+                        class="ticket-search-form"
+                        id="ticket-search-form"
+                        novalidate
+                    >
+
+                        <div class="ticket-code-field">
+
+                            <label for="ticket-code">
+                                Código de recuperação
+                            </label>
+
+                            <div class="ticket-code-input-container">
+
+                                <input
+                                    type="text"
+                                    id="ticket-code"
+                                    name="codigo"
+                                    maxlength="8"
+                                    autocomplete="off"
+                                    spellcheck="false"
+                                    placeholder="Ex.: 7KMP4XQ2"
+                                    aria-describedby="ticket-code-help"
+                                >
+
+                                <button
+                                    type="submit"
+                                    class="ticket-search-button"
+                                    id="ticket-search-button"
+                                >
+                                    <span aria-hidden="true">
+                                        🔎
+                                    </span>
+
+                                    <span>
+                                        Buscar ingresso
+                                    </span>
+                                </button>
+
+                            </div>
+
+                            <p
+                                class="ticket-code-help"
+                                id="ticket-code-help"
+                            >
+                                O código possui 8 letras e números.
+                            </p>
+
+                        </div>
+
+                    </form>
+
+                </section>
+
+
+                <!-- =================================================
+                     MENSAGEM / LOADING / ERRO
+                ================================================== -->
+
+                <section
+                    class="ticket-search-message hidden"
+                    id="ticket-search-message"
+                    role="status"
+                    aria-live="polite"
+                >
+
+                    <div
+                        class="ticket-search-spinner hidden"
+                        id="ticket-search-spinner"
+                        aria-hidden="true"
+                    ></div>
+
+                    <p id="ticket-search-message-text">
+                        Buscando ingresso...
+                    </p>
+
+                </section>
+
+
+                <!-- =================================================
+                     RESULTADO
+                ================================================== -->
+
+                <section
+                    class="ticket-result hidden"
+                    id="ticket-result"
+                    aria-labelledby="ticket-result-title"
+                >
+
+
+                    <!-- TÍTULO DO RESULTADO -->
+
+                    <div class="ticket-result-heading">
+
+                        <div>
+
+                            <p class="section-label">
+                                Resultado
+                            </p>
+
+                            <h2 id="ticket-result-title">
+                                Ingresso encontrado
+                            </h2>
+
+                        </div>
+
+                        <span
+                            class="ticket-status"
+                            id="ticket-status"
+                        >
+                            Válido
+                        </span>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         ALERTA DE INGRESSO UTILIZADO
+                    ================================================== -->
+
+                    <div
+                        class="ticket-used-warning hidden"
+                        id="ticket-used-warning"
+                        role="alert"
+                    >
+
+                        <strong>
+                            Este ingresso já foi utilizado.
+                        </strong>
+
+                        <p id="ticket-used-warning-description">
+                            A entrada correspondente a este ingresso
+                            já foi registrada.
+                        </p>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         INGRESSO
+                    ================================================== -->
+
+                    <article
+                        class="ticket-card"
+                        id="ticket-card"
+                    >
+
+
+                        <!-- QR CODE -->
+
+                        <section class="ticket-qr-area">
+
+                            <div
+                                class="ticket-qr-container"
+                                id="ticket-qr-code"
+                                aria-label="QR Code do ingresso"
+                            ></div>
+
+                            <p class="ticket-qr-description">
+                                QR Code original do ingresso
+                            </p>
+
+                        </section>
+
+
+                        <!-- INFORMAÇÕES -->
+
+                        <section class="ticket-information">
+
+
+                            <!-- FILME -->
+
+                            <header class="ticket-information-header">
+
+                                <p class="ticket-label">
+                                    Ingresso
+                                </p>
+
+                                <h2 id="ticket-movie-title">
+                                    Nome do filme
+                                </h2>
+
+                                <p
+                                    class="ticket-number"
+                                    id="ticket-number"
+                                >
+                                    Ingresso #--
+                                </p>
+
+                            </header>
+
+
+                            <!-- DETALHES -->
+
+                            <div class="ticket-details">
+
+
+                                <!-- DATA -->
+
+                                <div class="ticket-detail">
+
+                                    <span>
+                                        Data da sessão
+                                    </span>
+
+                                    <strong id="ticket-session-date">
+                                        --/--/----
+                                    </strong>
+
+                                </div>
+
+
+                                <!-- HORÁRIO -->
+
+                                <div class="ticket-detail">
+
+                                    <span>
+                                        Horário
+                                    </span>
+
+                                    <strong id="ticket-session-time">
+                                        --:--
+                                    </strong>
+
+                                </div>
+
+
+                                <!-- ASSENTO -->
+
+                                <div class="ticket-detail">
+
+                                    <span>
+                                        Assento
+                                    </span>
+
+                                    <strong id="ticket-seat">
+                                        --
+                                    </strong>
+
+                                </div>
+
+
+                                <!-- VALOR -->
+
+                                <div class="ticket-detail">
+
+                                    <span>
+                                        Valor pago
+                                    </span>
+
+                                    <strong id="ticket-value">
+                                        R$ --,--
+                                    </strong>
+
+                                </div>
+
+
+                                <!-- PAGAMENTO -->
+
+                                <div class="ticket-detail">
+
+                                    <span>
+                                        Forma de pagamento
+                                    </span>
+
+                                    <strong id="ticket-payment-method">
+                                        --
+                                    </strong>
+
+                                </div>
+
+
+                                <!-- DATA DA COMPRA -->
+
+                                <div class="ticket-detail">
+
+                                    <span>
+                                        Comprado em
+                                    </span>
+
+                                    <strong id="ticket-purchase-date">
+                                        --
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- =================================================
+                                 CÓDIGO DE RECUPERAÇÃO
+                            ================================================== -->
+
+                            <div class="ticket-recovery-code-container">
+
+                                <span class="ticket-recovery-code-label">
+                                    Código do ingresso
+                                </span>
+
+                                <strong
+                                    class="ticket-recovery-code"
+                                    id="ticket-recovery-code"
+                                >
+                                    --------
+                                </strong>
+
+                                <p>
+                                    Utilize este código para localizar
+                                    novamente este ingresso.
+                                </p>
+
+                            </div>
+
+                        </section>
+
+                    </article>
+
+
+                    <!-- =================================================
+                         AÇÕES
+                    ================================================== -->
+
+                    <div class="ticket-result-actions">
+
+                        <button
+                            type="button"
+                            class="ticket-print-button"
+                            id="ticket-print-button"
+                        >
+
+                            <span aria-hidden="true">
+                                🖨️
+                            </span>
+
+                            <span>
+                                Imprimir ingresso
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </section>
+
+            </main>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         FOOTER
+    ========================================================== -->
+
+    <footer>
+
+        <p>
+            © 2026 Cinema. Todos os direitos reservados.
+        </p>
+
+    </footer>
+
+
+    <!-- =========================================================
+         JAVASCRIPT
+    ========================================================== -->
+
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"
+    ></script>
+
+    <script src="/Frontend/js/config.js"></script>
+
+    <script src="/Frontend/js/api.js"></script>
+
+    <script src="/Frontend/js/pages/admin/buscar-ingresso.js"></script>
+
+</body>
+
+</html>
