@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using CinemaAPI.Data;
 using CinemaAPI.DTOs.Ingressos;
 using CinemaAPI.Models;
@@ -7,6 +8,11 @@ namespace CinemaAPI.Services;
 
 public class IngressoService : IIngressoService
 {
+    private const string CaracteresCodigoRecuperacao =
+        "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
+    private const int TamanhoCodigoRecuperacao = 8;
+
     private readonly AppDbContext _context;
 
     public IngressoService(AppDbContext context)
@@ -74,7 +80,7 @@ public class IngressoService : IIngressoService
             ValorTotal = sessao.PrecoIngresso
         };
 
-        var ingresso = CriarIngresso(
+        var ingresso = await CriarIngressoAsync(
             sessaoId: dto.SessaoId,
             assentoId: dto.AssentoId,
             usuarioId: dto.UsuarioId,
@@ -84,7 +90,6 @@ public class IngressoService : IIngressoService
         );
 
         await _context.Vendas.AddAsync(venda);
-
         await _context.Ingressos.AddAsync(ingresso);
 
         try
@@ -96,7 +101,7 @@ public class IngressoService : IIngressoService
             _context.ChangeTracker.Clear();
 
             throw new InvalidOperationException(
-                "O assento acabou de ser comprado por outro usuário."
+                "Não foi possível concluir a compra."
             );
         }
 
@@ -248,50 +253,33 @@ public class IngressoService : IIngressoService
                 ValorTotal = valorTotal
             };
 
-            var ingressos = assentoIds
-                .Select(assentoId =>
-                    new Ingresso
-                    {
-                        Venda = venda,
+            var ingressos =
+                new List<Ingresso>();
 
-                        SessaoId =
-                            dto.SessaoId,
+            var codigosGerados =
+                new HashSet<string>();
 
-                        AssentoId =
-                            assentoId,
+            foreach (var assentoId in assentoIds)
+            {
+                var ingresso =
+                    await CriarIngressoAsync(
+                        sessaoId: dto.SessaoId,
+                        assentoId: assentoId,
+                        usuarioId: usuarioId,
+                        valorPago: valorUnitario,
+                        dataCompra: agora,
+                        venda: venda,
+                        codigosGerados: codigosGerados
+                    );
 
-                        UsuarioId =
-                            usuarioId,
-
-                        ValorPago =
-                            valorUnitario,
-
-                        TokenQrCode =
-                            Guid.NewGuid()
-                                .ToString("N"),
-
-                        DataCompra =
-                            agora,
-
-                        Utilizado =
-                            false,
-
-                        DataUtilizacao =
-                            null
-                    }
-                )
-                .ToList();
+                ingressos.Add(ingresso);
+            }
 
             await _context.Vendas.AddAsync(venda);
 
             await _context.Ingressos
                 .AddRangeAsync(ingressos);
 
-            /*
-             * A venda, os ingressos e a remoção
-             * das reservas fazem parte da mesma
-             * transação.
-             */
             _context.ReservasAssentos.RemoveRange(
                 reservasValidas
             );
@@ -303,8 +291,8 @@ public class IngressoService : IIngressoService
             catch (DbUpdateException)
             {
                 throw new InvalidOperationException(
-                    "Um ou mais assentos acabaram de ser comprados " +
-                    "por outro usuário. Nenhum ingresso foi gerado."
+                    "Não foi possível concluir a compra. " +
+                    "Nenhum ingresso foi gerado."
                 );
             }
 
@@ -318,7 +306,6 @@ public class IngressoService : IIngressoService
             foreach (var ingresso in ingressos)
             {
                 ingresso.Sessao = sessao;
-
                 ingresso.Usuario = usuario;
 
                 ingresso.Assento =
@@ -389,11 +376,6 @@ public class IngressoService : IIngressoService
 
         try
         {
-            /*
-             * O FuncionarioId é obtido pelo JWT no controller.
-             * Mesmo assim, validamos novamente no service para
-             * não confiar apenas no atributo de autorização.
-             */
             var funcionario = await _context.Usuarios
                 .AsNoTracking()
                 .FirstOrDefaultAsync(
@@ -459,10 +441,6 @@ public class IngressoService : IIngressoService
                 );
             }
 
-            /*
-             * O funcionário precisa ser o dono atual
-             * das reservas dos assentos escolhidos.
-             */
             var reservasValidas =
                 await _context.ReservasAssentos
                     .Where(r =>
@@ -504,12 +482,6 @@ public class IngressoService : IIngressoService
                 dto.FormaPagamento ==
                 FormaPagamento.Cortesia;
 
-            /*
-             * O preço oficial sempre vem da sessão.
-             *
-             * Apenas uma cortesia substitui o valor
-             * efetivamente pago por zero.
-             */
             var valorUnitario =
                 cortesia
                     ? 0m
@@ -535,43 +507,27 @@ public class IngressoService : IIngressoService
                     valorTotal
             };
 
-            var ingressos = assentoIds
-                .Select(assentoId =>
-                    new Ingresso
-                    {
-                        Venda = venda,
+            var ingressos =
+                new List<Ingresso>();
 
-                        SessaoId =
-                            dto.SessaoId,
+            var codigosGerados =
+                new HashSet<string>();
 
-                        AssentoId =
-                            assentoId,
+            foreach (var assentoId in assentoIds)
+            {
+                var ingresso =
+                    await CriarIngressoAsync(
+                        sessaoId: dto.SessaoId,
+                        assentoId: assentoId,
+                        usuarioId: null,
+                        valorPago: valorUnitario,
+                        dataCompra: agora,
+                        venda: venda,
+                        codigosGerados: codigosGerados
+                    );
 
-                        /*
-                         * Venda presencial não possui
-                         * cliente cadastrado associado.
-                         */
-                        UsuarioId =
-                            null,
-
-                        ValorPago =
-                            valorUnitario,
-
-                        TokenQrCode =
-                            Guid.NewGuid()
-                                .ToString("N"),
-
-                        DataCompra =
-                            agora,
-
-                        Utilizado =
-                            false,
-
-                        DataUtilizacao =
-                            null
-                    }
-                )
-                .ToList();
+                ingressos.Add(ingresso);
+            }
 
             await _context.Vendas.AddAsync(venda);
 
@@ -589,8 +545,8 @@ public class IngressoService : IIngressoService
             catch (DbUpdateException)
             {
                 throw new InvalidOperationException(
-                    "Um ou mais assentos acabaram de ser vendidos " +
-                    "por outra operação. Nenhum ingresso foi gerado."
+                    "Não foi possível concluir a venda. " +
+                    "Nenhum ingresso foi gerado."
                 );
             }
 
@@ -610,13 +566,6 @@ public class IngressoService : IIngressoService
                         ingresso.AssentoId
                     ];
 
-                /*
-                 * Não atribuímos o funcionário a
-                 * ingresso.Usuario.
-                 *
-                 * O funcionário pertence à Venda,
-                 * não é o dono do ingresso.
-                 */
                 ingresso.Usuario = null;
             }
 
@@ -711,6 +660,83 @@ public class IngressoService : IIngressoService
         return ingresso is null
             ? null
             : ConverterParaDTO(ingresso);
+    }
+
+
+    public async Task<IngressoRecuperacaoDTO?>
+        BuscarPorCodigoRecuperacaoAsync(
+            string codigo
+        )
+    {
+        if (string.IsNullOrWhiteSpace(codigo))
+        {
+            return null;
+        }
+
+        var codigoNormalizado =
+            codigo
+                .Trim()
+                .ToUpperInvariant();
+
+        var dataLimite =
+            DateTime.Now.AddDays(-7);
+
+        return await _context.Ingressos
+            .AsNoTracking()
+            .Where(i =>
+                i.CodigoRecuperacao ==
+                    codigoNormalizado &&
+
+                i.Venda != null &&
+
+                i.Venda.OrigemVenda ==
+                    OrigemVenda.Bilheteria &&
+
+                i.DataCompra >=
+                    dataLimite
+            )
+            .Select(i =>
+                new IngressoRecuperacaoDTO
+                {
+                    Id = i.Id,
+
+                    CodigoRecuperacao =
+                        i.CodigoRecuperacao,
+
+                    Filme =
+                        i.Sessao.Filme.Titulo,
+
+                    DataSessao =
+                        i.Sessao.DataHora,
+
+                    CodigoAssento =
+                        i.Assento.Codigo,
+
+                    DataCompra =
+                        i.DataCompra,
+
+                    FormaPagamento =
+                        i.Venda!.FormaPagamento
+                            .HasValue
+                                ? i.Venda.FormaPagamento
+                                    .Value
+                                    .ToString()
+                                : string.Empty,
+
+                    ValorPago =
+                        i.ValorPago,
+
+                    Utilizado =
+                        i.Utilizado,
+
+                    DataUtilizacao =
+                        i.DataUtilizacao,
+
+                    TokenQrCode =
+                        i.TokenQrCode
+                }
+            )
+            .FirstOrDefaultAsync();
     }
 
 
@@ -846,15 +872,21 @@ public class IngressoService : IIngressoService
     }
 
 
-    private static Ingresso CriarIngresso(
+    private async Task<Ingresso> CriarIngressoAsync(
         int sessaoId,
         int assentoId,
-        int usuarioId,
+        int? usuarioId,
         decimal valorPago,
         DateTime dataCompra,
-        Venda venda
+        Venda venda,
+        HashSet<string>? codigosGerados = null
     )
     {
+        var codigoRecuperacao =
+            await GerarCodigoRecuperacaoUnicoAsync(
+                codigosGerados
+            );
+
         return new Ingresso
         {
             Venda = venda,
@@ -870,12 +902,79 @@ public class IngressoService : IIngressoService
             TokenQrCode =
                 Guid.NewGuid().ToString("N"),
 
+            CodigoRecuperacao =
+                codigoRecuperacao,
+
             DataCompra = dataCompra,
 
             Utilizado = false,
 
             DataUtilizacao = null
         };
+    }
+
+
+    private async Task<string>
+        GerarCodigoRecuperacaoUnicoAsync(
+            HashSet<string>? codigosGerados = null
+        )
+    {
+        while (true)
+        {
+            var codigo =
+                GerarCodigoRecuperacao();
+
+            if (
+                codigosGerados != null &&
+                codigosGerados.Contains(codigo)
+            )
+            {
+                continue;
+            }
+
+            var existeNoBanco =
+                await _context.Ingressos
+                    .AsNoTracking()
+                    .AnyAsync(i =>
+                        i.CodigoRecuperacao ==
+                        codigo
+                    );
+
+            if (existeNoBanco)
+            {
+                continue;
+            }
+
+            codigosGerados?.Add(codigo);
+
+            return codigo;
+        }
+    }
+
+
+    private static string GerarCodigoRecuperacao()
+    {
+        Span<char> codigo =
+            stackalloc char[
+                TamanhoCodigoRecuperacao
+            ];
+
+        for (
+            var i = 0;
+            i < TamanhoCodigoRecuperacao;
+            i++
+        )
+        {
+            var indice =
+                RandomNumberGenerator.GetInt32(
+                    CaracteresCodigoRecuperacao.Length
+                );
+
+            codigo[i] =
+                CaracteresCodigoRecuperacao[indice];
+        }
+
+        return new string(codigo);
     }
 
 
@@ -927,6 +1026,9 @@ public class IngressoService : IIngressoService
 
             TokenQrCode =
                 ingresso.TokenQrCode,
+
+            CodigoRecuperacao =
+                ingresso.CodigoRecuperacao,
 
             DataCompra =
                 ingresso.DataCompra,

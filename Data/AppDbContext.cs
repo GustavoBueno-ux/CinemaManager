@@ -43,6 +43,10 @@ public class AppDbContext : DbContext
             })
             .IsUnique();
 
+        modelBuilder.Entity<Ingresso>()
+            .HasIndex(i => i.CodigoRecuperacao)
+            .IsUnique();
+
         modelBuilder.Entity<ReservaAssento>()
             .HasIndex(r => new
             {

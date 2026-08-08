@@ -303,6 +303,31 @@ public class IngressoController : ControllerBase
         return Ok(ingresso);
     }
 
+    [Authorize(Roles = "Funcionario")]
+    [HttpGet("bilheteria/codigo/{codigo}")]
+    public async Task<IActionResult>
+        BuscarPorCodigoRecuperacao(
+            string codigo
+        )
+    {
+        var ingresso =
+            await _service
+                .BuscarPorCodigoRecuperacaoAsync(
+                    codigo
+                );
+    
+        if (ingresso is null)
+        {
+            return NotFound(new
+            {
+                mensagem =
+                    "Ingresso não encontrado ou indisponível para recuperação."
+            });
+        }
+    
+        return Ok(ingresso);
+    }
+
 
     [HttpPost("validar")]
     public async Task<IActionResult> Validar(

@@ -29,6 +29,10 @@ public interface IIngressoService
         int usuarioId
     );
 
+    Task<IngressoRecuperacaoDTO?> BuscarPorCodigoRecuperacaoAsync(
+        string codigo
+    );
+
     Task<ValidacaoIngressoResponseDTO> ValidarAsync(
         ValidarIngressoDTO dto
     );

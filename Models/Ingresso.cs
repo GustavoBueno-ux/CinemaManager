@@ -37,6 +37,10 @@ public class Ingresso
     [MaxLength(100)]
     public string TokenQrCode { get; set; } = string.Empty;
 
+    [Required]
+    [MaxLength(8)]
+    public string CodigoRecuperacao { get; set; } = string.Empty;
+
     public DateTime DataCompra { get; set; } = DateTime.UtcNow;
 
     public bool Utilizado { get; set; } = false;
