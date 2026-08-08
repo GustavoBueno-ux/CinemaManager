@@ -39,7 +39,7 @@ const horarioSessao =
    ESTADO DA TELA
 ========================================= */
 
-export const PRECO_INGRESSO = 22;
+export let PRECO_INGRESSO = 0;
 
 let assentosSelecionados = [];
 let todosAssentos = [];
@@ -100,9 +100,27 @@ async function carregarDadosSessao() {
 
         dadosSessaoAtual = resposta.data;
 
+        const precoIngresso = Number(
+            dadosSessaoAtual.precoIngresso
+            ?? dadosSessaoAtual.PrecoIngresso
+        );
+
+        if (
+            !Number.isFinite(precoIngresso)
+            || precoIngresso <= 0
+        ) {
+            throw new Error(
+                "Não foi possível identificar o preço da sessão."
+            );
+        }
+
+        PRECO_INGRESSO = precoIngresso;
+
         mostrarDadosSessao(
             dadosSessaoAtual
         );
+
+        atualizarResumoSelecao();
     } catch (erro) {
         console.error(
             "Erro ao carregar dados da sessão:",
