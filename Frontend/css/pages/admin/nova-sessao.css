@@ -12,7 +12,6 @@
 
 :root {
     --background: #070707;
-
     --surface: #111111;
     --surface-secondary: #0d0d0d;
 
@@ -169,6 +168,7 @@ a {
 
 .form-section {
     display: grid;
+
     grid-template-columns:
         240px
         minmax(0, 1fr);
@@ -216,6 +216,7 @@ a {
 
 .form-grid {
     display: grid;
+
     grid-template-columns:
         repeat(2, minmax(0, 1fr));
 
@@ -287,6 +288,32 @@ input[type="time"] {
 
     font-size: 0.7rem;
     line-height: 1.4;
+}
+
+/* =========================================================
+   PREÇO
+========================================================= */
+
+.form-field-price {
+    grid-column: 1 / -1;
+}
+
+.money-input {
+    font-variant-numeric: tabular-nums;
+
+    letter-spacing: 0.01em;
+}
+
+.money-input:not(:placeholder-shown) {
+    font-weight: 600;
+}
+
+.session-summary-price {
+    color: var(--primary) !important;
+
+    font-size: 1rem !important;
+
+    font-variant-numeric: tabular-nums;
 }
 
 /* =========================================================
@@ -412,10 +439,12 @@ input[type="time"] {
 
 .session-summary-grid {
     display: grid;
+
     grid-template-columns:
         minmax(0, 1.5fr)
         minmax(0, 1fr)
-        minmax(0, 0.8fr);
+        minmax(0, 0.8fr)
+        minmax(0, 0.9fr);
 
     gap: 10px;
 }
@@ -604,7 +633,6 @@ input:focus-visible {
 ========================================================= */
 
 @media (max-width: 1024px) {
-
     .admin-content,
     footer {
         margin-left: 0;
@@ -621,11 +649,9 @@ input:focus-visible {
 
         gap: 25px;
     }
-
 }
 
 @media (max-width: 760px) {
-
     .new-session-main {
         padding: 24px 20px 45px;
     }
@@ -653,11 +679,9 @@ input:focus-visible {
     .form-actions {
         padding-inline: 22px;
     }
-
 }
 
 @media (max-width: 540px) {
-
     .new-session-main {
         padding: 20px 16px 40px;
     }
@@ -672,6 +696,10 @@ input:focus-visible {
 
     .form-grid {
         grid-template-columns: 1fr;
+    }
+
+    .form-field-price {
+        grid-column: auto;
     }
 
     .session-summary-grid {
@@ -691,11 +719,9 @@ input:focus-visible {
     .save-button {
         width: 100%;
     }
-
 }
 
 @media (max-width: 390px) {
-
     .new-session-main {
         padding-inline: 13px;
     }
@@ -711,5 +737,4 @@ input:focus-visible {
     .form-actions {
         padding-inline: 17px;
     }
-
 }

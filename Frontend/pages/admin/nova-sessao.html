@@ -31,9 +31,7 @@
 
     <div class="admin-layout">
 
-        <!-- =====================================================
-             SIDEBAR
-        ====================================================== -->
+        <!-- SIDEBAR -->
 
         <aside
             class="sidebar"
@@ -70,7 +68,6 @@
 
             </div>
 
-
             <nav
                 class="sidebar-navigation"
                 aria-label="Navegação administrativa"
@@ -79,7 +76,6 @@
                 <ul class="sidebar-menu">
 
                     <li class="sidebar-menu-item">
-
                         <a
                             href="home-admin.html"
                             class="sidebar-link"
@@ -95,12 +91,9 @@
                                 Início
                             </span>
                         </a>
-
                     </li>
 
-
                     <li class="sidebar-menu-item">
-
                         <a
                             href="filmes.html"
                             class="sidebar-link"
@@ -116,12 +109,9 @@
                                 Filmes
                             </span>
                         </a>
-
                     </li>
 
-
                     <li class="sidebar-menu-item">
-
                         <a
                             href="sessoes.html"
                             class="sidebar-link active"
@@ -138,12 +128,9 @@
                                 Sessões
                             </span>
                         </a>
-
                     </li>
 
-
                     <li class="sidebar-menu-item">
-
                         <a
                             href="venda-ingressos.html"
                             class="sidebar-link"
@@ -159,12 +146,9 @@
                                 Vender ingressos
                             </span>
                         </a>
-
                     </li>
 
-
                     <li class="sidebar-menu-item">
-
                         <a
                             href="escanear-ingresso.html"
                             class="sidebar-link"
@@ -180,12 +164,9 @@
                                 Escanear QR Code
                             </span>
                         </a>
-
                     </li>
 
-
                     <li class="sidebar-menu-item">
-
                         <a
                             href="relatorios.html"
                             class="sidebar-link"
@@ -201,12 +182,9 @@
                                 Relatórios
                             </span>
                         </a>
-
                     </li>
 
-
                     <li class="sidebar-menu-item">
-
                         <a
                             href="perfil.html"
                             class="sidebar-link"
@@ -222,13 +200,11 @@
                                 Perfil
                             </span>
                         </a>
-
                     </li>
 
                 </ul>
 
             </nav>
-
 
             <div class="sidebar-footer">
 
@@ -277,10 +253,7 @@
 
         </aside>
 
-
-        <!-- =====================================================
-             OVERLAY MOBILE
-        ====================================================== -->
+        <!-- OVERLAY MOBILE -->
 
         <div
             class="sidebar-overlay"
@@ -288,14 +261,9 @@
             aria-hidden="true"
         ></div>
 
-
-        <!-- =====================================================
-             CONTEÚDO
-        ====================================================== -->
+        <!-- CONTEÚDO -->
 
         <div class="admin-content">
-
-            <!-- HEADER MOBILE -->
 
             <header class="mobile-header">
 
@@ -319,16 +287,9 @@
 
             </header>
 
-
-            <!-- =================================================
-                 CONTEÚDO PRINCIPAL
-            ================================================== -->
-
             <main class="new-session-main">
 
-                <!-- =================================================
-                     CABEÇALHO
-                ================================================== -->
+                <!-- CABEÇALHO -->
 
                 <section
                     class="new-session-heading"
@@ -357,17 +318,14 @@
                         </h1>
 
                         <p class="new-session-description">
-                            Escolha o filme, a data e o horário da nova sessão.
+                            Escolha o filme, a data, o horário e o preço da nova sessão.
                         </p>
 
                     </div>
 
                 </section>
 
-
-                <!-- =================================================
-                     CARD PRINCIPAL
-                ================================================== -->
+                <!-- CARD PRINCIPAL -->
 
                 <section class="new-session-card">
 
@@ -377,9 +335,7 @@
                         novalidate
                     >
 
-                        <!-- =================================================
-                             FILME
-                        ================================================== -->
+                        <!-- FILME -->
 
                         <div class="form-section">
 
@@ -398,7 +354,6 @@
                                 </p>
 
                             </div>
-
 
                             <div class="form-section-content">
 
@@ -427,9 +382,7 @@
                                         <div
                                             class="movie-search-results hidden"
                                             id="session-movie-results"
-                                        >
-                                            <!-- JavaScript -->
-                                        </div>
+                                        ></div>
 
                                     </div>
 
@@ -443,10 +396,7 @@
 
                         </div>
 
-
-                        <!-- =================================================
-                             DATA E HORÁRIO
-                        ================================================== -->
+                        <!-- PROGRAMAÇÃO E PREÇO -->
 
                         <div class="form-section">
 
@@ -457,19 +407,17 @@
                                 </p>
 
                                 <h2>
-                                    Data e horário
+                                    Data, horário e preço
                                 </h2>
 
                                 <p>
-                                    Defina quando esta sessão será realizada.
+                                    Defina quando esta sessão será realizada
+                                    e o valor cobrado por ingresso.
                                 </p>
 
                             </div>
 
-
                             <div class="form-grid">
-
-                                <!-- DATA -->
 
                                 <div class="form-field">
 
@@ -486,9 +434,6 @@
 
                                 </div>
 
-
-                                <!-- HORÁRIO -->
-
                                 <div class="form-field">
 
                                     <label for="session-time">
@@ -504,14 +449,38 @@
 
                                 </div>
 
+                                <div class="form-field form-field-price">
+
+                                    <label for="session-price">
+                                        Preço do ingresso
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        id="session-price"
+                                        class="money-input"
+                                        name="precoIngresso"
+                                        inputmode="numeric"
+                                        autocomplete="off"
+                                        placeholder="R$ 0,00"
+                                        aria-describedby="session-price-help"
+                                        required
+                                    >
+
+                                    <p
+                                        class="form-field-help"
+                                        id="session-price-help"
+                                    >
+                                        Digite apenas números. Ex.: 2500 → R$ 25,00.
+                                    </p>
+
+                                </div>
+
                             </div>
 
                         </div>
 
-
-                        <!-- =================================================
-                             RESUMO
-                        ================================================== -->
+                        <!-- RESUMO -->
 
                         <div
                             class="session-summary hidden"
@@ -530,7 +499,6 @@
 
                             </div>
 
-
                             <div class="session-summary-grid">
 
                                 <div class="session-summary-item">
@@ -545,7 +513,6 @@
 
                                 </div>
 
-
                                 <div class="session-summary-item">
 
                                     <span class="session-summary-label">
@@ -557,7 +524,6 @@
                                     </strong>
 
                                 </div>
-
 
                                 <div class="session-summary-item">
 
@@ -574,14 +540,26 @@
 
                                 </div>
 
+                                <div class="session-summary-item">
+
+                                    <span class="session-summary-label">
+                                        Preço
+                                    </span>
+
+                                    <strong
+                                        class="session-summary-price"
+                                        id="session-summary-price"
+                                    >
+                                        R$ --,--
+                                    </strong>
+
+                                </div>
+
                             </div>
 
                         </div>
 
-
-                        <!-- =================================================
-                             ERRO
-                        ================================================== -->
+                        <!-- ERRO -->
 
                         <div
                             class="form-error hidden"
@@ -592,10 +570,7 @@
                             Não foi possível cadastrar a sessão.
                         </div>
 
-
-                        <!-- =================================================
-                             AÇÕES
-                        ================================================== -->
+                        <!-- AÇÕES -->
 
                         <div class="form-actions">
 
@@ -626,23 +601,11 @@
 
     </div>
 
-
-    <!-- =========================================================
-         FOOTER
-    ========================================================== -->
-
     <footer>
-
         <p>
             © 2026 Cinema. Todos os direitos reservados.
         </p>
-
     </footer>
-
-
-    <!-- =========================================================
-         JAVASCRIPT
-    ========================================================== -->
 
     <script src="/Frontend/js/config.js"></script>
     <script src="/Frontend/js/api.js"></script>

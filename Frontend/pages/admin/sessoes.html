@@ -1,19 +1,15 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
-
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
-
     <meta
         name="description"
         content="Gerenciamento de sessões do cinema"
     >
-
     <title>Sessões | Cinema</title>
 
     <link
@@ -255,7 +251,6 @@
 
         </aside>
 
-
         <!-- =====================================================
              OVERLAY MOBILE
         ====================================================== -->
@@ -265,7 +260,6 @@
             id="sidebar-overlay"
             aria-hidden="true"
         ></div>
-
 
         <!-- =====================================================
              CONTEÚDO
@@ -296,7 +290,6 @@
                 </a>
 
             </header>
-
 
             <!-- =================================================
                  CONTEÚDO PRINCIPAL
@@ -347,7 +340,6 @@
 
                 </section>
 
-
                 <!-- =================================================
                      PESQUISA E FILTROS
                 ================================================== -->
@@ -378,7 +370,6 @@
                         >
 
                     </div>
-
 
                     <!-- STATUS -->
 
@@ -414,7 +405,6 @@
 
                     </div>
 
-
                     <!-- DATA -->
 
                     <div class="session-date-filter">
@@ -449,7 +439,6 @@
 
                 </section>
 
-
                 <!-- =================================================
                      RESULTADOS
                 ================================================== -->
@@ -465,7 +454,6 @@
 
                 </div>
 
-
                 <!-- =================================================
                      ERRO
                 ================================================== -->
@@ -477,6 +465,7 @@
                 >
 
                     <div>
+
                         <strong>
                             Não foi possível carregar as sessões.
                         </strong>
@@ -484,6 +473,7 @@
                         <p id="sessions-error-message">
                             Não foi possível se comunicar com o servidor.
                         </p>
+
                     </div>
 
                     <button
@@ -495,7 +485,6 @@
                     </button>
 
                 </section>
-
 
                 <!-- =================================================
                      LOADING
@@ -514,7 +503,6 @@
                     </p>
 
                 </section>
-
 
                 <!-- =================================================
                      LISTA
@@ -541,7 +529,6 @@
                     </div>
 
                 </section>
-
 
                 <!-- =================================================
                      EMPTY STATE
@@ -583,7 +570,6 @@
 
     </div>
 
-
     <!-- =========================================================
          TEMPLATE DO CARD
     ========================================================== -->
@@ -606,6 +592,7 @@
                     </span>
 
                     <div>
+
                         <p class="session-card-label">
                             Filme
                         </p>
@@ -613,6 +600,7 @@
                         <h2 class="session-movie-title">
                             Nome do filme
                         </h2>
+
                     </div>
 
                 </div>
@@ -626,8 +614,7 @@
 
             </header>
 
-
-            <!-- DATA / HORÁRIO -->
+            <!-- DATA / HORÁRIO / PREÇO -->
 
             <div class="session-information">
 
@@ -655,8 +642,19 @@
 
                 </div>
 
-            </div>
+                <div class="session-information-item">
 
+                    <span class="session-information-label">
+                        Preço
+                    </span>
+
+                    <strong class="session-price">
+                        R$ --,--
+                    </strong>
+
+                </div>
+
+            </div>
 
             <!-- AÇÕES -->
 
@@ -693,7 +691,6 @@
         </article>
 
     </template>
-
 
     <!-- =========================================================
          MODAL DE EDIÇÃO
@@ -743,7 +740,6 @@
 
             </header>
 
-
             <!-- FORMULÁRIO -->
 
             <form
@@ -756,17 +752,16 @@
                     id="edit-session-id"
                 >
 
-
                 <!-- FILME -->
 
                 <div class="form-field form-field-full">
-                                
+
                     <label for="edit-session-movie-search">
                         Filme
                     </label>
-                
+
                     <div class="movie-search-container">
-                    
+
                         <input
                             type="text"
                             id="edit-session-movie-search"
@@ -774,22 +769,21 @@
                             placeholder="Digite o nome do filme..."
                             autocomplete="off"
                         >
-                    
+
                         <input
                             type="hidden"
                             id="edit-session-movie"
                             name="filmeId"
                         >
-                    
+
                         <div
                             class="movie-search-results hidden"
                             id="edit-session-movie-results"
                         ></div>
-                    
-                    </div>
-                
-                </div>
 
+                    </div>
+
+                </div>
 
                 <!-- DATA -->
 
@@ -807,7 +801,6 @@
 
                 </div>
 
-
                 <!-- HORÁRIO -->
 
                 <div class="form-field">
@@ -824,6 +817,25 @@
 
                 </div>
 
+                <!-- PREÇO -->
+
+                <div class="form-field form-field-full">
+
+                    <label for="edit-session-price">
+                        Preço do ingresso
+                    </label>
+
+                    <input
+                        type="text"
+                        id="edit-session-price"
+                        class="money-input"
+                        inputmode="numeric"
+                        autocomplete="off"
+                        placeholder="R$ 0,00"
+                        required
+                    >
+
+                </div>
 
                 <!-- AVISO -->
 
@@ -834,7 +846,6 @@
                     Esta sessão não pode mais ser editada.
                 </div>
 
-
                 <!-- ERRO -->
 
                 <div
@@ -844,7 +855,6 @@
                 >
                     Não foi possível atualizar a sessão.
                 </div>
-
 
                 <!-- AÇÕES -->
 
@@ -874,17 +884,17 @@
 
     </div>
 
-
     <!-- =========================================================
          FOOTER
     ========================================================== -->
 
     <footer>
+
         <p>
             © 2026 Cinema. Todos os direitos reservados.
         </p>
-    </footer>
 
+    </footer>
 
     <!-- =========================================================
          JAVASCRIPT

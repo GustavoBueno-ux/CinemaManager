@@ -1,5 +1,6 @@
 const SESSOES_ENDPOINT = "/Sessao";
 const FILMES_ENDPOINT = "/Filme";
+const MAX_DIGITOS_PRECO = 10;
 
 const elementos = {
     sidebar: document.getElementById("sidebar"),
@@ -18,11 +19,13 @@ const elementos = {
 
     sessionDate: document.getElementById("session-date"),
     sessionTime: document.getElementById("session-time"),
+    sessionPrice: document.getElementById("session-price"),
 
     sessionSummary: document.getElementById("session-summary"),
     sessionSummaryMovie: document.getElementById("session-summary-movie"),
     sessionSummaryDate: document.getElementById("session-summary-date"),
     sessionSummaryTime: document.getElementById("session-summary-time"),
+    sessionSummaryPrice: document.getElementById("session-summary-price"),
 
     error: document.getElementById("new-session-error"),
     saveButton: document.getElementById("save-session-button")
@@ -129,6 +132,21 @@ function configurarEventos() {
     elementos.sessionTime?.addEventListener(
         "change",
         atualizarResumo
+    );
+
+    elementos.sessionPrice?.addEventListener(
+        "input",
+        formatarCampoPreco
+    );
+
+    elementos.sessionPrice?.addEventListener(
+        "focus",
+        posicionarCursorPrecoNoFinal
+    );
+
+    elementos.sessionPrice?.addEventListener(
+        "click",
+        posicionarCursorPrecoNoFinal
     );
 
     elementos.form?.addEventListener(
@@ -362,14 +380,10 @@ function renderizarResultadosFilmes(filmes) {
 }
 
 function selecionarFilme(filme) {
-    estado.filmeSelecionado =
-        filme;
+    estado.filmeSelecionado = filme;
 
-    elementos.movieId.value =
-        filme.id;
-
-    elementos.movieSearch.value =
-        filme.titulo;
+    elementos.movieId.value = filme.id;
+    elementos.movieSearch.value = filme.titulo;
 
     fecharResultadosFilmes();
     esconderErro();
@@ -380,7 +394,6 @@ function limparFilmeSelecionado(
     limparTexto = true
 ) {
     estado.filmeSelecionado = null;
-
     elementos.movieId.value = "";
 
     if (limparTexto) {
@@ -429,6 +442,95 @@ function obterDataHojeISO() {
 }
 
 /* =========================================================
+   PREÇO
+========================================================= */
+
+function formatarCampoPreco() {
+    if (!elementos.sessionPrice) {
+        return;
+    }
+
+    const digitos =
+        elementos.sessionPrice.value
+            .replace(/\D/g, "")
+            .slice(0, MAX_DIGITOS_PRECO);
+
+    if (!digitos) {
+        elementos.sessionPrice.value = "";
+        atualizarResumo();
+        return;
+    }
+
+    const centavos = Number(digitos);
+    const valor = centavos / 100;
+
+    elementos.sessionPrice.value =
+        formatarMoeda(valor);
+
+    posicionarCursorPrecoNoFinal();
+    atualizarResumo();
+}
+
+function posicionarCursorPrecoNoFinal() {
+    if (
+        !elementos.sessionPrice ||
+        document.activeElement !== elementos.sessionPrice
+    ) {
+        return;
+    }
+
+    requestAnimationFrame(() => {
+        const tamanho =
+            elementos.sessionPrice.value.length;
+
+        elementos.sessionPrice.setSelectionRange(
+            tamanho,
+            tamanho
+        );
+    });
+}
+
+function obterPrecoInformado() {
+    if (!elementos.sessionPrice) {
+        return null;
+    }
+
+    const digitos =
+        elementos.sessionPrice.value
+            .replace(/\D/g, "");
+
+    if (!digitos) {
+        return null;
+    }
+
+    const centavos =
+        Number(digitos);
+
+    if (
+        !Number.isFinite(centavos) ||
+        centavos <= 0
+    ) {
+        return centavos === 0
+            ? 0
+            : null;
+    }
+
+    return centavos / 100;
+}
+
+function formatarMoeda(valor) {
+    return Number(valor).toLocaleString(
+        "pt-BR",
+        {
+            style: "currency",
+            currency: "BRL",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }
+    );
+}
+
+/* =========================================================
    RESUMO
 ========================================================= */
 
@@ -442,7 +544,18 @@ function atualizarResumo() {
     const horario =
         elementos.sessionTime.value;
 
-    if (!filme && !data && !horario) {
+    const preco =
+        obterPrecoInformado();
+
+    const possuiPreco =
+        preco !== null;
+
+    if (
+        !filme &&
+        !data &&
+        !horario &&
+        !possuiPreco
+    ) {
         elementos.sessionSummary.classList.add(
             "hidden"
         );
@@ -464,6 +577,11 @@ function atualizarResumo() {
 
     elementos.sessionSummaryTime.textContent =
         horario || "--:--";
+
+    elementos.sessionSummaryPrice.textContent =
+        preco !== null && preco > 0
+            ? formatarMoeda(preco)
+            : "R$ --,--";
 }
 
 function formatarDataFormulario(data) {
@@ -503,9 +621,25 @@ async function cadastrarSessao(evento) {
     const horario =
         elementos.sessionTime.value;
 
-    if (!filmeId || !data || !horario) {
+    const precoIngresso =
+        obterPrecoInformado();
+
+    if (
+        !filmeId ||
+        !data ||
+        !horario ||
+        precoIngresso === null
+    ) {
         exibirErro(
             "Preencha todos os campos e selecione um filme válido."
+        );
+
+        return;
+    }
+
+    if (precoIngresso <= 0) {
+        exibirErro(
+            "O preço do ingresso deve ser maior que zero."
         );
 
         return;
@@ -549,15 +683,19 @@ async function cadastrarSessao(evento) {
     try {
         await enviarCadastroSessao({
             filmeId,
+
             dataHora:
                 formatarDataHoraParaApi(
                     data,
                     horario
-                )
+                ),
+
+            precoIngresso
         });
 
         window.location.href =
             "sessoes.html";
+
     } catch (erro) {
         console.error(
             "Erro ao cadastrar sessão:",
@@ -596,6 +734,7 @@ async function enviarCadastroSessao(sessao) {
             `${API_URL}${SESSOES_ENDPOINT}`,
             {
                 method: "POST",
+
                 headers: {
                     "Content-Type":
                         "application/json",
@@ -603,11 +742,13 @@ async function enviarCadastroSessao(sessao) {
                     Authorization:
                         `Bearer ${token}`
                 },
+
                 body: JSON.stringify(
                     sessao
                 )
             }
         );
+
     } catch {
         throw new Error(
             "Não foi possível se comunicar com o servidor."
@@ -650,10 +791,15 @@ async function enviarCadastroSessao(sessao) {
 ========================================================= */
 
 async function tentarLerMensagemErro(resposta) {
+    if (resposta.status >= 500) {
+        return "Ocorreu um erro interno no servidor. Tente novamente.";
+    }
+
     let texto;
 
     try {
-        texto = await resposta.text();
+        texto =
+            await resposta.text();
     } catch {
         return null;
     }
@@ -666,12 +812,36 @@ async function tentarLerMensagemErro(resposta) {
         const dados =
             JSON.parse(texto);
 
+        if (
+            dados?.errors &&
+            typeof dados.errors === "object"
+        ) {
+            const mensagens =
+                Object.values(dados.errors)
+                    .flat()
+                    .filter(Boolean);
+
+            return mensagens.length
+                ? mensagens.join(" ")
+                : null;
+        }
+
         return (
             dados?.mensagem ||
             dados?.message ||
+            dados?.title ||
             null
         );
+
     } catch {
+        if (
+            texto.length > 300 ||
+            texto.includes("System.") ||
+            texto.includes("Exception")
+        ) {
+            return "Não foi possível cadastrar a sessão.";
+        }
+
         return texto;
     }
 }
@@ -713,6 +883,9 @@ function definirEstadoSalvamento(salvando) {
         salvando;
 
     elementos.sessionTime.disabled =
+        salvando;
+
+    elementos.sessionPrice.disabled =
         salvando;
 
     elementos.saveButton.textContent =

@@ -8,12 +8,7 @@ public class PatchSessaoDTO
 
     public DateTime? DataHora { get; set; }
 
-    [Range(
-        typeof(decimal),
-        "0.01",
-        "99999999.99",
-        ErrorMessage = "O preço do ingresso deve ser maior que zero."
-    )]
+    [Range(0.01, 99999999.99, ErrorMessage = "O preço do ingresso deve ser maior que zero.")]
     public decimal? PrecoIngresso { get; set; }
 
     public bool? Ativa { get; set; }

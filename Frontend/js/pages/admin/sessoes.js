@@ -1,5 +1,6 @@
 const SESSOES_ENDPOINT = "/Sessao";
 const FILMES_ENDPOINT = "/Filme";
+const MAX_DIGITOS_PRECO = 10;
 
 const elementos = {
     sidebar: document.getElementById("sidebar"),
@@ -40,6 +41,7 @@ const elementos = {
 
     editSessionDate: document.getElementById("edit-session-date"),
     editSessionTime: document.getElementById("edit-session-time"),
+    editSessionPrice: document.getElementById("edit-session-price"),
 
     editSessionWarning: document.getElementById("edit-session-warning"),
     editSessionError: document.getElementById("edit-session-error"),
@@ -86,7 +88,9 @@ function obterUsuarioAutenticado() {
     const token = localStorage.getItem("token");
     const usuarioArmazenado = localStorage.getItem("usuario");
 
-    if (!token || !usuarioArmazenado) return null;
+    if (!token || !usuarioArmazenado) {
+        return null;
+    }
 
     try {
         const usuario = JSON.parse(usuarioArmazenado);
@@ -118,24 +122,59 @@ function configurarFuncionario(usuario) {
 ========================================================= */
 
 function configurarEventos() {
-    elementos.sidebarOpenButton?.addEventListener("click", abrirSidebar);
-    elementos.sidebarCloseButton?.addEventListener("click", fecharSidebar);
-    elementos.sidebarOverlay?.addEventListener("click", fecharSidebar);
-    elementos.logoutButton?.addEventListener("click", fazerLogout);
+    elementos.sidebarOpenButton?.addEventListener(
+        "click",
+        abrirSidebar
+    );
 
-    elementos.sessionsRetryButton?.addEventListener("click", carregarDados);
-    elementos.sessionSearch?.addEventListener("input", aplicarFiltros);
+    elementos.sidebarCloseButton?.addEventListener(
+        "click",
+        fecharSidebar
+    );
 
-    elementos.sessionDate?.addEventListener("change", () => {
-        atualizarBotaoLimparData();
-        aplicarFiltros();
-    });
+    elementos.sidebarOverlay?.addEventListener(
+        "click",
+        fecharSidebar
+    );
 
-    elementos.clearDateButton?.addEventListener("click", limparData);
-    elementos.clearFiltersButton?.addEventListener("click", limparFiltros);
+    elementos.logoutButton?.addEventListener(
+        "click",
+        fazerLogout
+    );
+
+    elementos.sessionsRetryButton?.addEventListener(
+        "click",
+        carregarDados
+    );
+
+    elementos.sessionSearch?.addEventListener(
+        "input",
+        aplicarFiltros
+    );
+
+    elementos.sessionDate?.addEventListener(
+        "change",
+        () => {
+            atualizarBotaoLimparData();
+            aplicarFiltros();
+        }
+    );
+
+    elementos.clearDateButton?.addEventListener(
+        "click",
+        limparData
+    );
+
+    elementos.clearFiltersButton?.addEventListener(
+        "click",
+        limparFiltros
+    );
 
     elementos.sessionStatusButtons.forEach(botao => {
-        botao.addEventListener("click", () => selecionarFiltroStatus(botao));
+        botao.addEventListener(
+            "click",
+            () => selecionarFiltroStatus(botao)
+        );
     });
 
     elementos.editSessionCloseButton?.addEventListener(
@@ -168,40 +207,76 @@ function configurarEventos() {
         controlarTecladoPesquisaFilme
     );
 
-    elementos.editSessionModal?.addEventListener("click", evento => {
-        if (evento.target === elementos.editSessionModal) {
-            fecharModalEdicao();
+    elementos.editSessionPrice?.addEventListener(
+        "input",
+        formatarCampoPrecoEdicao
+    );
+
+    elementos.editSessionPrice?.addEventListener(
+        "focus",
+        posicionarCursorPrecoNoFinal
+    );
+
+    elementos.editSessionPrice?.addEventListener(
+        "click",
+        posicionarCursorPrecoNoFinal
+    );
+
+    elementos.editSessionModal?.addEventListener(
+        "click",
+        evento => {
+            if (
+                evento.target ===
+                elementos.editSessionModal
+            ) {
+                fecharModalEdicao();
+            }
         }
-    });
+    );
 
-    document.addEventListener("click", evento => {
-        const container =
-            elementos.editSessionMovieSearch?.closest(
-                ".movie-search-container"
-            );
+    document.addEventListener(
+        "click",
+        evento => {
+            const container =
+                elementos.editSessionMovieSearch?.closest(
+                    ".movie-search-container"
+                );
 
-        if (container && !container.contains(evento.target)) {
-            fecharResultadosFilmes();
+            if (
+                container &&
+                !container.contains(evento.target)
+            ) {
+                fecharResultadosFilmes();
+            }
         }
-    });
+    );
 
-    document.addEventListener("keydown", evento => {
-        if (evento.key !== "Escape") return;
+    document.addEventListener(
+        "keydown",
+        evento => {
+            if (evento.key !== "Escape") {
+                return;
+            }
 
-        if (
-            elementos.editSessionMovieResults &&
-            !elementos.editSessionMovieResults.classList.contains("hidden")
-        ) {
-            fecharResultadosFilmes();
-            return;
+            if (
+                elementos.editSessionMovieResults &&
+                !elementos.editSessionMovieResults
+                    .classList.contains("hidden")
+            ) {
+                fecharResultadosFilmes();
+                return;
+            }
+
+            if (
+                !elementos.editSessionModal
+                    .classList.contains("hidden")
+            ) {
+                fecharModalEdicao();
+            } else {
+                fecharSidebar();
+            }
         }
-
-        if (!elementos.editSessionModal.classList.contains("hidden")) {
-            fecharModalEdicao();
-        } else {
-            fecharSidebar();
-        }
-    });
+    );
 }
 
 /* =========================================================
@@ -211,7 +286,11 @@ function configurarEventos() {
 function abrirSidebar() {
     elementos.sidebar?.classList.add("open");
     elementos.sidebarOverlay?.classList.add("visible");
-    elementos.sidebarOpenButton?.setAttribute("aria-expanded", "true");
+
+    elementos.sidebarOpenButton?.setAttribute(
+        "aria-expanded",
+        "true"
+    );
 
     document.body.classList.add("sidebar-open");
 }
@@ -219,7 +298,11 @@ function abrirSidebar() {
 function fecharSidebar() {
     elementos.sidebar?.classList.remove("open");
     elementos.sidebarOverlay?.classList.remove("visible");
-    elementos.sidebarOpenButton?.setAttribute("aria-expanded", "false");
+
+    elementos.sidebarOpenButton?.setAttribute(
+        "aria-expanded",
+        "false"
+    );
 
     document.body.classList.remove("sidebar-open");
 }
@@ -239,18 +322,27 @@ async function carregarDados() {
     prepararCarregamento();
 
     try {
-        const [respostaSessoes, respostaFilmes] = await Promise.all([
+        const [
+            respostaSessoes,
+            respostaFilmes
+        ] = await Promise.all([
             apiRequest(SESSOES_ENDPOINT),
             apiRequest(FILMES_ENDPOINT)
         ]);
 
         if (!respostaSessoes.ok) {
-            tratarErroCarregamento(respostaSessoes);
+            tratarErroCarregamento(
+                respostaSessoes
+            );
+
             return;
         }
 
         if (!respostaFilmes.ok) {
-            tratarErroCarregamento(respostaFilmes);
+            tratarErroCarregamento(
+                respostaFilmes
+            );
+
             return;
         }
 
@@ -258,15 +350,24 @@ async function carregarDados() {
             !Array.isArray(respostaSessoes.data) ||
             !Array.isArray(respostaFilmes.data)
         ) {
-            throw new Error("A API retornou dados inválidos.");
+            throw new Error(
+                "A API retornou dados inválidos."
+            );
         }
 
-        estado.sessoes = respostaSessoes.data;
-        estado.filmes = respostaFilmes.data;
+        estado.sessoes =
+            respostaSessoes.data;
+
+        estado.filmes =
+            respostaFilmes.data;
 
         aplicarFiltros();
+
     } catch (erro) {
-        console.error("Erro ao carregar sessões:", erro);
+        console.error(
+            "Erro ao carregar sessões:",
+            erro
+        );
 
         exibirErro(
             "Não foi possível se comunicar com o servidor."
@@ -275,10 +376,21 @@ async function carregarDados() {
 }
 
 function prepararCarregamento() {
-    elementos.sessionsLoading.classList.remove("hidden");
-    elementos.sessionsError.classList.add("hidden");
-    elementos.sessionsListSection.classList.add("hidden");
-    elementos.sessionsEmptyState.classList.add("hidden");
+    elementos.sessionsLoading.classList.remove(
+        "hidden"
+    );
+
+    elementos.sessionsError.classList.add(
+        "hidden"
+    );
+
+    elementos.sessionsListSection.classList.add(
+        "hidden"
+    );
+
+    elementos.sessionsEmptyState.classList.add(
+        "hidden"
+    );
 
     elementos.sessionsList.replaceChildren();
 
@@ -293,86 +405,125 @@ function prepararCarregamento() {
 function pesquisarFilmesModal() {
     elementos.editSessionMovie.value = "";
 
-    const pesquisa = elementos.editSessionMovieSearch.value
-        .trim()
-        .toLocaleLowerCase("pt-BR");
+    const pesquisa =
+        elementos.editSessionMovieSearch.value
+            .trim()
+            .toLocaleLowerCase("pt-BR");
 
-    const filmesEncontrados = obterFilmesFiltrados(pesquisa);
+    const filmesEncontrados =
+        obterFilmesFiltrados(pesquisa);
 
-    renderizarResultadosFilmes(filmesEncontrados);
+    renderizarResultadosFilmes(
+        filmesEncontrados
+    );
 }
 
 function mostrarSugestoesFilmes() {
-    const pesquisa = elementos.editSessionMovieSearch.value
-        .trim()
-        .toLocaleLowerCase("pt-BR");
+    const pesquisa =
+        elementos.editSessionMovieSearch.value
+            .trim()
+            .toLocaleLowerCase("pt-BR");
 
-    const filmesEncontrados = obterFilmesFiltrados(pesquisa);
+    const filmesEncontrados =
+        obterFilmesFiltrados(pesquisa);
 
-    renderizarResultadosFilmes(filmesEncontrados);
+    renderizarResultadosFilmes(
+        filmesEncontrados
+    );
 }
 
 function obterFilmesFiltrados(pesquisa) {
     return [...estado.filmes]
         .filter(filme => {
-            const titulo = String(filme.titulo || "")
-                .toLocaleLowerCase("pt-BR");
+            const titulo =
+                String(filme.titulo || "")
+                    .toLocaleLowerCase("pt-BR");
 
-            return !pesquisa || titulo.includes(pesquisa);
+            return (
+                !pesquisa ||
+                titulo.includes(pesquisa)
+            );
         })
         .sort((a, b) =>
-            String(a.titulo || "").localeCompare(
-                String(b.titulo || ""),
-                "pt-BR"
-            )
+            String(a.titulo || "")
+                .localeCompare(
+                    String(b.titulo || ""),
+                    "pt-BR"
+                )
         );
 }
 
 function renderizarResultadosFilmes(filmes) {
-    elementos.editSessionMovieResults.replaceChildren();
+    elementos.editSessionMovieResults
+        .replaceChildren();
 
     if (!filmes.length) {
-        const mensagem = document.createElement("div");
+        const mensagem =
+            document.createElement("div");
 
-        mensagem.className = "movie-search-empty";
-        mensagem.textContent = "Nenhum filme encontrado.";
+        mensagem.className =
+            "movie-search-empty";
 
-        elementos.editSessionMovieResults.append(mensagem);
-        elementos.editSessionMovieResults.classList.remove("hidden");
+        mensagem.textContent =
+            "Nenhum filme encontrado.";
+
+        elementos.editSessionMovieResults
+            .append(mensagem);
+
+        elementos.editSessionMovieResults
+            .classList.remove("hidden");
 
         return;
     }
 
-    const fragmento = document.createDocumentFragment();
+    const fragmento =
+        document.createDocumentFragment();
 
     filmes.forEach(filme => {
-        const botao = document.createElement("button");
+        const botao =
+            document.createElement("button");
 
         botao.type = "button";
-        botao.className = "movie-search-result";
-        botao.textContent = filme.titulo;
 
-        botao.addEventListener("click", () => {
-            selecionarFilmeModal(filme);
-        });
+        botao.className =
+            "movie-search-result";
+
+        botao.textContent =
+            filme.titulo;
+
+        botao.addEventListener(
+            "click",
+            () => {
+                selecionarFilmeModal(
+                    filme
+                );
+            }
+        );
 
         fragmento.append(botao);
     });
 
-    elementos.editSessionMovieResults.append(fragmento);
-    elementos.editSessionMovieResults.classList.remove("hidden");
+    elementos.editSessionMovieResults
+        .append(fragmento);
+
+    elementos.editSessionMovieResults
+        .classList.remove("hidden");
 }
 
 function selecionarFilmeModal(filme) {
-    elementos.editSessionMovie.value = filme.id;
-    elementos.editSessionMovieSearch.value = filme.titulo;
+    elementos.editSessionMovie.value =
+        filme.id;
+
+    elementos.editSessionMovieSearch.value =
+        filme.titulo;
 
     esconderErroEdicao();
     fecharResultadosFilmes();
 }
 
 function fecharResultadosFilmes() {
-    elementos.editSessionMovieResults?.classList.add("hidden");
+    elementos.editSessionMovieResults
+        ?.classList.add("hidden");
 }
 
 function controlarTecladoPesquisaFilme(evento) {
@@ -386,64 +537,106 @@ function controlarTecladoPesquisaFilme(evento) {
 ========================================================= */
 
 function selecionarFiltroStatus(botao) {
-    if (!botao) return;
+    if (!botao) {
+        return;
+    }
 
-    estado.filtroStatus = botao.dataset.status;
+    estado.filtroStatus =
+        botao.dataset.status;
 
-    elementos.sessionStatusButtons.forEach(item => {
-        item.classList.toggle("active", item === botao);
-    });
+    elementos.sessionStatusButtons.forEach(
+        item => {
+            item.classList.toggle(
+                "active",
+                item === botao
+            );
+        }
+    );
 
     aplicarFiltros();
 }
 
 function aplicarFiltros() {
-    const pesquisa = elementos.sessionSearch.value
-        .trim()
-        .toLocaleLowerCase("pt-BR");
+    const pesquisa =
+        elementos.sessionSearch.value
+            .trim()
+            .toLocaleLowerCase("pt-BR");
 
-    const dataSelecionada = elementos.sessionDate.value;
-    const agora = new Date();
+    const dataSelecionada =
+        elementos.sessionDate.value;
 
-    const sessoesFiltradas = estado.sessoes
-        .filter(sessao => {
-            const dataHora = new Date(sessao.dataHora);
+    const agora =
+        new Date();
 
-            const titulo = String(sessao.tituloFilme || "")
-                .toLocaleLowerCase("pt-BR");
+    const sessoesFiltradas =
+        estado.sessoes.filter(
+            sessao => {
+                const dataHora =
+                    new Date(
+                        sessao.dataHora
+                    );
 
-            const correspondePesquisa =
-                !pesquisa ||
-                titulo.includes(pesquisa);
+                const titulo =
+                    String(
+                        sessao.tituloFilme ||
+                        ""
+                    ).toLocaleLowerCase(
+                        "pt-BR"
+                    );
 
-            const correspondeData =
-                !dataSelecionada ||
-                obterDataISO(sessao.dataHora) === dataSelecionada;
+                const correspondePesquisa =
+                    !pesquisa ||
+                    titulo.includes(
+                        pesquisa
+                    );
 
-            let correspondeStatus = true;
+                const correspondeData =
+                    !dataSelecionada ||
+                    obterDataISO(
+                        sessao.dataHora
+                    ) === dataSelecionada;
 
-            if (estado.filtroStatus === "futuras") {
-                correspondeStatus = dataHora > agora;
+                let correspondeStatus =
+                    true;
+
+                if (
+                    estado.filtroStatus ===
+                    "futuras"
+                ) {
+                    correspondeStatus =
+                        dataHora > agora;
+                }
+
+                if (
+                    estado.filtroStatus ===
+                    "encerradas"
+                ) {
+                    correspondeStatus =
+                        dataHora <= agora;
+                }
+
+                return (
+                    correspondePesquisa &&
+                    correspondeData &&
+                    correspondeStatus
+                );
             }
+        );
 
-            if (estado.filtroStatus === "encerradas") {
-                correspondeStatus = dataHora <= agora;
-            }
+    ordenarSessoes(
+        sessoesFiltradas
+    );
 
-            return (
-                correspondePesquisa &&
-                correspondeData &&
-                correspondeStatus
-            );
-        });
-
-    ordenarSessoes(sessoesFiltradas);
-
-    renderizarSessoes(sessoesFiltradas);
+    renderizarSessoes(
+        sessoesFiltradas
+    );
 }
 
 function ordenarSessoes(sessoes) {
-    if (estado.filtroStatus === "futuras") {
+    if (
+        estado.filtroStatus ===
+        "futuras"
+    ) {
         sessoes.sort(
             (a, b) =>
                 new Date(a.dataHora) -
@@ -468,10 +661,11 @@ function limparData() {
 }
 
 function atualizarBotaoLimparData() {
-    elementos.clearDateButton.classList.toggle(
-        "hidden",
-        !elementos.sessionDate.value
-    );
+    elementos.clearDateButton
+        .classList.toggle(
+            "hidden",
+            !elementos.sessionDate.value
+        );
 }
 
 function limparFiltros() {
@@ -480,10 +674,17 @@ function limparFiltros() {
 
     atualizarBotaoLimparData();
 
-    const botaoTodas = [...elementos.sessionStatusButtons]
-        .find(botao => botao.dataset.status === "todas");
+    const botaoTodas =
+        [...elementos.sessionStatusButtons]
+            .find(
+                botao =>
+                    botao.dataset.status ===
+                    "todas"
+            );
 
-    selecionarFiltroStatus(botaoTodas);
+    selecionarFiltroStatus(
+        botaoTodas
+    );
 }
 
 /* =========================================================
@@ -491,70 +692,149 @@ function limparFiltros() {
 ========================================================= */
 
 function renderizarSessoes(sessoes) {
-    elementos.sessionsLoading.classList.add("hidden");
-    elementos.sessionsError.classList.add("hidden");
-    elementos.sessionsList.replaceChildren();
+    elementos.sessionsLoading
+        .classList.add("hidden");
 
-    atualizarContadorResultados(sessoes.length);
+    elementos.sessionsError
+        .classList.add("hidden");
 
-    elementos.sessionsEmptyState.classList.toggle(
-        "hidden",
-        sessoes.length !== 0
+    elementos.sessionsList
+        .replaceChildren();
+
+    atualizarContadorResultados(
+        sessoes.length
     );
 
-    elementos.sessionsListSection.classList.toggle(
-        "hidden",
-        sessoes.length === 0
-    );
+    elementos.sessionsEmptyState
+        .classList.toggle(
+            "hidden",
+            sessoes.length !== 0
+        );
 
-    if (!sessoes.length) return;
+    elementos.sessionsListSection
+        .classList.toggle(
+            "hidden",
+            sessoes.length === 0
+        );
 
-    const fragmento = document.createDocumentFragment();
+    if (!sessoes.length) {
+        return;
+    }
+
+    const fragmento =
+        document.createDocumentFragment();
 
     sessoes.forEach(sessao => {
-        fragmento.append(criarCardSessao(sessao));
+        fragmento.append(
+            criarCardSessao(
+                sessao
+            )
+        );
     });
 
-    elementos.sessionsList.append(fragmento);
+    elementos.sessionsList.append(
+        fragmento
+    );
 }
 
 function criarCardSessao(sessao) {
     const clone =
-        elementos.sessionCardTemplate.content.cloneNode(true);
+        elementos.sessionCardTemplate
+            .content
+            .cloneNode(true);
 
-    const card = clone.querySelector(".session-card");
-    const titulo = clone.querySelector(".session-movie-title");
-    const data = clone.querySelector(".session-date");
-    const horario = clone.querySelector(".session-time");
-    const status = clone.querySelector(".session-status");
-    const botaoEditar = clone.querySelector(".edit-session-button");
-    const botaoComprar = clone.querySelector(".buy-ticket-button");
+    const card =
+        clone.querySelector(
+            ".session-card"
+        );
 
-    const dataHora = new Date(sessao.dataHora);
-    const encerrada = dataHora <= new Date();
+    const titulo =
+        clone.querySelector(
+            ".session-movie-title"
+        );
 
-    const statusSessao = obterStatusSessao(sessao);
-    const podeEditar = sessaoPodeSerEditada(sessao);
+    const data =
+        clone.querySelector(
+            ".session-date"
+        );
 
-    card.dataset.sessionId = sessao.id;
+    const horario =
+        clone.querySelector(
+            ".session-time"
+        );
+
+    const preco =
+        clone.querySelector(
+            ".session-price"
+        );
+
+    const status =
+        clone.querySelector(
+            ".session-status"
+        );
+
+    const botaoEditar =
+        clone.querySelector(
+            ".edit-session-button"
+        );
+
+    const botaoComprar =
+        clone.querySelector(
+            ".buy-ticket-button"
+        );
+
+    const dataHora =
+        new Date(
+            sessao.dataHora
+        );
+
+    const encerrada =
+        dataHora <= new Date();
+
+    const statusSessao =
+        obterStatusSessao(
+            sessao
+        );
+
+    const podeEditar =
+        sessaoPodeSerEditada(
+            sessao
+        );
+
+    card.dataset.sessionId =
+        sessao.id;
 
     titulo.textContent =
-        sessao.tituloFilme || "Filme não informado";
+        sessao.tituloFilme ||
+        "Filme não informado";
 
     data.textContent =
-        formatarData(sessao.dataHora);
+        formatarData(
+            sessao.dataHora
+        );
 
     data.dateTime =
-        obterDataISO(sessao.dataHora);
+        obterDataISO(
+            sessao.dataHora
+        );
 
     horario.textContent =
-        formatarHorario(sessao.dataHora);
+        formatarHorario(
+            sessao.dataHora
+        );
 
     horario.dateTime =
         sessao.dataHora;
 
+    preco.textContent =
+        formatarPreco(
+            sessao.precoIngresso
+        );
+
     status.textContent =
-        obterTextoStatus(statusSessao);
+        obterTextoStatus(
+            statusSessao
+        );
 
     status.dataset.status =
         statusSessao;
@@ -579,7 +859,10 @@ function obterStatusSessao(sessao) {
         return "inativa";
     }
 
-    if (new Date(sessao.dataHora) <= new Date()) {
+    if (
+        new Date(sessao.dataHora) <=
+        new Date()
+    ) {
         return "encerrada";
     }
 
@@ -611,32 +894,45 @@ function sessaoPodeSerEditada(sessao) {
         return false;
     }
 
-    if (new Date(sessao.dataHora) <= new Date()) {
+    if (
+        new Date(sessao.dataHora) <=
+        new Date()
+    ) {
         return false;
     }
 
-    /*
-        Já deixamos compatibilidade para quando o backend
-        começar a retornar uma dessas propriedades.
-    */
-
-    if (sessao.podeEditar === false) {
+    if (
+        sessao.podeEditar === false
+    ) {
         return false;
     }
 
-    if (sessao.possuiIngressosVendidos === true) {
+    if (
+        sessao.possuiIngressosVendidos ===
+        true
+    ) {
         return false;
     }
 
     return true;
 }
 
-function configurarBotaoEditar(botao, sessao, podeEditar) {
+function configurarBotaoEditar(
+    botao,
+    sessao,
+    podeEditar
+) {
     if (!podeEditar) {
         botao.disabled = true;
-        botao.classList.add("disabled");
 
-        if (sessao.possuiIngressosVendidos === true) {
+        botao.classList.add(
+            "disabled"
+        );
+
+        if (
+            sessao.possuiIngressosVendidos ===
+            true
+        ) {
             botao.title =
                 "Esta sessão possui ingressos vendidos e não pode ser editada.";
         } else {
@@ -649,20 +945,34 @@ function configurarBotaoEditar(botao, sessao, podeEditar) {
 
     botao.addEventListener(
         "click",
-        () => abrirModalEdicao(sessao.id)
+        () =>
+            abrirModalEdicao(
+                sessao.id
+            )
     );
 }
 
-function configurarBotaoComprar(botao, sessao, encerrada) {
-    if (encerrada || !sessao.ativa) {
-        botao.classList.add("disabled");
+function configurarBotaoComprar(
+    botao,
+    sessao,
+    encerrada
+) {
+    if (
+        encerrada ||
+        !sessao.ativa
+    ) {
+        botao.classList.add(
+            "disabled"
+        );
 
         botao.setAttribute(
             "aria-disabled",
             "true"
         );
 
-        botao.removeAttribute("href");
+        botao.removeAttribute(
+            "href"
+        );
 
         return;
     }
@@ -675,15 +985,19 @@ function configurarBotaoComprar(botao, sessao, encerrada) {
    CONTADOR
 ========================================================= */
 
-function atualizarContadorResultados(quantidade) {
+function atualizarContadorResultados(
+    quantidade
+) {
     if (quantidade === 0) {
-        elementos.sessionsResultsCount.textContent =
+        elementos.sessionsResultsCount
+            .textContent =
             "Nenhuma sessão encontrada";
 
         return;
     }
 
-    elementos.sessionsResultsCount.textContent =
+    elementos.sessionsResultsCount
+        .textContent =
         quantidade === 1
             ? "1 sessão encontrada"
             : `${quantidade} sessões encontradas`;
@@ -694,20 +1008,31 @@ function atualizarContadorResultados(quantidade) {
 ========================================================= */
 
 function abrirModalEdicao(sessaoId) {
-    const sessao = estado.sessoes.find(
-        item => item.id === sessaoId
-    );
+    const sessao =
+        estado.sessoes.find(
+            item =>
+                item.id === sessaoId
+        );
 
-    if (!sessao) return;
-
-    if (!sessaoPodeSerEditada(sessao)) {
+    if (!sessao) {
         return;
     }
 
-    estado.sessaoEmEdicao = sessao;
+    if (
+        !sessaoPodeSerEditada(
+            sessao
+        )
+    ) {
+        return;
+    }
+
+    estado.sessaoEmEdicao =
+        sessao;
 
     const partes =
-        separarDataHora(sessao.dataHora);
+        separarDataHora(
+            sessao.dataHora
+        );
 
     elementos.editSessionId.value =
         sessao.id;
@@ -724,49 +1049,70 @@ function abrirModalEdicao(sessaoId) {
     elementos.editSessionTime.value =
         partes.horario;
 
+    elementos.editSessionPrice.value =
+        formatarPreco(
+            sessao.precoIngresso
+        );
+
     esconderErroEdicao();
     fecharResultadosFilmes();
 
-    elementos.editSessionWarning.classList.add(
-        "hidden"
-    );
+    elementos.editSessionWarning
+        .classList.add(
+            "hidden"
+        );
 
-    elementos.editSessionModal.classList.remove(
-        "hidden"
-    );
+    elementos.editSessionModal
+        .classList.remove(
+            "hidden"
+        );
 
-    elementos.editSessionModal.setAttribute(
-        "aria-hidden",
-        "false"
-    );
+    elementos.editSessionModal
+        .setAttribute(
+            "aria-hidden",
+            "false"
+        );
 
     document.body.classList.add(
         "modal-open"
     );
 
-    elementos.editSessionMovieSearch.focus();
+    elementos.editSessionMovieSearch
+        .focus();
 }
 
 function fecharModalEdicao() {
-    if (estado.salvandoEdicao) return;
+    if (
+        estado.salvandoEdicao
+    ) {
+        return;
+    }
 
-    elementos.editSessionModal.classList.add(
-        "hidden"
-    );
+    elementos.editSessionModal
+        .classList.add(
+            "hidden"
+        );
 
-    elementos.editSessionModal.setAttribute(
-        "aria-hidden",
-        "true"
-    );
+    elementos.editSessionModal
+        .setAttribute(
+            "aria-hidden",
+            "true"
+        );
 
     elementos.editSessionForm.reset();
 
-    if (elementos.editSessionMovie) {
-        elementos.editSessionMovie.value = "";
+    if (
+        elementos.editSessionMovie
+    ) {
+        elementos.editSessionMovie.value =
+            "";
     }
 
-    if (elementos.editSessionMovieSearch) {
-        elementos.editSessionMovieSearch.value = "";
+    if (
+        elementos.editSessionMovieSearch
+    ) {
+        elementos.editSessionMovieSearch.value =
+            "";
     }
 
     fecharResultadosFilmes();
@@ -775,7 +1121,8 @@ function fecharModalEdicao() {
         "modal-open"
     );
 
-    estado.sessaoEmEdicao = null;
+    estado.sessaoEmEdicao =
+        null;
 
     esconderErroEdicao();
 }
@@ -797,7 +1144,9 @@ async function salvarEdicao(evento) {
     esconderErroEdicao();
 
     const filmeId =
-        Number(elementos.editSessionMovie.value);
+        Number(
+            elementos.editSessionMovie.value
+        );
 
     const data =
         elementos.editSessionDate.value;
@@ -805,7 +1154,15 @@ async function salvarEdicao(evento) {
     const horario =
         elementos.editSessionTime.value;
 
-    if (!filmeId || !data || !horario) {
+    const precoIngresso =
+        obterPrecoInformadoEdicao();
+
+    if (
+        !filmeId ||
+        !data ||
+        !horario ||
+        precoIngresso === null
+    ) {
         exibirErroEdicao(
             "Preencha todos os campos e selecione um filme válido."
         );
@@ -813,9 +1170,21 @@ async function salvarEdicao(evento) {
         return;
     }
 
+    if (
+        precoIngresso <= 0
+    ) {
+        exibirErroEdicao(
+            "O preço do ingresso deve ser maior que zero."
+        );
+
+        return;
+    }
+
     const filmeExiste =
         estado.filmes.some(
-            filme => Number(filme.id) === filmeId
+            filme =>
+                Number(filme.id) ===
+                filmeId
         );
 
     if (!filmeExiste) {
@@ -827,7 +1196,10 @@ async function salvarEdicao(evento) {
     }
 
     const dataHora =
-        criarDataHora(data, horario);
+        criarDataHora(
+            data,
+            horario
+        );
 
     if (!dataHora) {
         exibirErroEdicao(
@@ -837,7 +1209,9 @@ async function salvarEdicao(evento) {
         return;
     }
 
-    if (dataHora <= new Date()) {
+    if (
+        dataHora <= new Date()
+    ) {
         exibirErroEdicao(
             "A sessão deve ocorrer em uma data futura."
         );
@@ -850,13 +1224,18 @@ async function salvarEdicao(evento) {
 
     const alteracoes = {};
 
-    if (filmeId !== Number(sessao.filmeId)) {
+    if (
+        filmeId !==
+        Number(sessao.filmeId)
+    ) {
         alteracoes.filmeId =
             filmeId;
     }
 
     const dataHoraOriginal =
-        new Date(sessao.dataHora);
+        new Date(
+            sessao.dataHora
+        );
 
     if (
         dataHora.getTime() !==
@@ -869,12 +1248,28 @@ async function salvarEdicao(evento) {
             );
     }
 
-    if (!Object.keys(alteracoes).length) {
+    if (
+        precoIngresso !==
+        Number(
+            sessao.precoIngresso
+        )
+    ) {
+        alteracoes.precoIngresso =
+            precoIngresso;
+    }
+
+    if (
+        !Object.keys(
+            alteracoes
+        ).length
+    ) {
         fecharModalEdicao();
         return;
     }
 
-    definirEstadoSalvamento(true);
+    definirEstadoSalvamento(
+        true
+    );
 
     try {
         await atualizarSessao(
@@ -885,6 +1280,7 @@ async function salvarEdicao(evento) {
         fecharModalAposSucesso();
 
         await carregarDados();
+
     } catch (erro) {
         console.error(
             "Erro ao editar sessão:",
@@ -895,8 +1291,11 @@ async function salvarEdicao(evento) {
             erro.message ||
             "Não foi possível atualizar a sessão."
         );
+
     } finally {
-        definirEstadoSalvamento(false);
+        definirEstadoSalvamento(
+            false
+        );
     }
 }
 
@@ -904,9 +1303,14 @@ async function salvarEdicao(evento) {
    PATCH
 ========================================================= */
 
-async function atualizarSessao(sessaoId, alteracoes) {
+async function atualizarSessao(
+    sessaoId,
+    alteracoes
+) {
     const token =
-        localStorage.getItem("token");
+        localStorage.getItem(
+            "token"
+        );
 
     if (!token) {
         fazerLogout();
@@ -923,20 +1327,31 @@ async function atualizarSessao(sessaoId, alteracoes) {
             `${API_URL}${SESSOES_ENDPOINT}/${sessaoId}`,
             {
                 method: "PATCH",
+
                 headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
+                    "Content-Type":
+                        "application/json",
+
+                    Authorization:
+                        `Bearer ${token}`
                 },
-                body: JSON.stringify(alteracoes)
+
+                body:
+                    JSON.stringify(
+                        alteracoes
+                    )
             }
         );
+
     } catch {
         throw new Error(
             "Não foi possível se comunicar com o servidor."
         );
     }
 
-    if (resposta.status === 401) {
+    if (
+        resposta.status === 401
+    ) {
         fazerLogout();
 
         throw new Error(
@@ -944,7 +1359,9 @@ async function atualizarSessao(sessaoId, alteracoes) {
         );
     }
 
-    if (resposta.status === 403) {
+    if (
+        resposta.status === 403
+    ) {
         redirecionarParaHomeCliente();
 
         throw new Error(
@@ -952,7 +1369,9 @@ async function atualizarSessao(sessaoId, alteracoes) {
         );
     }
 
-    if (resposta.status === 404) {
+    if (
+        resposta.status === 404
+    ) {
         throw new Error(
             "A sessão não foi encontrada."
         );
@@ -960,7 +1379,9 @@ async function atualizarSessao(sessaoId, alteracoes) {
 
     if (!resposta.ok) {
         const mensagem =
-            await tentarLerMensagemErro(resposta);
+            await tentarLerMensagemErro(
+                resposta
+            );
 
         throw new Error(
             mensagem ||
@@ -973,13 +1394,19 @@ async function atualizarSessao(sessaoId, alteracoes) {
    ERROS
 ========================================================= */
 
-function tratarErroCarregamento(resposta) {
-    if (resposta.status === 401) {
+function tratarErroCarregamento(
+    resposta
+) {
+    if (
+        resposta.status === 401
+    ) {
         fazerLogout();
         return;
     }
 
-    if (resposta.status === 403) {
+    if (
+        resposta.status === 403
+    ) {
         redirecionarParaHomeCliente();
         return;
     }
@@ -990,26 +1417,32 @@ function tratarErroCarregamento(resposta) {
 }
 
 function exibirErro(mensagem) {
-    elementos.sessionsLoading.classList.add(
-        "hidden"
-    );
+    elementos.sessionsLoading
+        .classList.add(
+            "hidden"
+        );
 
-    elementos.sessionsListSection.classList.add(
-        "hidden"
-    );
+    elementos.sessionsListSection
+        .classList.add(
+            "hidden"
+        );
 
-    elementos.sessionsEmptyState.classList.add(
-        "hidden"
-    );
+    elementos.sessionsEmptyState
+        .classList.add(
+            "hidden"
+        );
 
-    elementos.sessionsError.classList.remove(
-        "hidden"
-    );
+    elementos.sessionsError
+        .classList.remove(
+            "hidden"
+        );
 
-    elementos.sessionsErrorMessage.textContent =
+    elementos.sessionsErrorMessage
+        .textContent =
         mensagem;
 
-    elementos.sessionsResultsCount.textContent =
+    elementos.sessionsResultsCount
+        .textContent =
         "Não foi possível carregar as sessões";
 }
 
@@ -1017,22 +1450,27 @@ function exibirErroEdicao(mensagem) {
     elementos.editSessionError.textContent =
         mensagem;
 
-    elementos.editSessionError.classList.remove(
-        "hidden"
-    );
+    elementos.editSessionError
+        .classList.remove(
+            "hidden"
+        );
 }
 
 function esconderErroEdicao() {
-    elementos.editSessionError.classList.add(
-        "hidden"
-    );
+    elementos.editSessionError
+        .classList.add(
+            "hidden"
+        );
 }
 
-async function tentarLerMensagemErro(resposta) {
+async function tentarLerMensagemErro(
+    resposta
+) {
     let texto;
 
     try {
-        texto = await resposta.text();
+        texto =
+            await resposta.text();
     } catch {
         return null;
     }
@@ -1042,13 +1480,15 @@ async function tentarLerMensagemErro(resposta) {
     }
 
     try {
-        const dados = JSON.parse(texto);
+        const dados =
+            JSON.parse(texto);
 
         return (
             dados?.mensagem ||
             dados?.message ||
             null
         );
+
     } catch {
         return texto;
     }
@@ -1058,7 +1498,9 @@ async function tentarLerMensagemErro(resposta) {
    ESTADO DE SALVAMENTO
 ========================================================= */
 
-function definirEstadoSalvamento(salvando) {
+function definirEstadoSalvamento(
+    salvando
+) {
     estado.salvandoEdicao =
         salvando;
 
@@ -1080,6 +1522,9 @@ function definirEstadoSalvamento(salvando) {
     elementos.editSessionTime.disabled =
         salvando;
 
+    elementos.editSessionPrice.disabled =
+        salvando;
+
     elementos.editSessionSaveButton.textContent =
         salvando
             ? "Salvando..."
@@ -1091,8 +1536,117 @@ function definirEstadoSalvamento(salvando) {
 }
 
 function fecharModalAposSucesso() {
-    estado.salvandoEdicao = false;
+    estado.salvandoEdicao =
+        false;
+
     fecharModalEdicao();
+}
+
+/* =========================================================
+   PREÇO
+========================================================= */
+
+function formatarCampoPrecoEdicao() {
+    if (
+        !elementos.editSessionPrice
+    ) {
+        return;
+    }
+
+    const digitos =
+        elementos.editSessionPrice.value
+            .replace(/\D/g, "")
+            .slice(
+                0,
+                MAX_DIGITOS_PRECO
+            );
+
+    if (!digitos) {
+        elementos.editSessionPrice.value =
+            "";
+
+        return;
+    }
+
+    const centavos =
+        Number(digitos);
+
+    elementos.editSessionPrice.value =
+        formatarPreco(
+            centavos / 100
+        );
+
+    posicionarCursorPrecoNoFinal();
+}
+
+function posicionarCursorPrecoNoFinal() {
+    if (
+        !elementos.editSessionPrice ||
+        document.activeElement !==
+        elementos.editSessionPrice
+    ) {
+        return;
+    }
+
+    requestAnimationFrame(
+        () => {
+            const tamanho =
+                elementos.editSessionPrice
+                    .value.length;
+
+            elementos.editSessionPrice
+                .setSelectionRange(
+                    tamanho,
+                    tamanho
+                );
+        }
+    );
+}
+
+function obterPrecoInformadoEdicao() {
+    if (
+        !elementos.editSessionPrice
+    ) {
+        return null;
+    }
+
+    const digitos =
+        elementos.editSessionPrice.value
+            .replace(/\D/g, "");
+
+    if (!digitos) {
+        return null;
+    }
+
+    const centavos =
+        Number(digitos);
+
+    return Number.isFinite(
+        centavos
+    )
+        ? centavos / 100
+        : null;
+}
+
+function formatarPreco(valor) {
+    const numero =
+        Number(valor);
+
+    if (
+        !Number.isFinite(numero)
+    ) {
+        return "R$ --,--";
+    }
+
+    return numero.toLocaleString(
+        "pt-BR",
+        {
+            style: "currency",
+            currency: "BRL",
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }
+    );
 }
 
 /* =========================================================
@@ -1100,26 +1654,51 @@ function fecharModalAposSucesso() {
 ========================================================= */
 
 function separarDataHora(dataHora) {
-    const data = new Date(dataHora);
+    const data =
+        new Date(dataHora);
 
     return {
-        data: obterDataISO(data),
+        data:
+            obterDataISO(
+                data
+            ),
+
         horario:
-            `${String(data.getHours()).padStart(2, "0")}:` +
-            `${String(data.getMinutes()).padStart(2, "0")}`
+            `${String(
+                data.getHours()
+            ).padStart(
+                2,
+                "0"
+            )}:` +
+            `${String(
+                data.getMinutes()
+            ).padStart(
+                2,
+                "0"
+            )}`
     };
 }
 
-function criarDataHora(data, horario) {
+function criarDataHora(
+    data,
+    horario
+) {
     const valor =
-        new Date(`${data}T${horario}:00`);
+        new Date(
+            `${data}T${horario}:00`
+        );
 
-    return Number.isNaN(valor.getTime())
+    return Number.isNaN(
+        valor.getTime()
+    )
         ? null
         : valor;
 }
 
-function formatarDataHoraParaApi(data, horario) {
+function formatarDataHoraParaApi(
+    data,
+    horario
+) {
     return `${data}T${horario}:00`;
 }
 
@@ -1129,7 +1708,11 @@ function obterDataISO(valor) {
             ? valor
             : new Date(valor);
 
-    if (Number.isNaN(data.getTime())) {
+    if (
+        Number.isNaN(
+            data.getTime()
+        )
+    ) {
         return "";
     }
 
@@ -1137,12 +1720,20 @@ function obterDataISO(valor) {
         data.getFullYear();
 
     const mes =
-        String(data.getMonth() + 1)
-            .padStart(2, "0");
+        String(
+            data.getMonth() + 1
+        ).padStart(
+            2,
+            "0"
+        );
 
     const dia =
-        String(data.getDate())
-            .padStart(2, "0");
+        String(
+            data.getDate()
+        ).padStart(
+            2,
+            "0"
+        );
 
     return `${ano}-${mes}-${dia}`;
 }
@@ -1151,7 +1742,11 @@ function formatarData(dataHora) {
     const data =
         new Date(dataHora);
 
-    if (Number.isNaN(data.getTime())) {
+    if (
+        Number.isNaN(
+            data.getTime()
+        )
+    ) {
         return "--/--/----";
     }
 
@@ -1169,7 +1764,11 @@ function formatarHorario(dataHora) {
     const data =
         new Date(dataHora);
 
-    if (Number.isNaN(data.getTime())) {
+    if (
+        Number.isNaN(
+            data.getTime()
+        )
+    ) {
         return "--:--";
     }
 
