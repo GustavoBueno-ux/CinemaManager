@@ -2,7 +2,7 @@
    CONFIGURAÇÕES
 ========================================================= */
 
-const PRECO_INGRESSO = 22;
+let PRECO_INGRESSO = 0;
 const INTERVALO_ATUALIZACAO_MS = 5000;
 
 /* =========================================================
@@ -316,10 +316,26 @@ async function carregarSessaoCompleta(
     ]);
 
     dadosSessaoAtual = sessao;
-
+    
+    const precoIngresso = Number(
+        sessao.precoIngresso ??
+        sessao.PrecoIngresso
+    );
+    
+    if (
+        !Number.isFinite(precoIngresso) ||
+        precoIngresso <= 0
+    ) {
+        throw new Error(
+            "Não foi possível identificar o preço da sessão."
+        );
+    }
+    
+    PRECO_INGRESSO = precoIngresso;
+    
     mostrarDadosSessao(sessao);
     aplicarStatusAssentos(assentos);
-
+    
     esconderMensagemPagina();
 }
 
