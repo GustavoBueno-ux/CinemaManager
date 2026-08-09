@@ -31,7 +31,7 @@ public class SessaoService : ISessaoService
             );
         }
 
-        if (dto.DataHora <= HorarioCinema.Agora)
+        if (dto.DataHora <= DateTime.Now)
         {
             throw new Exception(
                 "A sessão deve ser em uma data futura."
@@ -150,7 +150,7 @@ public class SessaoService : ISessaoService
          * Uma sessão que já começou não pode
          * mais ser editada.
          */
-        if (sessao.DataHora <= HorarioCinema.Agora)
+        if (sessao.DataHora <= DateTime.Now)
         {
             throw new InvalidOperationException(
                 "Esta sessão já aconteceu e não pode ser editada."
@@ -205,7 +205,7 @@ public class SessaoService : ISessaoService
         {
             if (
                 dto.DataHora.Value <=
-                HorarioCinema.Agora
+                DateTime.Now
             )
             {
                 throw new Exception(
