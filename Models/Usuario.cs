@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using CinemaAPI.Utils;
 
 namespace CinemaAPI.Models;
 
@@ -21,7 +22,7 @@ public class Usuario
     [Required]
     public TipoUsuario TipoUsuario { get; set; } = TipoUsuario.Cliente;
 
-    public DateTime DataCadastro { get; set; } = DateTime.UtcNow;
+    public DateTime DataCadastro { get; set; } = HorarioCinema.Agora;
 }
 
 public enum TipoUsuario

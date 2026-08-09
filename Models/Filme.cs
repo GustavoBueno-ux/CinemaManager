@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using CinemaAPI.Utils;
 
 namespace CinemaAPI.Models;
 
@@ -25,7 +26,7 @@ public class Filme
     [MaxLength(500)]
     public string PosterUrl { get; set; } = string.Empty;
 
-    public DateTime DataCadastro { get; set; } = DateTime.UtcNow;
+    public DateTime DataCadastro { get; set; } = HorarioCinema.Agora;
 
     public ICollection<Sessao> Sessoes { get; set; } = new List<Sessao>();
 }

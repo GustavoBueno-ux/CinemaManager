@@ -1,6 +1,7 @@
 using CinemaAPI.Data;
 using CinemaAPI.DTOs.Sessoes;
 using CinemaAPI.Models;
+using CinemaAPI.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace CinemaAPI.Services;
@@ -31,7 +32,7 @@ public class SessaoService : ISessaoService
             );
         }
 
-        if (dto.DataHora <= DateTime.Now)
+        if (dto.DataHora <= HorarioCinema.Agora)
         {
             throw new Exception(
                 "A sessão deve ser em uma data futura."
@@ -150,7 +151,7 @@ public class SessaoService : ISessaoService
          * Uma sessão que já começou não pode
          * mais ser editada.
          */
-        if (sessao.DataHora <= DateTime.Now)
+        if (sessao.DataHora <= HorarioCinema.Agora)
         {
             throw new InvalidOperationException(
                 "Esta sessão já aconteceu e não pode ser editada."
@@ -205,7 +206,7 @@ public class SessaoService : ISessaoService
         {
             if (
                 dto.DataHora.Value <=
-                DateTime.Now
+                HorarioCinema.Agora
             )
             {
                 throw new Exception(

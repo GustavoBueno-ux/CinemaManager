@@ -2,6 +2,7 @@ using System.Data;
 using CinemaAPI.Data;
 using CinemaAPI.DTOs.Reservas;
 using CinemaAPI.Models;
+using CinemaAPI.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace CinemaAPI.Services;
@@ -41,7 +42,7 @@ public class ReservaAssentoService : IReservaAssentoService
             );
         }
 
-        var agora = DateTime.Now;
+        var agora = HorarioCinema.Agora;
         var expiracaoNovasReservas = agora.AddMinutes(MinutosReserva);
 
         await using var transaction =
@@ -299,7 +300,7 @@ public class ReservaAssentoService : IReservaAssentoService
         CriarReservaAssentoDTO dto
     )
     {
-        var agora = DateTime.Now;
+        var agora = HorarioCinema.Agora;
 
         await using var transaction =
             await _context.Database.BeginTransactionAsync(
@@ -468,7 +469,7 @@ public class ReservaAssentoService : IReservaAssentoService
         int usuarioId
     )
     {
-        var agora = DateTime.Now;
+        var agora = HorarioCinema.Agora;
 
         var sessaoExiste = await _context.Sessoes
             .AsNoTracking()

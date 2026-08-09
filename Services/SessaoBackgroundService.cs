@@ -1,4 +1,5 @@
 using CinemaAPI.Data;
+using CinemaAPI.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace CinemaAPI.Services;
@@ -20,7 +21,7 @@ public class SessaoBackgroundService : BackgroundService
 
             var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-            var agora = DateTime.Now;
+            var agora = HorarioCinema.Agora;
 
             var sessoes = await context.Sessoes
                 .Where(s =>

@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using CinemaAPI.Utils;
 
 namespace CinemaAPI.Models;
 
@@ -41,7 +42,7 @@ public class Ingresso
     [MaxLength(8)]
     public string CodigoRecuperacao { get; set; } = string.Empty;
 
-    public DateTime DataCompra { get; set; } = DateTime.UtcNow;
+    public DateTime DataCompra { get; set; } = HorarioCinema.Agora;
 
     public bool Utilizado { get; set; } = false;
 

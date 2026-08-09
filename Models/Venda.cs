@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using CinemaAPI.Utils;
 
 namespace CinemaAPI.Models;
 
@@ -6,7 +7,7 @@ public class Venda
 {
     public int Id { get; set; }
 
-    public DateTime DataHora { get; set; } = DateTime.UtcNow;
+    public DateTime DataHora { get; set; } = HorarioCinema.Agora;
 
     public FormaPagamento? FormaPagamento { get; set; }
 
