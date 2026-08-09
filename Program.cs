@@ -78,28 +78,14 @@ builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IIngressoService, IngressoService>();
 builder.Services.AddScoped<IAssentoService, AssentoService>();
-
-builder.Services.AddScoped<
-    IReservaAssentoService,
-    ReservaAssentoService
->();
-
-builder.Services.AddScoped<
-    IDashboardService,
-    DashboardService
->();
-
-builder.Services.AddScoped<
-    IPosterService,
-    PosterService
->();
+builder.Services.AddScoped<IReservaAssentoService, ReservaAssentoService>();
+builder.Services.AddScoped<IDashboardService, DashboardService>();
+builder.Services.AddScoped<IPosterService, PosterService>();
+builder.Services.AddScoped<IRelatorioService, RelatorioService>();
 
 // Serviços executados em segundo plano
 builder.Services.AddHostedService<SessaoBackgroundService>();
-
-builder.Services.AddHostedService<
-    ReservaAssentoBackgroundService
->();
+builder.Services.AddHostedService<ReservaAssentoBackgroundService>();
 
 // JWT
 builder.Services
