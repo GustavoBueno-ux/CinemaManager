@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Seleção de sessão para validação de ingressos"
+    >
+
+    <title>Escanear ingressos | Cinema</title>
+
+    <link
+        rel="stylesheet"
+        href="/Frontend/css/pages/admin/navbar-admin.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="/Frontend/css/pages/admin/escanear-ingresso.css"
+    >
+
+</head>
+
+<body>
+
+    <div class="admin-layout">
+
+        <!-- =====================================================
+             SIDEBAR
+        ====================================================== -->
+
+        <aside
+            class="sidebar"
+            id="sidebar"
+        >
+
+            <div class="sidebar-header">
+
+                <a
+                    href="home-admin.html"
+                    class="sidebar-logo"
+                    aria-label="Ir para a página inicial do painel"
+                >
+
+                    <span
+                        class="sidebar-logo-icon"
+                        aria-hidden="true"
+                    >
+                        C
+                    </span>
+
+                    <span class="sidebar-logo-text">
+                        Cinema
+                    </span>
+
+                </a>
+
+                <button
+                    type="button"
+                    class="sidebar-close-button"
+                    id="sidebar-close-button"
+                    aria-label="Fechar menu lateral"
+                >
+                    &times;
+                </button>
+
+            </div>
+
+            <nav
+                class="sidebar-navigation"
+                aria-label="Navegação administrativa"
+            >
+
+                <ul class="sidebar-menu">
+
+                    <!-- INÍCIO -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="home-admin.html"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                ⌂
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Início
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- FILMES -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="filmes.html"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                🎬
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Filmes
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- SESSÕES -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="sessoes.html"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                📅
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Sessões
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- VENDER INGRESSOS -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="venda-ingressos.html"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                🎟️
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Vender ingressos
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- BUSCAR INGRESSO -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="buscar-ingresso.html"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                🔎
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Buscar ingresso
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- ESCANEAR QR CODE -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="escanear-ingresso.html"
+                            class="sidebar-link active"
+                            aria-current="page"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                ▣
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Escanear QR Code
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- RELATÓRIOS -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="relatorios.html"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                📊
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Relatórios
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- PERFIL -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="perfil.html"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                👤
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Perfil
+                            </span>
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </nav>
+
+
+            <!-- USUÁRIO -->
+
+            <div class="sidebar-footer">
+
+                <div class="sidebar-user">
+
+                    <div
+                        class="sidebar-user-avatar"
+                        id="sidebar-user-avatar"
+                        aria-hidden="true"
+                    >
+                        F
+                    </div>
+
+                    <div class="sidebar-user-information">
+
+                        <strong
+                            class="sidebar-user-name"
+                            id="sidebar-user-name"
+                        >
+                            Funcionário
+                        </strong>
+
+                        <span class="sidebar-user-role">
+                            Funcionário
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <button
+                    type="button"
+                    class="logout-button"
+                    id="logout-button"
+                >
+
+                    <span aria-hidden="true">
+                        ↪
+                    </span>
+
+                    <span>
+                        Sair
+                    </span>
+
+                </button>
+
+            </div>
+
+        </aside>
+
+
+        <!-- =====================================================
+             OVERLAY MOBILE
+        ====================================================== -->
+
+        <div
+            class="sidebar-overlay"
+            id="sidebar-overlay"
+            aria-hidden="true"
+        ></div>
+
+
+        <!-- =====================================================
+             CONTEÚDO
+        ====================================================== -->
+
+        <div class="admin-content">
+
+
+            <!-- HEADER MOBILE -->
+
+            <header class="mobile-header">
+
+                <button
+                    type="button"
+                    class="sidebar-open-button"
+                    id="sidebar-open-button"
+                    aria-label="Abrir menu lateral"
+                    aria-controls="sidebar"
+                    aria-expanded="false"
+                >
+                    ☰
+                </button>
+
+                <a
+                    href="home-admin.html"
+                    class="mobile-logo"
+                >
+                    Cinema
+                </a>
+
+            </header>
+
+
+            <!-- =================================================
+                 CONTEÚDO PRINCIPAL
+            ================================================== -->
+
+            <main class="scanner-sessions-main">
+
+
+                <!-- =================================================
+                     CABEÇALHO
+                ================================================== -->
+
+                <section
+                    class="scanner-sessions-heading"
+                    aria-labelledby="scanner-sessions-title"
+                >
+
+                    <div>
+
+                        <p class="page-label">
+                            Controle de entrada
+                        </p>
+
+                        <h1 id="scanner-sessions-title">
+                            Escanear ingressos
+                        </h1>
+
+                        <p class="scanner-sessions-description">
+                            Escolha a sessão que será validada
+                            e abra o leitor de QR Code.
+                        </p>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     ERRO GERAL
+                ================================================== -->
+
+                <section
+                    class="scanner-sessions-error hidden"
+                    id="scanner-sessions-error"
+                    role="alert"
+                >
+
+                    <div>
+
+                        <strong>
+                            Não foi possível carregar as sessões.
+                        </strong>
+
+                        <p id="scanner-sessions-error-message">
+                            Verifique sua conexão e tente novamente.
+                        </p>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="scanner-retry-button"
+                        id="scanner-retry-button"
+                    >
+                        Tentar novamente
+                    </button>
+
+                </section>
+
+
+                <!-- =================================================
+                     LOADING
+                ================================================== -->
+
+                <section
+                    class="scanner-sessions-loading"
+                    id="scanner-sessions-loading"
+                    aria-live="polite"
+                >
+
+                    <div class="loading-spinner"></div>
+
+                    <p>
+                        Carregando sessões...
+                    </p>
+
+                </section>
+
+
+                <!-- =================================================
+                     CONTEÚDO DAS SESSÕES
+                ================================================== -->
+
+                <div
+                    class="scanner-sessions-content hidden"
+                    id="scanner-sessions-content"
+                >
+
+
+                    <!-- =================================================
+                         SESSÕES DE HOJE
+                    ================================================== -->
+
+                    <section
+                        class="scanner-section today-sessions-section"
+                        aria-labelledby="today-sessions-title"
+                    >
+
+                        <div class="scanner-section-heading">
+
+                            <div>
+
+                                <p class="section-label">
+                                    Hoje
+                                </p>
+
+                                <h2 id="today-sessions-title">
+                                    Sessões de hoje
+                                </h2>
+
+                                <p class="scanner-section-description">
+                                    Selecione uma sessão para iniciar
+                                    a validação dos ingressos.
+                                </p>
+
+                            </div>
+
+                            <span
+                                class="today-date"
+                                id="today-date"
+                            >
+                                --/--/----
+                            </span>
+
+                        </div>
+
+
+                        <div
+                            class="scanner-sessions-grid"
+                            id="today-sessions-list"
+                        >
+                            <!-- preenchido pelo JavaScript -->
+                        </div>
+
+
+                        <div
+                            class="scanner-empty-state hidden"
+                            id="today-sessions-empty"
+                        >
+
+                            <span
+                                class="scanner-empty-icon"
+                                aria-hidden="true"
+                            >
+                                🎬
+                            </span>
+
+                            <h3>
+                                Nenhuma sessão hoje
+                            </h3>
+
+                            <p>
+                                Não existem sessões programadas para hoje.
+                            </p>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- =================================================
+                         OUTRAS DATAS
+                    ================================================== -->
+
+                    <section
+                        class="scanner-section other-sessions-section"
+                        aria-labelledby="other-sessions-title"
+                    >
+
+                        <div class="scanner-section-heading">
+
+                            <div>
+
+                                <p class="section-label">
+                                    Programação futura
+                                </p>
+
+                                <h2 id="other-sessions-title">
+                                    Outras datas
+                                </h2>
+
+                                <p class="scanner-section-description">
+                                    Escolha uma data para visualizar
+                                    as sessões programadas.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- DATAS FUTURAS -->
+
+                        <div
+                            class="scanner-date-buttons"
+                            id="scanner-date-buttons"
+                        >
+                            <!-- preenchido pelo JavaScript -->
+                        </div>
+
+
+                        <!-- SESSÕES DA DATA SELECIONADA -->
+
+                        <div
+                            class="future-date-sessions hidden"
+                            id="future-date-sessions"
+                        >
+
+                            <div class="future-date-heading">
+
+                                <span class="future-date-label">
+                                    Sessões
+                                </span>
+
+                                <h3 id="future-date-title">
+                                    --
+                                </h3>
+
+                            </div>
+
+                            <div
+                                class="scanner-sessions-grid"
+                                id="other-sessions-list"
+                            >
+                                <!-- preenchido pelo JavaScript -->
+                            </div>
+
+                        </div>
+
+
+                        <!-- EMPTY STATE -->
+
+                        <div
+                            class="scanner-empty-state hidden"
+                            id="other-sessions-empty"
+                        >
+
+                            <span
+                                class="scanner-empty-icon"
+                                aria-hidden="true"
+                            >
+                                📅
+                            </span>
+
+                            <h3>
+                                Nenhuma sessão futura
+                            </h3>
+
+                            <p>
+                                Não existem sessões programadas
+                                para os próximos dias.
+                            </p>
+
+                        </div>
+
+                    </section>
+
+                </div>
+
+            </main>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         TEMPLATE DO CARD DE SESSÃO
+    ========================================================== -->
+
+    <template id="scanner-session-card-template">
+
+        <article class="scanner-session-card">
+
+            <header class="scanner-session-card-header">
+
+                <div class="scanner-session-movie">
+
+                    <span
+                        class="scanner-session-icon"
+                        aria-hidden="true"
+                    >
+                        🎬
+                    </span>
+
+                    <div class="scanner-session-movie-info">
+
+                        <p class="scanner-session-label">
+                            Filme
+                        </p>
+
+                        <h3 class="scanner-session-title">
+                            Nome do filme
+                        </h3>
+
+                    </div>
+
+                </div>
+
+                <span
+                    class="scanner-session-status"
+                    data-status=""
+                >
+                    --
+                </span>
+
+            </header>
+
+
+            <div class="scanner-session-information">
+
+                <div class="scanner-session-information-item">
+
+                    <span>
+                        Data
+                    </span>
+
+                    <strong class="scanner-session-date">
+                        --/--/----
+                    </strong>
+
+                </div>
+
+                <div class="scanner-session-information-item">
+
+                    <span>
+                        Horário
+                    </span>
+
+                    <strong class="scanner-session-time">
+                        --:--
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <a
+                href="#"
+                class="scanner-session-button"
+            >
+
+                <span
+                    class="scanner-session-button-icon"
+                    aria-hidden="true"
+                >
+                    ▣
+                </span>
+
+                <span>
+                    Escanear
+                </span>
+
+            </a>
+
+        </article>
+
+    </template>
+
+
+    <!-- =========================================================
+         FOOTER
+    ========================================================== -->
+
+    <footer>
+
+        <p>
+            © 2026 Cinema. Todos os direitos reservados.
+        </p>
+
+    </footer>
+
+
+    <!-- =========================================================
+         JAVASCRIPT
+    ========================================================== -->
+
+    <script src="/Frontend/js/config.js"></script>
+    <script src="/Frontend/js/api.js"></script>
+    <script src="/Frontend/js/pages/admin/escanear-ingresso.js"></script>
+
+</body>
+
+</html>

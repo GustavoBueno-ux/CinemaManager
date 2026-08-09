@@ -745,11 +745,32 @@ public class IngressoService : IIngressoService
             ValidarIngressoDTO dto
         )
     {
+        var sessaoExiste = await _context.Sessoes
+            .AsNoTracking()
+            .AnyAsync(s =>
+                s.Id == dto.SessaoId
+            );
+
+        if (!sessaoExiste)
+        {
+            return CriarResultadoValidacao(
+                false,
+                "SESSAO_NAO_ENCONTRADA",
+                "Sessão não encontrada."
+            );
+        }
+
+        if (string.IsNullOrWhiteSpace(dto.TokenQrCode))
+        {
+            return CriarResultadoValidacao(
+                false,
+                "INGRESSO_NAO_ENCONTRADO",
+                "Ingresso não encontrado."
+            );
+        }
+
         var ingresso = await _context.Ingressos
             .Include(i => i.Sessao)
-                .ThenInclude(s => s.Filme)
-            .Include(i => i.Assento)
-            .Include(i => i.Usuario)
             .FirstOrDefaultAsync(i =>
                 i.TokenQrCode == dto.TokenQrCode
             );
@@ -758,6 +779,7 @@ public class IngressoService : IIngressoService
         {
             return CriarResultadoValidacao(
                 false,
+                "INGRESSO_NAO_ENCONTRADO",
                 "Ingresso não encontrado."
             );
         }
@@ -766,6 +788,7 @@ public class IngressoService : IIngressoService
         {
             return CriarResultadoValidacao(
                 false,
+                "INGRESSO_OUTRA_SESSAO",
                 "Este ingresso pertence a outra sessão."
             );
         }
@@ -774,6 +797,7 @@ public class IngressoService : IIngressoService
         {
             return CriarResultadoValidacao(
                 false,
+                "SESSAO_ENCERRADA",
                 "A sessão já foi encerrada."
             );
         }
@@ -782,29 +806,34 @@ public class IngressoService : IIngressoService
         {
             return CriarResultadoValidacao(
                 false,
+                "INGRESSO_JA_UTILIZADO",
                 "Este ingresso já foi utilizado."
             );
         }
+
+        var agora = DateTime.Now;
 
         var inicioLiberacao =
             ingresso.Sessao.DataHora
                 .AddMinutes(-30);
 
-        if (DateTime.Now < inicioLiberacao)
+        if (agora < inicioLiberacao)
         {
             return CriarResultadoValidacao(
                 false,
+                "SESSAO_NAO_LIBERADA",
                 "A sessão ainda não está liberada para entrada."
             );
         }
 
         ingresso.Utilizado = true;
-        ingresso.DataUtilizacao = DateTime.Now;
+        ingresso.DataUtilizacao = agora;
 
         await _context.SaveChangesAsync();
 
         return CriarResultadoValidacao(
             true,
+            "VALIDADO",
             "Entrada liberada."
         );
     }
@@ -981,12 +1010,14 @@ public class IngressoService : IIngressoService
     private static ValidacaoIngressoResponseDTO
         CriarResultadoValidacao(
             bool sucesso,
+            string codigo,
             string mensagem
         )
     {
         return new ValidacaoIngressoResponseDTO
         {
             Sucesso = sucesso,
+            Codigo = codigo,
             Mensagem = mensagem
         };
     }

@@ -1,0 +1,1005 @@
+/* =========================================================
+   RESET E VARIÁVEIS
+========================================================= */
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --background: #070707;
+
+    --surface: #111111;
+    --surface-secondary: #0d0d0d;
+    --surface-hover: #151515;
+
+    --text-primary: #ffffff;
+    --text-secondary: #bdbdbd;
+    --text-muted: #777777;
+
+    --border: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.13);
+
+    --primary: #e50914;
+    --primary-hover: #ff2733;
+    --primary-soft: rgba(229, 9, 20, 0.13);
+
+    --success: #22c55e;
+    --success-soft: rgba(34, 197, 94, 0.12);
+
+    --warning: #f59e0b;
+    --warning-soft: rgba(245, 158, 11, 0.12);
+
+    --muted-soft: rgba(255, 255, 255, 0.06);
+
+    --sidebar-width: 270px;
+
+    --radius-small: 10px;
+    --radius-medium: 15px;
+    --radius-large: 20px;
+
+    --transition: 0.3s;
+}
+
+html {
+    min-height: 100%;
+}
+
+body {
+    min-width: 320px;
+    min-height: 100dvh;
+
+    color: var(--text-primary);
+    background: var(--background);
+
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Arial,
+        sans-serif;
+}
+
+button,
+a {
+    font: inherit;
+}
+
+button {
+    color: inherit;
+}
+
+.hidden {
+    display: none !important;
+}
+
+
+/* =========================================================
+   LAYOUT
+========================================================= */
+
+.admin-layout {
+    width: 100%;
+    min-height: 100dvh;
+}
+
+.admin-content {
+    display: flex;
+    flex-direction: column;
+
+    min-height: 100dvh;
+
+    margin-left: var(--sidebar-width);
+}
+
+.scanner-sessions-main {
+    width: 100%;
+    max-width: 1350px;
+
+    margin: 0 auto;
+
+    padding:
+        26px
+        4%
+        60px;
+}
+
+
+/* =========================================================
+   CABEÇALHO
+========================================================= */
+
+.scanner-sessions-heading {
+    margin-bottom: 28px;
+}
+
+.page-label,
+.section-label {
+    margin-bottom: 6px;
+
+    color: var(--primary);
+
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.scanner-sessions-heading h1 {
+    font-size: clamp(30px, 3vw, 42px);
+    line-height: 1.1;
+}
+
+.scanner-sessions-description {
+    max-width: 650px;
+
+    margin-top: 9px;
+
+    color: var(--text-secondary);
+
+    font-size: 0.92rem;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   ERRO
+========================================================= */
+
+.scanner-sessions-error {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 18px;
+
+    margin-bottom: 22px;
+    padding: 16px 18px;
+
+    color: #ff9da2;
+    background: var(--primary-soft);
+
+    border: 1px solid rgba(229, 9, 20, 0.28);
+    border-radius: var(--radius-medium);
+}
+
+.scanner-sessions-error strong {
+    display: block;
+
+    margin-bottom: 4px;
+
+    font-size: 0.84rem;
+}
+
+.scanner-sessions-error p {
+    color: #d98c90;
+
+    font-size: 0.75rem;
+    line-height: 1.45;
+}
+
+.scanner-retry-button {
+    flex-shrink: 0;
+
+    min-height: 38px;
+
+    padding: 7px 15px;
+
+    color: #ffffff;
+    background: transparent;
+
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 20px;
+
+    font-size: 0.74rem;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition: var(--transition);
+}
+
+.scanner-retry-button:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.scanner-sessions-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
+
+    min-height: 260px;
+
+    color: var(--text-secondary);
+
+    font-size: 0.8rem;
+}
+
+.loading-spinner {
+    width: 31px;
+    height: 31px;
+
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+
+    animation: scanner-spinner 0.8s linear infinite;
+}
+
+@keyframes scanner-spinner {
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* =========================================================
+   CONTEÚDO
+========================================================= */
+
+.scanner-sessions-content {
+    display: flex;
+    flex-direction: column;
+
+    gap: 28px;
+}
+
+
+/* =========================================================
+   SEÇÕES
+========================================================= */
+
+.scanner-section {
+    padding: 20px;
+
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+    border-radius: var(--radius-large);
+}
+
+.today-sessions-section {
+    border-color:
+        rgba(229, 9, 20, 0.2);
+}
+
+.scanner-section-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 18px;
+
+    margin-bottom: 18px;
+}
+
+.scanner-section-heading h2 {
+    font-size: 1.08rem;
+}
+
+.scanner-section-description {
+    margin-top: 5px;
+
+    color: var(--text-muted);
+
+    font-size: 0.75rem;
+    line-height: 1.45;
+}
+
+.today-date {
+    flex-shrink: 0;
+
+    padding: 7px 11px;
+
+    color: var(--text-secondary);
+    background: var(--surface-secondary);
+
+    border: 1px solid var(--border);
+    border-radius: 18px;
+
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+
+/* =========================================================
+   GRID
+========================================================= */
+
+.scanner-sessions-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 14px;
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.scanner-session-card {
+    display: flex;
+    flex-direction: column;
+
+    min-width: 0;
+
+    padding: 17px;
+
+    background: var(--surface-secondary);
+
+    border: 1px solid var(--border);
+    border-radius: var(--radius-medium);
+
+    transition:
+        transform var(--transition),
+        border-color var(--transition),
+        background var(--transition);
+}
+
+.scanner-session-card:hover {
+    background: var(--surface-hover);
+
+    border-color:
+        rgba(229, 9, 20, 0.35);
+
+    transform: translateY(-2px);
+}
+
+
+/* =========================================================
+   HEADER DO CARD
+========================================================= */
+
+.scanner-session-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-bottom: 16px;
+}
+
+.scanner-session-movie {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 10px;
+
+    min-width: 0;
+}
+
+.scanner-session-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 35px;
+    min-width: 35px;
+    height: 35px;
+
+    background: var(--primary-soft);
+
+    border-radius: 9px;
+
+    font-size: 0.95rem;
+}
+
+.scanner-session-movie-info {
+    min-width: 0;
+}
+
+.scanner-session-label {
+    margin-bottom: 3px;
+
+    color: var(--text-muted);
+
+    font-size: 0.62rem;
+    font-weight: 500;
+
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.scanner-session-title {
+    overflow: hidden;
+
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.3;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.scanner-session-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    min-height: 25px;
+
+    padding: 4px 8px;
+
+    border-radius: 14px;
+
+    font-size: 0.62rem;
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+.scanner-session-status[data-status="hoje"] {
+    color: #67d997;
+    background: var(--success-soft);
+
+    border:
+        1px solid
+        rgba(34, 197, 94, 0.22);
+}
+
+.scanner-session-status[data-status="futura"] {
+    color: #74a7ff;
+    background: rgba(59, 130, 246, 0.12);
+
+    border:
+        1px solid
+        rgba(59, 130, 246, 0.22);
+}
+
+.scanner-session-status[data-status="iniciada"] {
+    color: #ffbf69;
+    background: var(--warning-soft);
+
+    border:
+        1px solid
+        rgba(245, 158, 11, 0.22);
+}
+
+.scanner-session-status[data-status="inativa"] {
+    color: #aaaaaa;
+    background: var(--muted-soft);
+
+    border:
+        1px solid
+        var(--border);
+}
+
+.scanner-session-status[data-status="indefinida"] {
+    color: var(--text-muted);
+    background: var(--muted-soft);
+
+    border:
+        1px solid
+        var(--border);
+}
+
+
+/* =========================================================
+   INFORMAÇÕES
+========================================================= */
+
+.scanner-session-information {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 8px;
+
+    margin-bottom: 14px;
+}
+
+.scanner-session-information-item {
+    display: flex;
+    flex-direction: column;
+
+    gap: 4px;
+
+    min-width: 0;
+
+    padding: 10px;
+
+    background: #090909;
+
+    border: 1px solid var(--border);
+    border-radius: var(--radius-small);
+}
+
+.scanner-session-information-item span {
+    color: var(--text-muted);
+
+    font-size: 0.6rem;
+    font-weight: 500;
+
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.scanner-session-information-item strong {
+    overflow: hidden;
+
+    color: var(--text-primary);
+
+    font-size: 0.78rem;
+    font-weight: 600;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.scanner-session-information-item:last-child strong {
+    color: var(--primary);
+
+    font-size: 0.9rem;
+}
+
+
+/* =========================================================
+   BOTÃO ESCANEAR
+========================================================= */
+
+.scanner-session-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    width: 100%;
+    min-height: 40px;
+
+    margin-top: auto;
+
+    padding: 8px 14px;
+
+    color: #ffffff;
+    background: var(--primary);
+
+    border: 1px solid var(--primary);
+    border-radius: 21px;
+
+    text-decoration: none;
+
+    font-size: 0.74rem;
+    font-weight: 600;
+
+    transition: var(--transition);
+}
+
+.scanner-session-button:hover:not(.disabled) {
+    background: var(--primary-hover);
+    border-color: var(--primary-hover);
+
+    transform: translateY(-1px);
+}
+
+.scanner-session-button-icon {
+    font-size: 0.9rem;
+}
+
+.scanner-session-button.disabled {
+    color: var(--text-muted);
+    background: transparent;
+
+    border-color: var(--border);
+
+    opacity: 0.55;
+
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+
+/* =========================================================
+   DATAS FUTURAS
+========================================================= */
+
+.scanner-date-buttons {
+    display: flex;
+
+    gap: 9px;
+
+    width: 100%;
+
+    padding-bottom: 5px;
+
+    overflow-x: auto;
+
+    scrollbar-width: thin;
+    scrollbar-color:
+        rgba(255, 255, 255, 0.15)
+        transparent;
+}
+
+.scanner-date-buttons::-webkit-scrollbar {
+    height: 5px;
+}
+
+.scanner-date-buttons::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.scanner-date-buttons::-webkit-scrollbar-thumb {
+    background:
+        rgba(255, 255, 255, 0.15);
+
+    border-radius: 10px;
+}
+
+.scanner-date-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 2px;
+
+    flex: 0 0 auto;
+
+    min-width: 82px;
+    min-height: 68px;
+
+    padding: 8px 13px;
+
+    color: var(--text-secondary);
+    background: var(--surface-secondary);
+
+    border: 1px solid var(--border);
+    border-radius: 13px;
+
+    cursor: pointer;
+
+    transition: var(--transition);
+}
+
+.scanner-date-button:hover {
+    color: var(--text-primary);
+    background: var(--surface-hover);
+
+    border-color:
+        rgba(229, 9, 20, 0.35);
+}
+
+.scanner-date-button.active {
+    color: #ffffff;
+    background: var(--primary);
+
+    border-color: var(--primary);
+}
+
+.scanner-date-button-weekday {
+    font-size: 0.62rem;
+    font-weight: 500;
+
+    text-transform: uppercase;
+}
+
+.scanner-date-button-date {
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.scanner-date-button-count {
+    color: var(--text-muted);
+
+    font-size: 0.58rem;
+}
+
+.scanner-date-button.active
+.scanner-date-button-count {
+    color:
+        rgba(255, 255, 255, 0.75);
+}
+
+
+/* =========================================================
+   SESSÕES DA DATA SELECIONADA
+========================================================= */
+
+.future-date-sessions {
+    margin-top: 20px;
+    padding-top: 18px;
+
+    border-top:
+        1px solid
+        var(--border);
+}
+
+.future-date-heading {
+    margin-bottom: 13px;
+}
+
+.future-date-label {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: var(--text-muted);
+
+    font-size: 0.62rem;
+    font-weight: 500;
+
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.future-date-heading h3 {
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.scanner-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 6px;
+
+    min-height: 160px;
+
+    padding: 25px 18px;
+
+    text-align: center;
+
+    background: var(--surface-secondary);
+
+    border: 1px solid var(--border);
+    border-radius: var(--radius-medium);
+}
+
+.scanner-empty-icon {
+    margin-bottom: 6px;
+
+    font-size: 1.7rem;
+}
+
+.scanner-empty-state h3 {
+    font-size: 0.9rem;
+}
+
+.scanner-empty-state p {
+    max-width: 380px;
+
+    color: var(--text-muted);
+
+    font-size: 0.72rem;
+    line-height: 1.45;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer {
+    margin-left: var(--sidebar-width);
+
+    padding: 24px;
+
+    color: var(--text-muted);
+
+    text-align: center;
+
+    border-top:
+        1px solid
+        var(--border);
+
+    font-size: 0.7rem;
+}
+
+
+/* =========================================================
+   FOCO
+========================================================= */
+
+a:focus-visible,
+button:focus-visible {
+    outline:
+        2px solid
+        var(--primary);
+
+    outline-offset: 3px;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1150px) {
+
+    .scanner-sessions-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+
+/* =========================================================
+   SEM SIDEBAR FIXA
+========================================================= */
+
+@media (max-width: 1024px) {
+
+    .admin-content,
+    footer {
+        margin-left: 0;
+    }
+
+    .scanner-sessions-main {
+        padding:
+            24px
+            5%
+            50px;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+    .scanner-sessions-main {
+        padding:
+            20px
+            16px
+            45px;
+    }
+
+    .scanner-sessions-heading {
+        margin-bottom: 22px;
+    }
+
+    .scanner-sessions-heading h1 {
+        font-size: 30px;
+    }
+
+    .scanner-sessions-description {
+        font-size: 0.86rem;
+    }
+
+    .scanner-sessions-content {
+        gap: 20px;
+    }
+
+    .scanner-section {
+        padding: 16px;
+    }
+
+    .scanner-section-heading {
+        margin-bottom: 15px;
+    }
+
+    .scanner-sessions-grid {
+        grid-template-columns: 1fr;
+
+        gap: 11px;
+    }
+
+    .scanner-session-card {
+        padding: 15px;
+    }
+
+    .scanner-session-card-header {
+        margin-bottom: 13px;
+    }
+
+    .scanner-session-button {
+        min-height: 44px;
+
+        font-size: 0.78rem;
+    }
+
+    .scanner-sessions-error {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+
+    /* DATAS FUTURAS */
+
+    .scanner-date-buttons {
+        margin-right: -16px;
+        padding-right: 16px;
+    }
+
+    .scanner-date-button {
+        min-width: 78px;
+        min-height: 66px;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE PEQUENO
+========================================================= */
+
+@media (max-width: 460px) {
+
+    .scanner-sessions-main {
+        padding:
+            17px
+            13px
+            40px;
+    }
+
+    .scanner-section {
+        padding: 13px;
+    }
+
+    .scanner-section-heading {
+        flex-direction: column;
+
+        gap: 10px;
+    }
+
+    .today-date {
+        align-self: flex-start;
+    }
+
+    .scanner-session-title {
+        white-space: normal;
+    }
+
+    .scanner-session-information {
+        grid-template-columns:
+            1fr
+            1fr;
+    }
+
+}
+
+
+/* =========================================================
+   TELAS MUITO PEQUENAS
+========================================================= */
+
+@media (max-width: 350px) {
+
+    .scanner-session-card-header {
+        flex-direction: column;
+    }
+
+    .scanner-session-status {
+        align-self: flex-start;
+    }
+
+    .scanner-session-information {
+        grid-template-columns: 1fr;
+    }
+
+}

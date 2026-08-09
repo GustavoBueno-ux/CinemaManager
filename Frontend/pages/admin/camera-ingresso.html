@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Leitura e validação de ingressos por QR Code"
+    >
+
+    <title>Validar ingresso | Cinema</title>
+
+    <link
+        rel="stylesheet"
+        href="/Frontend/css/pages/admin/camera-ingresso.css"
+    >
+
+</head>
+
+<body>
+
+    <main class="scanner-page">
+
+        <!-- =====================================================
+             TOPO
+        ====================================================== -->
+
+        <header class="scanner-header">
+
+            <div class="scanner-header-information">
+
+                <p class="scanner-page-label">
+                    Controle de entrada
+                </p>
+
+                <h1>
+                    Escanear ingresso
+                </h1>
+
+            </div>
+
+            <a
+                href="escanear-ingresso.html"
+                class="scanner-back-button"
+                id="scanner-back-button"
+            >
+                <span aria-hidden="true">
+                    ←
+                </span>
+
+                <span>
+                    Voltar
+                </span>
+            </a>
+
+        </header>
+
+
+        <!-- =====================================================
+             SESSÃO SELECIONADA
+        ====================================================== -->
+
+        <section
+            class="selected-session-card"
+            id="selected-session-card"
+            aria-labelledby="selected-session-title"
+        >
+
+            <div class="selected-session-icon" aria-hidden="true">
+                🎬
+            </div>
+
+            <div class="selected-session-information">
+
+                <p class="selected-session-label">
+                    Sessão selecionada
+                </p>
+
+                <h2 id="selected-session-title">
+                    Carregando sessão...
+                </h2>
+
+                <div class="selected-session-details">
+
+                    <span id="selected-session-date">
+                        --/--/----
+                    </span>
+
+                    <span
+                        class="selected-session-separator"
+                        aria-hidden="true"
+                    >
+                        •
+                    </span>
+
+                    <span id="selected-session-time">
+                        --:--
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             ERRO AO CARREGAR A SESSÃO
+        ====================================================== -->
+
+        <section
+            class="scanner-page-error hidden"
+            id="scanner-page-error"
+            role="alert"
+        >
+
+            <div>
+
+                <strong>
+                    Não foi possível carregar a sessão.
+                </strong>
+
+                <p id="scanner-page-error-message">
+                    Verifique sua conexão e tente novamente.
+                </p>
+
+            </div>
+
+            <a
+                href="escanear-ingresso.html"
+                class="scanner-page-error-button"
+            >
+                Escolher outra sessão
+            </a>
+
+        </section>
+
+
+        <!-- =====================================================
+             ÁREA DA CÂMERA
+        ====================================================== -->
+
+        <section
+            class="camera-section"
+            id="camera-section"
+            aria-labelledby="camera-section-title"
+        >
+
+            <div class="camera-section-heading">
+
+                <div>
+
+                    <p class="camera-section-label">
+                        Leitor
+                    </p>
+
+                    <h2 id="camera-section-title">
+                        Aponte a câmera para o QR Code
+                    </h2>
+
+                    <p>
+                        Posicione o QR Code do ingresso dentro da área indicada.
+                    </p>
+
+                </div>
+
+                <span
+                    class="camera-status"
+                    id="camera-status"
+                    data-status="loading"
+                >
+                    Iniciando câmera...
+                </span>
+
+            </div>
+
+
+            <!-- CÂMERA -->
+
+            <div
+                class="camera-container"
+                id="camera-container"
+            >
+
+                <video
+                    id="camera-video"
+                    class="camera-video"
+                    autoplay
+                    muted
+                    playsinline
+                ></video>
+
+
+                <!-- OVERLAY VISUAL -->
+
+                <div
+                    class="camera-overlay"
+                    aria-hidden="true"
+                >
+
+                    <div class="camera-frame">
+
+                        <span class="camera-corner corner-top-left"></span>
+                        <span class="camera-corner corner-top-right"></span>
+                        <span class="camera-corner corner-bottom-left"></span>
+                        <span class="camera-corner corner-bottom-right"></span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ESTADO DE CARREGAMENTO -->
+
+                <div
+                    class="camera-message"
+                    id="camera-loading"
+                >
+
+                    <div class="camera-loading-spinner"></div>
+
+                    <strong>
+                        Iniciando câmera
+                    </strong>
+
+                    <p>
+                        Aguarde enquanto solicitamos acesso à câmera.
+                    </p>
+
+                </div>
+
+
+                <!-- ERRO DE CÂMERA -->
+
+                <div
+                    class="camera-message camera-error hidden"
+                    id="camera-error"
+                >
+
+                    <span
+                        class="camera-message-icon"
+                        aria-hidden="true"
+                    >
+                        ⚠
+                    </span>
+
+                    <strong>
+                        Não foi possível acessar a câmera
+                    </strong>
+
+                    <p id="camera-error-message">
+                        Verifique se o navegador possui permissão para utilizar a câmera.
+                    </p>
+
+                    <button
+                        type="button"
+                        class="camera-retry-button"
+                        id="camera-retry-button"
+                    >
+                        Tentar novamente
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- INSTRUÇÃO -->
+
+            <p
+                class="camera-help"
+                id="camera-help"
+            >
+                Mantenha o QR Code visível e evite movimentar o aparelho durante a leitura.
+            </p>
+
+        </section>
+
+
+        <!-- =====================================================
+             VALIDANDO
+        ====================================================== -->
+
+        <section
+            class="validation-loading hidden"
+            id="validation-loading"
+            aria-live="polite"
+        >
+
+            <div class="validation-loading-spinner"></div>
+
+            <div>
+
+                <strong>
+                    Validando ingresso...
+                </strong>
+
+                <p>
+                    Aguarde enquanto o sistema verifica o QR Code.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             RESULTADO DA VALIDAÇÃO
+        ====================================================== -->
+
+        <section
+            class="validation-result hidden"
+            id="validation-result"
+            role="status"
+            aria-live="polite"
+            data-result=""
+        >
+
+            <div class="validation-result-icon">
+
+                <span
+                    id="validation-result-icon"
+                    aria-hidden="true"
+                >
+                    ✓
+                </span>
+
+            </div>
+
+            <div class="validation-result-content">
+
+                <p
+                    class="validation-result-label"
+                    id="validation-result-label"
+                >
+                    Validação concluída
+                </p>
+
+                <h2
+                    id="validation-result-title"
+                >
+                    Entrada liberada
+                </h2>
+
+                <p
+                    class="validation-result-message"
+                    id="validation-result-message"
+                >
+                    O ingresso foi validado com sucesso.
+                </p>
+
+
+                <!-- CÓDIGO TÉCNICO / STATUS -->
+
+                <div
+                    class="validation-result-code"
+                    id="validation-result-code-container"
+                >
+
+                    <span>
+                        Resultado
+                    </span>
+
+                    <strong
+                        id="validation-result-code"
+                    >
+                        VALIDADO
+                    </strong>
+
+                </div>
+
+
+                <!-- AÇÃO -->
+
+                <button
+                    type="button"
+                    class="scan-again-button"
+                    id="scan-again-button"
+                >
+                    <span aria-hidden="true">
+                        ▣
+                    </span>
+
+                    <span>
+                        Escanear novamente
+                    </span>
+                </button>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================================================
+         JAVASCRIPT
+    ========================================================== -->
+
+    <script src="/Frontend/js/config.js"></script>
+
+    <script src="/Frontend/js/api.js"></script>
+
+    <!--
+        A biblioteca responsável pela leitura do QR Code
+        será adicionada quando implementarmos o JavaScript.
+    -->
+
+    <script src="/Frontend/js/pages/admin/camera-ingresso.js"></script>
+
+</body>
+
+</html>

@@ -303,6 +303,7 @@ public class IngressoController : ControllerBase
         return Ok(ingresso);
     }
 
+
     [Authorize(Roles = "Funcionario")]
     [HttpGet("bilheteria/codigo/{codigo}")]
     public async Task<IActionResult>
@@ -315,7 +316,7 @@ public class IngressoController : ControllerBase
                 .BuscarPorCodigoRecuperacaoAsync(
                     codigo
                 );
-    
+
         if (ingresso is null)
         {
             return NotFound(new
@@ -324,20 +325,34 @@ public class IngressoController : ControllerBase
                     "Ingresso não encontrado ou indisponível para recuperação."
             });
         }
-    
+
         return Ok(ingresso);
     }
 
 
+    [Authorize(Roles = "Funcionario")]
     [HttpPost("validar")]
     public async Task<IActionResult> Validar(
-        ValidarIngressoDTO dto
+        [FromBody] ValidarIngressoDTO dto
     )
     {
-        var resultado =
-            await _service.ValidarAsync(dto);
+        try
+        {
+            var resultado =
+                await _service.ValidarAsync(dto);
 
-        return Ok(resultado);
+            return Ok(resultado);
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, new
+            {
+                sucesso = false,
+                codigo = "ERRO_INTERNO",
+                mensagem =
+                    "Ocorreu um erro interno ao validar o ingresso."
+            });
+        }
     }
 
 
