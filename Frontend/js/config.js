@@ -1,1 +1,1 @@
-const API_URL = "http://localhost:5075/api";
+const API_URL = "https://cinemamanager-production.up.railway.app/api";

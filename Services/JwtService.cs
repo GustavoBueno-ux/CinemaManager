@@ -40,7 +40,7 @@ public class JwtService : IJwtService
             issuer: _configuration["Jwt:Issuer"],
             audience: _configuration["Jwt:Audience"],
             claims: claims,
-            expires: DateTime.Now.AddDays(7),
+            expires: HorarioCinema.Agora.AddDays(7),
             signingCredentials: credentials
         );
 

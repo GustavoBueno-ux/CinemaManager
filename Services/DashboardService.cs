@@ -22,7 +22,7 @@ public class DashboardService : IDashboardService
     public async Task<DashboardResponseDTO> BuscarAsync()
     {
         /*
-         * O restante do projeto trabalha com DateTime.Now para:
+         * O restante do projeto trabalha com HorarioCinema.Agora para:
          * - criação de sessões;
          * - compra de ingressos;
          * - validação de horários.
@@ -30,7 +30,7 @@ public class DashboardService : IDashboardService
          * Portanto, o dashboard segue a mesma convenção local
          * para não misturar UTC com horário local.
          */
-        var agora = DateTime.Now;
+        var agora = HorarioCinema.Agora;
         var inicioHoje = agora.Date;
         var inicioAmanha = inicioHoje.AddDays(1);
 

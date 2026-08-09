@@ -69,7 +69,7 @@ public class IngressoService : IIngressoService
             );
         }
 
-        var agora = DateTime.Now;
+        var agora = HorarioCinema.Agora;
 
         var venda = new Venda
         {
@@ -139,7 +139,7 @@ public class IngressoService : IIngressoService
             );
         }
 
-        var agora = DateTime.Now;
+        var agora = HorarioCinema.Agora;
 
         await using var transaction =
             await _context.Database.BeginTransactionAsync();
@@ -369,7 +369,7 @@ public class IngressoService : IIngressoService
             );
         }
 
-        var agora = DateTime.Now;
+        var agora = HorarioCinema.Agora;
 
         await using var transaction =
             await _context.Database.BeginTransactionAsync();
@@ -679,7 +679,7 @@ public class IngressoService : IIngressoService
                 .ToUpperInvariant();
 
         var dataLimite =
-            DateTime.Now.AddDays(-7);
+            HorarioCinema.Agora.AddDays(-7);
 
         return await _context.Ingressos
             .AsNoTracking()
@@ -811,7 +811,7 @@ public class IngressoService : IIngressoService
             );
         }
 
-        var agora = DateTime.Now;
+        var agora = HorarioCinema.Agora;
 
         var inicioLiberacao =
             ingresso.Sessao.DataHora
@@ -890,7 +890,7 @@ public class IngressoService : IIngressoService
         var limiteCompra =
             sessao.DataHora.AddMinutes(30);
 
-        if (DateTime.Now > limiteCompra)
+        if (HorarioCinema.Agora > limiteCompra)
         {
             throw new InvalidOperationException(
                 "O prazo para compra desta sessão foi encerrado."
