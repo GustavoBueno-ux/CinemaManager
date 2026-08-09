@@ -20,20 +20,10 @@ namespace CinemaAPI.Migrations
                 oldMaxLength: 8,
                 oldNullable: true)
                 .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Ingressos_CodigoRecuperacao",
-                table: "Ingressos",
-                column: "CodigoRecuperacao",
-                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropIndex(
-                name: "IX_Ingressos_CodigoRecuperacao",
-                table: "Ingressos");
-
             migrationBuilder.AlterColumn<string>(
                 name: "CodigoRecuperacao",
                 table: "Ingressos",
