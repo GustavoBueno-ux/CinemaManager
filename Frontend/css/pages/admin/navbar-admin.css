@@ -39,8 +39,8 @@
     align-items: center;
     justify-content: space-between;
 
-    min-height: 75px;
-    padding: 0 22px;
+    max-height: 75px;
+    padding: 10px 22px;
 
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
@@ -49,12 +49,13 @@
     display: inline-flex;
     align-items: center;
     gap: 12px;
+    
 
     color: #ffffff;
     text-decoration: none;
 }
 
-.sidebar-logo-icon {
+.sidebar-logo-image {
     display: inline-flex;
     align-items: center;
     justify-content: center;

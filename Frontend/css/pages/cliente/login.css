@@ -164,36 +164,53 @@ body::after{
    LOGO
 ========================= */
 
-.cinema-logo{
+.cinema-logo {
+    width: 115px;
+    height: 115px;
 
-    width:90px;
+    margin: 0 auto 24px;
 
-    height:90px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-    margin:0 auto 22px;
+    border-radius: 50%;
 
-    border-radius:50%;
+    overflow: hidden;
 
-    background:#181818;
+    background: #080808;
 
-    display:flex;
+    border: 1px solid rgba(229, 9, 20, 0.28);
 
-    justify-content:center;
+    box-shadow:
+        0 0 0 5px rgba(229, 9, 20, 0.04),
+        0 10px 30px rgba(0, 0, 0, 0.45);
 
-    align-items:center;
-
-    overflow:hidden;
-
-    border:1px solid rgba(255,255,255,.05);
-
+    transition:
+        transform 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
 }
 
-.cinema-logo img{
+.cinema-logo:hover {
+    transform: scale(1.03);
 
-    width:70%;
+    border-color: rgba(229, 9, 20, 0.5);
 
-    object-fit:contain;
+    box-shadow:
+        0 0 0 5px rgba(229, 9, 20, 0.06),
+        0 12px 35px rgba(0, 0, 0, 0.55);
+}
 
+.cinema-logo img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    border-radius: 50%;
 }
 
 
@@ -517,10 +534,10 @@ body::after{
 
     .cinema-logo{
 
-        width:75px;
-        height:75px;
+        width:92px;
+        height:92px;
 
-        margin-bottom:18px;
+        margin-bottom:20px;
 
     }
 

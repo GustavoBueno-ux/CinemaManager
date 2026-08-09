@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Relatórios financeiros e operacionais do cinema"
+    >
+
+    <title>Relatórios | Cinemax Piraju</title>
+
+    <link
+        rel="stylesheet"
+        href="/Frontend/css/pages/admin/navbar-admin.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="/Frontend/css/pages/admin/relatorios.css"
+    >
+
+</head>
+
+<body>
+
+    <div class="admin-layout">
+
+        <!-- =====================================================
+             SIDEBAR
+        ====================================================== -->
+
+        <aside
+            class="sidebar"
+            id="sidebar"
+        >
+
+            <div class="sidebar-header">
+
+                <a
+                    href="home-admin.html"
+                    class="sidebar-logo"
+                    aria-label="Ir para a página inicial do painel"
+                >
+
+                    <img
+                        src="../../assets/logo/Logo Cinemax.png"
+                        alt=""
+                        class="sidebar-logo-image"
+                        aria-hidden="true"
+                    >
+
+                    <span class="sidebar-logo-text">
+                        Cinemax Piraju
+                    </span>
+                
+                </a>
+
+                <button
+                    type="button"
+                    class="sidebar-close-button"
+                    id="sidebar-close-button"
+                    aria-label="Fechar menu lateral"
+                >
+                    &times;
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+                 NAVEGAÇÃO
+            ================================================== -->
+
+            <nav
+                class="sidebar-navigation"
+                aria-label="Navegação administrativa"
+            >
+
+                <ul class="sidebar-menu">
+
+                    <!-- INÍCIO -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="home-admin.html"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                ⌂
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Início
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- FILMES -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="filmes.html"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                🎬
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Filmes
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- SESSÕES -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="sessoes.html"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                📅
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Sessões
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- VENDER INGRESSOS -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="venda-ingressos.html"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                🎟️
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Vender ingressos
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- BUSCAR INGRESSO -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="buscar-ingresso.html"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                🔎
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Buscar ingresso
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- ESCANEAR QR CODE -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="escanear-ingresso.html"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                ▣
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Escanear QR Code
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- RELATÓRIOS -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="relatorios.html"
+                            class="sidebar-link active"
+                            aria-current="page"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                📊
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Relatórios
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- PERFIL -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="perfil.html"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                👤
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Perfil
+                            </span>
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </nav>
+
+
+            <!-- =================================================
+                 USUÁRIO
+            ================================================== -->
+
+            <div class="sidebar-footer">
+
+                <div class="sidebar-user">
+
+                    <div
+                        class="sidebar-user-avatar"
+                        id="sidebar-user-avatar"
+                        aria-hidden="true"
+                    >
+                        F
+                    </div>
+
+                    <div class="sidebar-user-information">
+
+                        <strong
+                            class="sidebar-user-name"
+                            id="sidebar-user-name"
+                        >
+                            Funcionário
+                        </strong>
+
+                        <span class="sidebar-user-role">
+                            Funcionário
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <button
+                    type="button"
+                    class="logout-button"
+                    id="logout-button"
+                >
+
+                    <span aria-hidden="true">
+                        ↪
+                    </span>
+
+                    <span>
+                        Sair
+                    </span>
+
+                </button>
+
+            </div>
+
+        </aside>
+
+
+        <!-- =====================================================
+             OVERLAY MOBILE
+        ====================================================== -->
+
+        <div
+            class="sidebar-overlay"
+            id="sidebar-overlay"
+            aria-hidden="true"
+        ></div>
+
+
+        <!-- =====================================================
+             CONTEÚDO
+        ====================================================== -->
+
+        <div class="admin-content">
+
+
+            <!-- =================================================
+                 HEADER MOBILE
+            ================================================== -->
+
+            <header class="mobile-header">
+
+                <button
+                    type="button"
+                    class="sidebar-open-button"
+                    id="sidebar-open-button"
+                    aria-label="Abrir menu lateral"
+                    aria-controls="sidebar"
+                    aria-expanded="false"
+                >
+                    ☰
+                </button>
+
+                <a
+                    href="home-admin.html"
+                    class="mobile-logo"
+                >
+                    Cinema
+                </a>
+
+            </header>
+
+
+            <!-- =================================================
+                 PRINCIPAL
+            ================================================== -->
+
+            <main class="reports-main">
+
+
+                <!-- =================================================
+                     CABEÇALHO
+                ================================================== -->
+
+                <section
+                    class="reports-heading"
+                    aria-labelledby="reports-title"
+                >
+
+                    <div>
+
+                        <p class="page-label">
+                            Gestão
+                        </p>
+
+                        <h1 id="reports-title">
+                            Relatórios
+                        </h1>
+
+                        <p class="reports-description">
+                            Acompanhe vendas, faturamento e desempenho
+                            do cinema no período selecionado.
+                        </p>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     FILTRO DE PERÍODO
+                ================================================== -->
+
+                <section
+                    class="report-filter-card"
+                    aria-labelledby="report-filter-title"
+                >
+
+                    <div class="report-filter-heading">
+
+                        <div>
+
+                            <p class="section-label">
+                                Período
+                            </p>
+
+                            <h2 id="report-filter-title">
+                                Selecionar período
+                            </h2>
+
+                        </div>
+
+                        <p
+                            class="selected-period"
+                            id="selected-period"
+                        >
+                            --
+                        </p>
+
+                    </div>
+
+
+                    <!-- ATALHOS -->
+
+                    <div
+                        class="period-buttons"
+                        id="period-buttons"
+                    >
+
+                        <button
+                            type="button"
+                            class="period-button active"
+                            data-period="today"
+                        >
+                            Hoje
+                        </button>
+
+                        <button
+                            type="button"
+                            class="period-button"
+                            data-period="7days"
+                        >
+                            7 dias
+                        </button>
+
+                        <button
+                            type="button"
+                            class="period-button"
+                            data-period="30days"
+                        >
+                            30 dias
+                        </button>
+
+                        <button
+                            type="button"
+                            class="period-button"
+                            data-period="year"
+                        >
+                            Este ano
+                        </button>
+
+                        <button
+                            type="button"
+                            class="period-button"
+                            data-period="custom"
+                        >
+                            Personalizado
+                        </button>
+
+                    </div>
+
+
+                    <!-- PERÍODO PERSONALIZADO -->
+
+                    <form
+                        class="custom-period-form hidden"
+                        id="custom-period-form"
+                    >
+
+                        <div class="custom-period-field">
+
+                            <label for="custom-start-date">
+                                Data inicial
+                            </label>
+
+                            <input
+                                type="date"
+                                id="custom-start-date"
+                                required
+                            >
+
+                        </div>
+
+                        <div class="custom-period-field">
+
+                            <label for="custom-end-date">
+                                Data final
+                            </label>
+
+                            <input
+                                type="date"
+                                id="custom-end-date"
+                                required
+                            >
+
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="custom-period-submit"
+                        >
+                            Aplicar período
+                        </button>
+
+                    </form>
+
+                </section>
+
+
+                <!-- =================================================
+                     LOADING
+                ================================================== -->
+
+                <section
+                    class="reports-loading"
+                    id="reports-loading"
+                    aria-live="polite"
+                >
+
+                    <div class="reports-loading-spinner"></div>
+
+                    <div>
+
+                        <strong>
+                            Carregando relatório...
+                        </strong>
+
+                        <p>
+                            Aguarde enquanto os dados são processados.
+                        </p>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     ERRO
+                ================================================== -->
+
+                <section
+                    class="reports-error hidden"
+                    id="reports-error"
+                    role="alert"
+                >
+
+                    <div>
+
+                        <strong>
+                            Não foi possível carregar o relatório.
+                        </strong>
+
+                        <p id="reports-error-message">
+                            Tente novamente em alguns instantes.
+                        </p>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="reports-retry-button"
+                        id="reports-retry-button"
+                    >
+                        Tentar novamente
+                    </button>
+
+                </section>
+
+
+                <!-- =================================================
+                     CONTEÚDO DO RELATÓRIO
+                ================================================== -->
+
+                <div
+                    class="reports-content hidden"
+                    id="reports-content"
+                >
+
+
+                    <!-- =================================================
+                         INDICADORES
+                    ================================================== -->
+
+                    <section
+                        class="report-summary"
+                        aria-label="Resumo do período"
+                    >
+
+
+                        <!-- FATURAMENTO -->
+
+                        <article class="report-summary-card">
+
+                            <div class="summary-card-top">
+
+                                <span class="summary-icon" aria-hidden="true">
+                                    R$
+                                </span>
+
+                                <span>
+                                    Faturamento
+                                </span>
+
+                            </div>
+
+                            <strong
+                                class="summary-value"
+                                id="summary-revenue"
+                            >
+                                R$ 0,00
+                            </strong>
+
+                            <p>
+                                Receita gerada no período
+                            </p>
+
+                        </article>
+
+
+                        <!-- VENDAS -->
+
+                        <article class="report-summary-card">
+
+                            <div class="summary-card-top">
+
+                                <span class="summary-icon" aria-hidden="true">
+                                    $
+                                </span>
+
+                                <span>
+                                    Vendas
+                                </span>
+
+                            </div>
+
+                            <strong
+                                class="summary-value"
+                                id="summary-sales"
+                            >
+                                0
+                            </strong>
+
+                            <p>
+                                Operações de venda realizadas
+                            </p>
+
+                        </article>
+
+
+                        <!-- INGRESSOS -->
+
+                        <article class="report-summary-card">
+
+                            <div class="summary-card-top">
+
+                                <span class="summary-icon" aria-hidden="true">
+                                    🎟
+                                </span>
+
+                                <span>
+                                    Ingressos vendidos
+                                </span>
+
+                            </div>
+
+                            <strong
+                                class="summary-value"
+                                id="summary-tickets"
+                            >
+                                0
+                            </strong>
+
+                            <p>
+                                Ingressos emitidos no período
+                            </p>
+
+                        </article>
+
+
+                        <!-- COMPARECIMENTO -->
+
+                        <article class="report-summary-card">
+
+                            <div class="summary-card-top">
+
+                                <span class="summary-icon" aria-hidden="true">
+                                    ✓
+                                </span>
+
+                                <span>
+                                    Comparecimento
+                                </span>
+
+                            </div>
+
+                            <strong
+                                class="summary-value"
+                                id="summary-attendance"
+                            >
+                                0%
+                            </strong>
+
+                            <p id="summary-attendance-detail">
+                                0 de 0 ingressos utilizados
+                            </p>
+
+                        </article>
+
+
+                        <!-- CORTESIAS -->
+
+                        <article class="report-summary-card">
+
+                            <div class="summary-card-top">
+
+                                <span class="summary-icon" aria-hidden="true">
+                                    ★
+                                </span>
+
+                                <span>
+                                    Cortesias
+                                </span>
+
+                            </div>
+
+                            <strong
+                                class="summary-value"
+                                id="summary-courtesy"
+                            >
+                                0
+                            </strong>
+
+                            <p>
+                                Ingressos emitidos sem cobrança
+                            </p>
+
+                        </article>
+
+                    </section>
+
+
+                    <!-- =================================================
+                         EVOLUÇÃO
+                    ================================================== -->
+
+                    <section
+                        class="report-section revenue-evolution-section"
+                        aria-labelledby="revenue-evolution-title"
+                    >
+
+                        <div class="report-section-heading">
+
+                            <div>
+
+                                <p class="section-label">
+                                    Evolução
+                                </p>
+
+                                <h2 id="revenue-evolution-title">
+                                    Faturamento ao longo do período
+                                </h2>
+
+                                <p>
+                                    Visualize como as vendas evoluíram
+                                    durante os dias selecionados.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="report-chart-container">
+
+                            <canvas
+                                id="revenue-chart"
+                                aria-label="Gráfico de faturamento por dia"
+                            ></canvas>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- =================================================
+                         DESTAQUES
+                    ================================================== -->
+
+                    <section
+                        class="report-section highlights-section"
+                        aria-labelledby="highlights-title"
+                    >
+
+                        <div class="report-section-heading">
+
+                            <div>
+
+                                <p class="section-label">
+                                    Destaques
+                                </p>
+
+                                <h2 id="highlights-title">
+                                    Principais resultados
+                                </h2>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="report-highlights-grid">
+
+
+                            <!-- MAIS VENDIDO -->
+
+                            <article class="highlight-card">
+
+                                <span
+                                    class="highlight-icon"
+                                    aria-hidden="true"
+                                >
+                                    🏆
+                                </span>
+
+                                <div class="highlight-information">
+
+                                    <span>
+                                        Filme mais vendido
+                                    </span>
+
+                                    <strong
+                                        id="highlight-best-selling-movie"
+                                    >
+                                        Nenhum dado
+                                    </strong>
+
+                                    <p
+                                        id="highlight-best-selling-movie-detail"
+                                    >
+                                        --
+                                    </p>
+
+                                </div>
+
+                            </article>
+
+
+                            <!-- MAIOR FATURAMENTO -->
+
+                            <article class="highlight-card">
+
+                                <span
+                                    class="highlight-icon"
+                                    aria-hidden="true"
+                                >
+                                    💰
+                                </span>
+
+                                <div class="highlight-information">
+
+                                    <span>
+                                        Maior faturamento
+                                    </span>
+
+                                    <strong
+                                        id="highlight-highest-revenue-movie"
+                                    >
+                                        Nenhum dado
+                                    </strong>
+
+                                    <p
+                                        id="highlight-highest-revenue-movie-detail"
+                                    >
+                                        --
+                                    </p>
+
+                                </div>
+
+                            </article>
+
+
+                            <!-- MELHOR SESSÃO -->
+
+                            <article class="highlight-card">
+
+                                <span
+                                    class="highlight-icon"
+                                    aria-hidden="true"
+                                >
+                                    🎟
+                                </span>
+
+                                <div class="highlight-information">
+
+                                    <span>
+                                        Sessão mais vendida
+                                    </span>
+
+                                    <strong
+                                        id="highlight-best-session"
+                                    >
+                                        Nenhum dado
+                                    </strong>
+
+                                    <p
+                                        id="highlight-best-session-detail"
+                                    >
+                                        --
+                                    </p>
+
+                                </div>
+
+                            </article>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- =================================================
+                         FILMES
+                    ================================================== -->
+
+                    <section
+                        class="report-section movies-performance-section"
+                        aria-labelledby="movies-performance-title"
+                    >
+
+                        <div class="report-section-heading">
+
+                            <div>
+
+                                <p class="section-label">
+                                    Filmes
+                                </p>
+
+                                <h2 id="movies-performance-title">
+                                    Desempenho por filme
+                                </h2>
+
+                                <p>
+                                    Compare quantidade de ingressos
+                                    e faturamento de cada filme.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- TABELA -->
+
+                        <div
+                            class="movies-table-wrapper"
+                            id="movies-table-wrapper"
+                        >
+
+                            <table class="movies-performance-table">
+
+                                <thead>
+
+                                    <tr>
+
+                                        <th>
+                                            Filme
+                                        </th>
+
+                                        <th>
+                                            Ingressos
+                                        </th>
+
+                                        <th>
+                                            Participação
+                                        </th>
+
+                                        <th>
+                                            Faturamento
+                                        </th>
+
+                                    </tr>
+
+                                </thead>
+
+                                <tbody id="movies-performance-body">
+                                    <!-- preenchido pelo JS -->
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+
+                        <!-- EMPTY -->
+
+                        <div
+                            class="section-empty-state hidden"
+                            id="movies-empty"
+                        >
+
+                            <span aria-hidden="true">
+                                🎬
+                            </span>
+
+                            <strong>
+                                Nenhuma venda de filme no período
+                            </strong>
+
+                            <p>
+                                Não existem dados de filmes
+                                para o período selecionado.
+                            </p>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- =================================================
+                         ORIGEM + PAGAMENTO
+                    ================================================== -->
+
+                    <div class="report-distributions-grid">
+
+
+                        <!-- ORIGEM -->
+
+                        <section
+                            class="report-section distribution-section"
+                            aria-labelledby="sales-origin-title"
+                        >
+
+                            <div class="report-section-heading">
+
+                                <div>
+
+                                    <p class="section-label">
+                                        Canais
+                                    </p>
+
+                                    <h2 id="sales-origin-title">
+                                        Origem das vendas
+                                    </h2>
+
+                                    <p>
+                                        Online e bilheteria.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="distribution-content">
+
+                                <div class="distribution-chart">
+
+                                    <canvas
+                                        id="sales-origin-chart"
+                                        aria-label="Gráfico da origem das vendas"
+                                    ></canvas>
+
+                                </div>
+
+
+                                <div
+                                    class="distribution-list"
+                                    id="sales-origin-list"
+                                >
+                                    <!-- preenchido pelo JS -->
+                                </div>
+
+                            </div>
+
+
+                            <div
+                                class="section-empty-state hidden"
+                                id="sales-origin-empty"
+                            >
+
+                                <span aria-hidden="true">
+                                    📊
+                                </span>
+
+                                <strong>
+                                    Nenhuma venda
+                                </strong>
+
+                                <p>
+                                    Não existem vendas no período.
+                                </p>
+
+                            </div>
+
+                        </section>
+
+
+                        <!-- PAGAMENTO -->
+
+                        <section
+                            class="report-section distribution-section"
+                            aria-labelledby="payment-method-title"
+                        >
+
+                            <div class="report-section-heading">
+
+                                <div>
+
+                                    <p class="section-label">
+                                        Pagamentos
+                                    </p>
+
+                                    <h2 id="payment-method-title">
+                                        Formas de pagamento
+                                    </h2>
+
+                                    <p>
+                                        Distribuição das vendas da bilheteria.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="distribution-content">
+
+                                <div class="distribution-chart">
+
+                                    <canvas
+                                        id="payment-method-chart"
+                                        aria-label="Gráfico de formas de pagamento"
+                                    ></canvas>
+
+                                </div>
+
+
+                                <div
+                                    class="distribution-list"
+                                    id="payment-method-list"
+                                >
+                                    <!-- preenchido pelo JS -->
+                                </div>
+
+                            </div>
+
+
+                            <div
+                                class="section-empty-state hidden"
+                                id="payment-method-empty"
+                            >
+
+                                <span aria-hidden="true">
+                                    💳
+                                </span>
+
+                                <strong>
+                                    Nenhum pagamento registrado
+                                </strong>
+
+                                <p>
+                                    Não existem vendas com forma
+                                    de pagamento conhecida neste período.
+                                </p>
+
+                            </div>
+
+                        </section>
+
+                    </div>
+
+                </div>
+
+            </main>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         FOOTER
+    ========================================================== -->
+
+    <footer>
+
+        <p>
+            © 2026 Cinemax Piraju. Todos os direitos reservados.
+        </p>
+
+    </footer>
+
+
+    <!-- =========================================================
+         TEMPLATE - FILME
+    ========================================================== -->
+
+    <template id="movie-row-template">
+
+        <tr>
+
+            <td>
+
+                <div class="movie-table-name">
+
+                    <span
+                        class="movie-ranking"
+                        aria-hidden="true"
+                    >
+                        1
+                    </span>
+
+                    <strong class="movie-title">
+                        Filme
+                    </strong>
+
+                </div>
+
+            </td>
+
+            <td class="movie-tickets">
+                0
+            </td>
+
+            <td>
+
+                <div class="movie-participation">
+
+                    <strong class="movie-percentage">
+                        0%
+                    </strong>
+
+                    <div class="movie-percentage-bar">
+
+                        <span
+                            class="movie-percentage-progress"
+                        ></span>
+
+                    </div>
+
+                </div>
+
+            </td>
+
+            <td class="movie-revenue">
+                R$ 0,00
+            </td>
+
+        </tr>
+
+    </template>
+
+
+    <!-- =========================================================
+         TEMPLATE - DISTRIBUIÇÃO
+    ========================================================== -->
+
+    <template id="distribution-item-template">
+
+        <article class="distribution-item">
+
+            <div class="distribution-item-main">
+
+                <span
+                    class="distribution-color"
+                    aria-hidden="true"
+                ></span>
+
+                <div>
+
+                    <strong class="distribution-name">
+                        --
+                    </strong>
+
+                    <span class="distribution-detail">
+                        0 ingressos
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="distribution-values">
+
+                <strong class="distribution-percentage">
+                    0%
+                </strong>
+
+                <span class="distribution-revenue">
+                    R$ 0,00
+                </span>
+
+            </div>
+
+        </article>
+
+    </template>
+
+
+    <!-- =========================================================
+         JAVASCRIPT
+    ========================================================== -->
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/chart.js"
+    ></script>
+
+    <script src="/Frontend/js/config.js"></script>
+
+    <script src="/Frontend/js/api.js"></script>
+
+    <script src="/Frontend/js/pages/admin/relatorios.js"></script>
+
+</body>
+
+</html>

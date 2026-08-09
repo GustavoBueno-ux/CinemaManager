@@ -98,20 +98,53 @@ body::after{
    LOGO
 ========================= */
 
-.logo-container{
-    display:flex;
-    justify-content:center;
-    margin-bottom:22px;
+.cinema-logo {
+    width: 115px;
+    height: 115px;
+
+    margin: 0 auto 24px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 50%;
+
+    overflow: hidden;
+
+    background: #080808;
+
+    border: 1px solid rgba(229, 9, 20, 0.28);
+
+    box-shadow:
+        0 0 0 5px rgba(229, 9, 20, 0.04),
+        0 10px 30px rgba(0, 0, 0, 0.45);
+
+    transition:
+        transform 0.3s ease,
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
 }
 
-.logo{
-    width:90px;
-    height:90px;
-    object-fit:contain;
-    border-radius:50%;
-    background:#181818;
-    padding:10px;
-    border:1px solid rgba(255,255,255,.05);
+.cinema-logo:hover {
+    transform: scale(1.03);
+
+    border-color: rgba(229, 9, 20, 0.5);
+
+    box-shadow:
+        0 0 0 5px rgba(229, 9, 20, 0.06),
+        0 12px 35px rgba(0, 0, 0, 0.55);
+}
+
+.cinema-logo img {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    border-radius: 50%;
 }
 
 /* =========================
@@ -319,9 +352,9 @@ body::after{
         border-radius:20px;
     }
 
-    .logo{
-        width:76px;
-        height:76px;
+    .cinema-logo{
+        width:92px;
+        height:92px;
     }
 
     .auth-card h1{
