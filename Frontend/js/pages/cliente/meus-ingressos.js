@@ -19,7 +19,7 @@ function configurarBotaoVoltar() {
         "click",
         () => {
 
-            window.location.href = "/Frontend/pages/public/home.html";
+            window.location.href = "/pages/public/home.html";
 
         }
     );

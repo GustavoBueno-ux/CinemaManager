@@ -939,7 +939,7 @@ function obterCaminhoPoster(posterUrl) {
         return url;
     }
 
-    return `/Frontend/assets/posters/${url}`;
+    return `/assets/posters/${url}`;
 }
 
 /* =========================================================
