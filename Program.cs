@@ -8,10 +8,18 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Controllers
+
+// =========================================================
+// CONTROLLERS
+// =========================================================
+
 builder.Services.AddControllers();
 
+
+// =========================================================
 // CORS
+// =========================================================
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
@@ -23,7 +31,11 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Swagger
+
+// =========================================================
+// SWAGGER
+// =========================================================
+
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(options =>
@@ -59,7 +71,11 @@ builder.Services.AddSwaggerGen(options =>
     );
 });
 
-// Banco de dados
+
+// =========================================================
+// BANCO DE DADOS
+// =========================================================
+
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     var connectionString = builder.Configuration
@@ -71,7 +87,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     );
 });
 
-// Services
+
+// =========================================================
+// SERVICES
+// =========================================================
+
 builder.Services.AddScoped<IFilmeService, FilmeService>();
 builder.Services.AddScoped<ISessaoService, SessaoService>();
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
@@ -83,11 +103,19 @@ builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IPosterService, PosterService>();
 builder.Services.AddScoped<IRelatorioService, RelatorioService>();
 
-// Serviços executados em segundo plano
+
+// =========================================================
+// SERVIÇOS EM SEGUNDO PLANO
+// =========================================================
+
 builder.Services.AddHostedService<SessaoBackgroundService>();
 builder.Services.AddHostedService<ReservaAssentoBackgroundService>();
 
+
+// =========================================================
 // JWT
+// =========================================================
+
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -115,38 +143,74 @@ builder.Services
             };
     });
 
+
 builder.Services.AddAuthorization();
+
 
 var app = builder.Build();
 
-// Popula automaticamente os assentos da sala
-// caso a tabela esteja vazia.
+
+// =========================================================
+// MIGRATIONS + INICIALIZAÇÃO DO BANCO
+// =========================================================
+
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider
         .GetRequiredService<AppDbContext>();
 
+    /*
+        Aplica automaticamente somente as migrations
+        que ainda não foram executadas no banco.
+
+        Em um banco novo, como o MySQL do Railway,
+        isso cria todas as tabelas antes de qualquer
+        inicialização de dados.
+    */
+
+    await context.Database.MigrateAsync();
+
+
+    /*
+        Depois que as tabelas já existem,
+        popula os assentos caso a tabela esteja vazia.
+    */
+
     await DbInitializer.PopularAssentosAsync(context);
 }
 
-// Swagger
+
+// =========================================================
+// SWAGGER
+// =========================================================
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+
+// =========================================================
+// MIDDLEWARES
+// =========================================================
+
 app.UseHttpsRedirection();
+
 
 // Permite servir arquivos da pasta wwwroot.
 app.UseStaticFiles();
 
+
 app.UseCors("AllowFrontend");
+
 
 // A autenticação deve vir antes da autorização.
 app.UseAuthentication();
 app.UseAuthorization();
 
+
 app.MapControllers();
+
 
 app.Run();
