@@ -348,7 +348,7 @@
    RESPONSIVIDADE
 ========================= */
 
-@media (max-width: 1024px) {
+@media (max-width: 1180px) {
     .sidebar {
         transform: translateX(-100%);
         transition: transform var(--navigation-transition);

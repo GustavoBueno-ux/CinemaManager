@@ -570,7 +570,7 @@ select:focus-visible {
    RESPONSIVIDADE
 ========================================================= */
 
-@media (max-width: 1024px) {
+@media (max-width: 1180px) {
 
     .admin-content {
         margin-left: 0;

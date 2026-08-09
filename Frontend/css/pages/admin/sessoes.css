@@ -1363,7 +1363,7 @@ select:focus-visible {
     }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1180px) {
 
     .admin-content,
     footer {

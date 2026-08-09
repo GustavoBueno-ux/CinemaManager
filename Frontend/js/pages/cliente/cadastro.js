@@ -1,5 +1,3 @@
-console.log("Cadastro JS carregado");
-
 const form = document.getElementById("cadastro-form");
 
 const nomeInput = document.getElementById("nome");
