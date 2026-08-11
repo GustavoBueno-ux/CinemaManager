@@ -843,10 +843,7 @@ function criarAssento(
         );
     }
 
-    if (
-        operacaoAssentoEmAndamento ||
-        vendaEmAndamento
-    ) {
+    if (vendaEmAndamento) {
         botao.disabled = true;
     }
 
@@ -977,19 +974,6 @@ function definirEstadoOperacaoAssento(
 ) {
     operacaoAssentoEmAndamento =
         emAndamento;
-
-    mapaAssentos
-        ?.querySelectorAll(
-            "button.assento"
-        )
-        .forEach(botao => {
-            botao.disabled =
-                emAndamento ||
-                vendaEmAndamento ||
-                botao.classList.contains(
-                    "ocupado"
-                );
-        });
 
     atualizarEstadoBotaoContinuar();
 }

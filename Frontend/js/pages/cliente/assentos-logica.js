@@ -660,10 +660,6 @@ function criarAssento(assento) {
         );
     }
 
-    if (operacaoAssentoEmAndamento) {
-        botao.disabled = true;
-    }
-
     return botao;
 }
 
@@ -769,16 +765,6 @@ function definirEstadoOperacaoAssento(
 ) {
     operacaoAssentoEmAndamento =
         emAndamento;
-
-    mapaAssentos
-        ?.querySelectorAll("button.assento")
-        .forEach(botao => {
-            botao.disabled =
-                emAndamento
-                || botao.classList.contains(
-                    "ocupado"
-                );
-        });
 
     if (botaoContinuar) {
         botaoContinuar.disabled =
