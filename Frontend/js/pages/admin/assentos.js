@@ -3,7 +3,7 @@
 ========================================================= */
 
 let PRECO_INGRESSO = 0;
-const INTERVALO_ATUALIZACAO_MS = 2000;
+const INTERVALO_ATUALIZACAO_MS = 5000;
 
 /* =========================================================
    ELEMENTOS - PÁGINA
@@ -80,8 +80,6 @@ let sessoesDisponiveis = [];
 
 let operacaoAssentoEmAndamento = false;
 let vendaEmAndamento = false;
-let filaOperacoesAssentos = Promise.resolve();
-let quantidadeOperacoesPendentes = 0;
 let carregandoTrocaSessao = false;
 
 let intervaloAtualizacao = null;
@@ -856,45 +854,24 @@ function criarAssento(
    RESERVAR ASSENTO
 ========================================================= */
 
-function reservarAssento(
+async function reservarAssento(
     assento
 ) {
     if (
-        vendaEmAndamento ||
-        assentosSelecionados.some(
-            item => item.id === assento.id
-        )
+        operacaoAssentoEmAndamento ||
+        vendaEmAndamento
     ) {
         return;
     }
 
-    // Atualização otimista local
-    assentosSelecionados.push({
-        ...assento,
-        status: "reservado",
-        reservadoPeloUsuarioAtual: true
-    });
-
-    const assentoLocal =
-        todosAssentos.find(
-            item => item.id === assento.id
-        );
-
-    if (assentoLocal) {
-        assentoLocal.status = "reservado";
-        assentoLocal.reservadoPeloUsuarioAtual = true;
-    }
-
-    mostrarAssentos(
-        todosAssentos
-    );
-
-    const assentoIds =
-        assentosSelecionados.map(
+    const assentoIds = [
+        ...assentosSelecionados.map(
             item => item.id
-        );
+        ),
+        assento.id
+    ];
 
-    enfileirarOperacaoAssento(
+    await executarOperacaoAssento(
         async () => {
             await requisicaoAutenticada(
                 "/ReservaAssento/lote",
@@ -917,38 +894,17 @@ function reservarAssento(
    CANCELAR RESERVA
 ========================================================= */
 
-function cancelarSelecaoAssento(
+async function cancelarSelecaoAssento(
     assento
 ) {
-    if (vendaEmAndamento) {
+    if (
+        operacaoAssentoEmAndamento ||
+        vendaEmAndamento
+    ) {
         return;
     }
 
-    // Atualização otimista local
-    assentosSelecionados =
-        assentosSelecionados.filter(
-            item =>
-                item.id !== assento.id
-        );
-
-    const assentoLocal =
-        todosAssentos.find(
-            item => item.id === assento.id
-        );
-
-    if (assentoLocal) {
-        assentoLocal.status =
-            "disponivel";
-
-        assentoLocal.reservadoPeloUsuarioAtual =
-            false;
-    }
-
-    mostrarAssentos(
-        todosAssentos
-    );
-
-    enfileirarOperacaoAssento(
+    await executarOperacaoAssento(
         async () => {
             const parametros =
                 new URLSearchParams({
@@ -973,58 +929,44 @@ function cancelarSelecaoAssento(
     );
 }
 
-function enfileirarOperacaoAssento(
+async function executarOperacaoAssento(
     operacao
 ) {
-    quantidadeOperacoesPendentes++;
+    definirEstadoOperacaoAssento(
+        true
+    );
 
-    operacaoAssentoEmAndamento =
-        true;
+    try {
+        await operacao();
 
-    atualizarEstadoBotaoContinuar();
+        esconderMensagemPagina();
+    } catch (erro) {
+        console.error(
+            "Erro ao alterar reserva:",
+            erro
+        );
 
-    filaOperacoesAssentos =
-        filaOperacoesAssentos
-            .then(
-                async () => {
-                    try {
-                        await operacao();
-                    } catch (erro) {
-                        console.error(
-                            "Erro ao alterar reserva:",
-                            erro
-                        );
+        if (erro.status === 401) {
+            redirecionarParaLogin();
+            return;
+        }
 
-                        if (erro.status === 401) {
-                            redirecionarParaLogin();
-                            return;
-                        }
+        exibirMensagemPagina(
+            erro.message ||
+            "Não foi possível atualizar a seleção.",
+            "erro"
+        );
+    } finally {
+        try {
+            await sincronizarAssentosComServidor();
+        } catch {
+            /* erro já tratado */
+        }
 
-                        exibirMensagemPagina(
-                            erro.message ||
-                            "Não foi possível atualizar a seleção.",
-                            "erro"
-                        );
-                    } finally {
-                        quantidadeOperacoesPendentes--;
-
-                        if (
-                            quantidadeOperacoesPendentes === 0
-                        ) {
-                            operacaoAssentoEmAndamento =
-                                false;
-
-                            try {
-                                await sincronizarAssentosComServidor();
-                            } catch {
-                                /* erro já tratado */
-                            }
-
-                            atualizarEstadoBotaoContinuar();
-                        }
-                    }
-                }
-            );
+        definirEstadoOperacaoAssento(
+            false
+        );
+    }
 }
 
 function definirEstadoOperacaoAssento(
