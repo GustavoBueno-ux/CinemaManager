@@ -3,10 +3,7 @@
 ========================================================= */
 
 let PRECO_INGRESSO = 0;
-
-const INTERVALO_ATUALIZACAO_MS = 2000;
-const ATRASO_SINCRONIZACAO_SELECAO_MS = 200;
-
+const INTERVALO_ATUALIZACAO_MS = 5000;
 
 /* =========================================================
    ELEMENTOS - PÁGINA
@@ -27,7 +24,6 @@ const horarioSessao = document.getElementById("horario-sessao");
 const botaoVoltar = document.getElementById("botao-voltar");
 const mensagemPagina = document.getElementById("mensagem-pagina");
 
-
 /* =========================================================
    ELEMENTOS - TROCA DE SESSÃO
 ========================================================= */
@@ -37,7 +33,6 @@ const modalSessoes = document.getElementById("modal-sessoes");
 const botaoFecharModalSessoes = document.getElementById("botao-fechar-modal-sessoes");
 const pesquisaSessao = document.getElementById("pesquisa-sessao");
 const listaSessoes = document.getElementById("lista-sessoes");
-
 
 /* =========================================================
    ELEMENTOS - VENDA
@@ -53,7 +48,6 @@ const mensagemModalVenda = document.getElementById("mensagem-modal-venda");
 const opcoesPagamento = document.querySelectorAll(
     'input[name="formaPagamento"]'
 );
-
 
 /* =========================================================
    ELEMENTOS - RESULTADO DA VENDA
@@ -72,6 +66,7 @@ const botaoReimprimir = document.getElementById("botao-reimprimir");
 const botaoNovaVenda = document.getElementById("botao-nova-venda");
 
 
+
 /* =========================================================
    ESTADO
 ========================================================= */
@@ -85,18 +80,12 @@ let sessoesDisponiveis = [];
 
 let operacaoAssentoEmAndamento = false;
 let vendaEmAndamento = false;
-
-let temporizadorSincronizacaoSelecao = null;
-let sincronizacaoSelecaoEmAndamento = false;
-let sincronizacaoSelecaoPendente = false;
-
 let carregandoTrocaSessao = false;
 
 let intervaloAtualizacao = null;
 let paginaAtiva = true;
 
 let ultimaVendaBilheteria = null;
-
 
 /* =========================================================
    INICIALIZAÇÃO
@@ -143,7 +132,6 @@ async function inicializarPagina() {
     }
 }
 
-
 /* =========================================================
    AUTENTICAÇÃO
 ========================================================= */
@@ -162,7 +150,6 @@ function obterUsuarioAutenticado() {
         return null;
     }
 }
-
 
 /* =========================================================
    EVENTOS
@@ -259,7 +246,6 @@ function configurarEventos() {
     );
 }
 
-
 /* =========================================================
    SESSÃO INICIAL
 ========================================================= */
@@ -298,7 +284,6 @@ async function resolverSessaoInicial() {
     return proximaSessaoId;
 }
 
-
 /* =========================================================
    CARREGAMENTO DA SESSÃO
 ========================================================= */
@@ -331,12 +316,12 @@ async function carregarSessaoCompleta(
     ]);
 
     dadosSessaoAtual = sessao;
-
+    
     const precoIngresso = Number(
         sessao.precoIngresso ??
         sessao.PrecoIngresso
     );
-
+    
     if (
         !Number.isFinite(precoIngresso) ||
         precoIngresso <= 0
@@ -345,15 +330,14 @@ async function carregarSessaoCompleta(
             "Não foi possível identificar o preço da sessão."
         );
     }
-
+    
     PRECO_INGRESSO = precoIngresso;
-
+    
     mostrarDadosSessao(sessao);
     aplicarStatusAssentos(assentos);
-
+    
     esconderMensagemPagina();
 }
-
 
 /* =========================================================
    BUSCAR SESSÃO
@@ -430,7 +414,6 @@ function mostrarDadosSessao(sessao) {
             );
     }
 }
-
 
 /* =========================================================
    STATUS DOS ASSENTOS
@@ -561,7 +544,6 @@ function normalizarStatusAssento(
             null
     };
 }
-
 
 /* =========================================================
    MAPA
@@ -773,9 +755,13 @@ function obterNumeroAssento(
    ASSENTO
 ========================================================= */
 
-function criarAssento(assento) {
+function criarAssento(
+    assento
+) {
     const botao =
-        document.createElement("button");
+        document.createElement(
+            "button"
+        );
 
     botao.type = "button";
 
@@ -864,219 +850,29 @@ function criarAssento(assento) {
     return botao;
 }
 
-
 /* =========================================================
-   SELEÇÃO OTIMISTA
+   RESERVAR ASSENTO
 ========================================================= */
 
-function reservarAssento(assento) {
-    if (
-        vendaEmAndamento ||
-        assentosSelecionados.some(
-            item =>
-                item.id === assento.id
-        )
-    ) {
-        return;
-    }
-
-    /*
-        Atualiza primeiro o estado local.
-
-        Isso faz o assento ficar selecionado
-        imediatamente, sem esperar Railway/API/MySQL.
-    */
-
-    assentosSelecionados.push({
-        ...assento,
-        status: "reservado",
-        reservadoPeloUsuarioAtual: true
-    });
-
-    atualizarAssentoLocal(
-        assento.id,
-        "reservado",
-        true
-    );
-
-    mostrarAssentos(
-        todosAssentos
-    );
-
-    /*
-        A comunicação com o servidor acontece
-        depois, em segundo plano.
-    */
-
-    agendarSincronizacaoSelecao();
-}
-
-
-function cancelarSelecaoAssento(
+async function reservarAssento(
     assento
 ) {
-    if (vendaEmAndamento) {
-        return;
-    }
-
-    /*
-        Remove imediatamente da seleção local.
-    */
-
-    assentosSelecionados =
-        assentosSelecionados.filter(
-            item =>
-                item.id !== assento.id
-        );
-
-    atualizarAssentoLocal(
-        assento.id,
-        "disponivel",
-        false
-    );
-
-    mostrarAssentos(
-        todosAssentos
-    );
-
-    /*
-        Agenda a atualização do backend sem
-        bloquear os próximos cliques.
-    */
-
-    agendarSincronizacaoSelecao();
-}
-
-
-function atualizarAssentoLocal(
-    assentoId,
-    status,
-    reservadoPeloUsuarioAtual
-) {
-    const assento =
-        todosAssentos.find(
-            item =>
-                item.id === assentoId
-        );
-
-    if (!assento) {
-        return;
-    }
-
-    assento.status =
-        status;
-
-    assento.reservadoPeloUsuarioAtual =
-        reservadoPeloUsuarioAtual;
-}
-
-
-/* =========================================================
-   AGENDAMENTO DA SINCRONIZAÇÃO
-========================================================= */
-
-function agendarSincronizacaoSelecao() {
-    sincronizacaoSelecaoPendente =
-        true;
-
-    /*
-        Se o funcionário clicar em vários
-        assentos rapidamente, reiniciamos
-        este temporizador.
-
-        Exemplo:
-
-        F7
-        F8
-        F9
-        F10
-
-        Tudo isso dentro de ~200ms pode virar
-        uma única sincronização.
-    */
-
     if (
-        temporizadorSincronizacaoSelecao
+        operacaoAssentoEmAndamento ||
+        vendaEmAndamento
     ) {
-        window.clearTimeout(
-            temporizadorSincronizacaoSelecao
-        );
-    }
-
-    temporizadorSincronizacaoSelecao =
-        window.setTimeout(
-            sincronizarSelecaoComServidor,
-            ATRASO_SINCRONIZACAO_SELECAO_MS
-        );
-}
-
-
-/* =========================================================
-   SINCRONIZAÇÃO COM O SERVIDOR
-========================================================= */
-
-async function sincronizarSelecaoComServidor() {
-    temporizadorSincronizacaoSelecao =
-        null;
-
-    /*
-        Se já existe uma sincronização acontecendo,
-        não criamos outra simultaneamente.
-
-        Apenas marcamos que existe uma atualização
-        mais recente esperando para ser enviada.
-    */
-
-    if (
-        sincronizacaoSelecaoEmAndamento
-    ) {
-        sincronizacaoSelecaoPendente =
-            true;
-
         return;
     }
 
-    sincronizacaoSelecaoEmAndamento =
-        true;
+    const assentoIds = [
+        ...assentosSelecionados.map(
+            item => item.id
+        ),
+        assento.id
+    ];
 
-    sincronizacaoSelecaoPendente =
-        false;
-
-    definirEstadoOperacaoAssento(
-        true
-    );
-
-    /*
-        Tiramos uma fotografia da seleção atual.
-    */
-
-    const assentoIds =
-        assentosSelecionados.map(
-            assento =>
-                assento.id
-        );
-
-    try {
-
-        /*
-            Primeiro removemos as reservas atuais
-            deste funcionário nesta sessão.
-
-            Depois recriamos a seleção atual
-            inteira usando o endpoint em lote.
-
-            Dessa forma, o estado do backend
-            fica igual ao estado atual da tela.
-        */
-
-        await requisicaoAutenticada(
-            `/ReservaAssento/minhas?sessaoId=${sessaoIdAtual}`,
-            {
-                method: "DELETE"
-            }
-        );
-
-        if (assentoIds.length) {
+    await executarOperacaoAssento(
+        async () => {
             await requisicaoAutenticada(
                 "/ReservaAssento/lote",
                 {
@@ -1091,18 +887,66 @@ async function sincronizarSelecaoComServidor() {
                 }
             );
         }
+    );
+}
+
+/* =========================================================
+   CANCELAR RESERVA
+========================================================= */
+
+async function cancelarSelecaoAssento(
+    assento
+) {
+    if (
+        operacaoAssentoEmAndamento ||
+        vendaEmAndamento
+    ) {
+        return;
+    }
+
+    await executarOperacaoAssento(
+        async () => {
+            const parametros =
+                new URLSearchParams({
+                    sessaoId:
+                        String(
+                            sessaoIdAtual
+                        ),
+
+                    assentoId:
+                        String(
+                            assento.id
+                        )
+                });
+
+            await requisicaoAutenticada(
+                `/ReservaAssento?${parametros}`,
+                {
+                    method: "DELETE"
+                }
+            );
+        }
+    );
+}
+
+async function executarOperacaoAssento(
+    operacao
+) {
+    definirEstadoOperacaoAssento(
+        true
+    );
+
+    try {
+        await operacao();
 
         esconderMensagemPagina();
-
     } catch (erro) {
         console.error(
-            "Erro ao sincronizar seleção de assentos:",
+            "Erro ao alterar reserva:",
             erro
         );
 
-        if (
-            erro.status === 401
-        ) {
+        if (erro.status === 401) {
             redirecionarParaLogin();
             return;
         }
@@ -1112,44 +956,11 @@ async function sincronizarSelecaoComServidor() {
             "Não foi possível atualizar a seleção.",
             "erro"
         );
-
     } finally {
-
-        sincronizacaoSelecaoEmAndamento =
-            false;
-
-        /*
-            Se o funcionário clicou em outro
-            assento enquanto a API respondia,
-            existe uma versão mais recente
-            da seleção.
-
-            Nesse caso sincronizamos novamente.
-        */
-
-        if (
-            sincronizacaoSelecaoPendente
-        ) {
-            sincronizarSelecaoComServidor();
-            return;
-        }
-
-        /*
-            Depois da operação, buscamos o estado
-            verdadeiro da sessão no servidor.
-
-            Isso também resolve conflitos caso
-            outra pessoa tenha reservado algum
-            daqueles assentos.
-        */
-
         try {
             await sincronizarAssentosComServidor();
         } catch {
-            /*
-                O próprio método já trata/loga
-                o erro de sincronização.
-            */
+            /* erro já tratado */
         }
 
         definirEstadoOperacaoAssento(
@@ -1158,82 +969,14 @@ async function sincronizarSelecaoComServidor() {
     }
 }
 
-
-/* =========================================================
-   ESTADO DA OPERAÇÃO
-========================================================= */
-
 function definirEstadoOperacaoAssento(
     emAndamento
 ) {
     operacaoAssentoEmAndamento =
         emAndamento;
 
-    /*
-        IMPORTANTE:
-
-        Não desabilitamos todos os assentos.
-
-        A sincronização acontece em background
-        enquanto o funcionário continua podendo
-        selecionar outros lugares.
-    */
-
     atualizarEstadoBotaoContinuar();
 }
-
-
-/* =========================================================
-   GARANTIR SINCRONIZAÇÃO
-========================================================= */
-
-async function garantirSelecaoSincronizada() {
-
-    /*
-        Pode acontecer de o funcionário:
-
-        selecionar F7
-        selecionar F8
-        clicar imediatamente em Continuar
-
-        antes dos 200ms do debounce terminarem.
-
-        Nesse caso forçamos a sincronização antes
-        de prosseguir para a venda.
-    */
-
-    if (
-        temporizadorSincronizacaoSelecao
-    ) {
-        window.clearTimeout(
-            temporizadorSincronizacaoSelecao
-        );
-
-        temporizadorSincronizacaoSelecao =
-            null;
-
-        await sincronizarSelecaoComServidor();
-    }
-
-    /*
-        Se já existe uma requisição acontecendo,
-        esperamos ela terminar antes da venda.
-    */
-
-    while (
-        sincronizacaoSelecaoEmAndamento ||
-        sincronizacaoSelecaoPendente
-    ) {
-        await new Promise(
-            resolve =>
-                window.setTimeout(
-                    resolve,
-                    25
-                )
-        );
-    }
-}
-
 
 /* =========================================================
    CONTADORES
@@ -1242,14 +985,14 @@ async function garantirSelecaoSincronizada() {
 function atualizarContadores(
     assentos
 ) {
-    const disponiveis =
+    const totalDisponiveis =
         assentos.filter(
             assento =>
                 assento.status ===
                 "disponivel"
         ).length;
 
-    const ocupados =
+    const totalOcupados =
         assentos.filter(
             assento =>
                 assento.status ===
@@ -1259,203 +1002,24 @@ function atualizarContadores(
                 (
                     assento.status ===
                         "reservado" &&
-                    !assento.reservadoPeloUsuarioAtual
+                    !assento
+                        .reservadoPeloUsuarioAtual
                 )
         ).length;
 
     if (quantidadeDisponiveis) {
         quantidadeDisponiveis.textContent =
-            disponiveis;
+            totalDisponiveis;
     }
 
     if (quantidadeOcupados) {
         quantidadeOcupados.textContent =
-            ocupados;
-    }
-
-    if (quantidadeSelecionados) {
-        quantidadeSelecionados.textContent =
-            assentosSelecionados.length;
+            totalOcupados;
     }
 }
 
-
 /* =========================================================
-   RESUMO DA SELEÇÃO
-========================================================= */
-
-function atualizarResumoSelecao() {
-    if (
-        quantidadeSelecionados
-    ) {
-        quantidadeSelecionados.textContent =
-            assentosSelecionados.length;
-    }
-
-    if (
-        listaAssentosSelecionados
-    ) {
-        listaAssentosSelecionados.innerHTML =
-            "";
-
-        if (
-            !assentosSelecionados.length
-        ) {
-            const mensagem =
-                document.createElement(
-                    "span"
-                );
-
-            mensagem.classList.add(
-                "nenhum-assento"
-            );
-
-            mensagem.textContent =
-                "Nenhum assento selecionado";
-
-            listaAssentosSelecionados.appendChild(
-                mensagem
-            );
-        } else {
-            const ordenados = [
-                ...assentosSelecionados
-            ].sort(
-                compararAssentos
-            );
-
-            ordenados.forEach(
-                assento => {
-                    const item =
-                        document.createElement(
-                            "span"
-                        );
-
-                    item.classList.add(
-                        "assento-selecionado"
-                    );
-
-                    item.textContent =
-                        assento.codigo;
-
-                    listaAssentosSelecionados.appendChild(
-                        item
-                    );
-                }
-            );
-        }
-    }
-
-    const total =
-        assentosSelecionados.length *
-        PRECO_INGRESSO;
-
-    if (valorTotal) {
-        valorTotal.textContent =
-            formatarMoeda(
-                total
-            );
-    }
-
-    atualizarEstadoBotaoContinuar();
-}
-
-
-/* =========================================================
-   BOTÃO CONTINUAR
-========================================================= */
-
-function atualizarEstadoBotaoContinuar() {
-    if (!botaoContinuar) {
-        return;
-    }
-
-    botaoContinuar.disabled =
-        vendaEmAndamento ||
-        assentosSelecionados.length === 0;
-}
-
-
-/* =========================================================
-   ORDENAÇÃO DOS ASSENTOS
-========================================================= */
-
-function compararAssentos(
-    a,
-    b
-) {
-    const fileiraA =
-        a.codigo
-            .charAt(0)
-            .toUpperCase();
-
-    const fileiraB =
-        b.codigo
-            .charAt(0)
-            .toUpperCase();
-
-    if (
-        fileiraA !== fileiraB
-    ) {
-        return fileiraA.localeCompare(
-            fileiraB
-        );
-    }
-
-    return (
-        obterNumeroAssento(
-            a.codigo
-        ) -
-        obterNumeroAssento(
-            b.codigo
-        )
-    );
-}
-
-/* =========================================================
-   CONTADORES
-========================================================= */
-
-function atualizarContadores(
-    assentos
-) {
-    if (
-        !quantidadeDisponiveis ||
-        !quantidadeOcupados
-    ) {
-        return;
-    }
-
-    const disponiveis =
-        assentos.filter(
-            assento =>
-                assento.status ===
-                "disponivel"
-        ).length;
-
-    const ocupados =
-        assentos.filter(
-            assento =>
-                assento.status ===
-                    "ocupado" ||
-                assento.status ===
-                    "bloqueado" ||
-                (
-                    assento.status ===
-                        "reservado" &&
-                    !assento.reservadoPeloUsuarioAtual
-                )
-        ).length;
-
-    quantidadeDisponiveis.textContent =
-        disponiveis;
-
-    quantidadeOcupados.textContent =
-        ocupados;
-}
-
-
-/* =========================================================
-   RESUMO DA SELEÇÃO
+   RESUMO
 ========================================================= */
 
 function atualizarResumoSelecao() {
@@ -1529,6 +1093,7 @@ function atualizarEstadoBotaoContinuar() {
     }
 
     botaoContinuar.disabled =
+        operacaoAssentoEmAndamento ||
         vendaEmAndamento ||
         assentosSelecionados.length === 0;
 }
@@ -1566,7 +1131,6 @@ function obterAssentosSelecionados() {
     ];
 }
 
-
 /* =========================================================
    ATUALIZAÇÃO QUASE EM TEMPO REAL
 ========================================================= */
@@ -1580,9 +1144,8 @@ function iniciarAtualizacaoAutomatica() {
                 if (
                     !paginaAtiva ||
                     document.hidden ||
-                    vendaEmAndamento ||
-                    sincronizacaoSelecaoEmAndamento ||
-                    sincronizacaoSelecaoPendente
+                    operacaoAssentoEmAndamento ||
+                    vendaEmAndamento
                 ) {
                     return;
                 }
@@ -1636,7 +1199,6 @@ function tratarRetornoPagina() {
     iniciarAtualizacaoAutomatica();
 }
 
-
 /* =========================================================
    TROCA DE SESSÃO
 ========================================================= */
@@ -1674,7 +1236,6 @@ async function abrirModalSessoes() {
         renderizarSessoesFiltradas();
 
         pesquisaSessao?.focus();
-
     } catch (erro) {
         console.error(
             "Erro ao carregar sessões:",
@@ -1688,7 +1249,6 @@ async function abrirModalSessoes() {
                 </p>
             `;
         }
-
     } finally {
         carregandoTrocaSessao = false;
     }
@@ -1848,8 +1408,9 @@ function agruparSessoesPorDia(
         }
 
         mapa.get(chave)
-            .sessoes
-            .push(sessao);
+            .sessoes.push(
+                sessao
+            );
     });
 
     return Array.from(
@@ -1860,45 +1421,49 @@ function agruparSessoesPorDia(
 function criarGrupoSessoes(
     grupo
 ) {
-    const container =
+    const section =
         document.createElement(
             "section"
         );
 
-    container.className =
-        "grupo-sessoes";
+    section.className =
+        "grupo-sessoes-dia";
 
-    const cabecalho =
+    const header =
         document.createElement(
-            "div"
+            "header"
         );
 
-    cabecalho.className =
-        "cabecalho-grupo-sessoes";
+    header.className =
+        "grupo-sessoes-cabecalho";
 
-    const nomeDia =
+    const tituloDia =
         document.createElement(
             "strong"
         );
 
-    nomeDia.textContent =
+    tituloDia.textContent =
         obterNomeRelativoDia(
             grupo.data
         );
 
-    const data =
+    const dataTexto =
         document.createElement(
             "span"
         );
 
-    data.textContent =
-        formatarData(
-            grupo.data
+    dataTexto.textContent =
+        grupo.data.toLocaleDateString(
+            "pt-BR",
+            {
+                day: "2-digit",
+                month: "long"
+            }
         );
 
-    cabecalho.append(
-        nomeDia,
-        data
+    header.append(
+        tituloDia,
+        dataTexto
     );
 
     const lista =
@@ -1907,7 +1472,7 @@ function criarGrupoSessoes(
         );
 
     lista.className =
-        "opcoes-sessoes";
+        "grupo-sessoes-lista";
 
     grupo.sessoes.forEach(
         sessao => {
@@ -1919,12 +1484,12 @@ function criarGrupoSessoes(
         }
     );
 
-    container.append(
-        cabecalho,
+    section.append(
+        header,
         lista
     );
 
-    return container;
+    return section;
 }
 
 function criarOpcaoSessao(
@@ -1935,11 +1500,9 @@ function criarOpcaoSessao(
             "button"
         );
 
-    botao.type =
-        "button";
-
+    botao.type = "button";
     botao.className =
-        "opcao-sessao";
+        "sessao-opcao";
 
     const sessaoId =
         obterIdSessao(
@@ -1957,19 +1520,14 @@ function criarOpcaoSessao(
         sessao.TituloFilme ??
         "Filme";
 
-    const horario =
-        formatarHorario(
-            dataHora
-        );
-
     botao.innerHTML = `
-        <span class="opcao-sessao-filme">
+        <span class="sessao-opcao-filme">
             ${escaparHtml(titulo)}
         </span>
 
-        <span class="opcao-sessao-horario">
-            ${escaparHtml(horario)}
-        </span>
+        <strong class="sessao-opcao-horario">
+            ${formatarHorario(dataHora)}
+        </strong>
     `;
 
     if (
@@ -1977,73 +1535,21 @@ function criarOpcaoSessao(
         sessaoIdAtual
     ) {
         botao.classList.add(
-            "selecionada"
+            "ativa"
         );
 
         botao.disabled = true;
+    } else {
+        botao.addEventListener(
+            "click",
+            () =>
+                trocarSessao(
+                    sessaoId
+                )
+        );
     }
-
-    botao.addEventListener(
-        "click",
-        () =>
-            trocarSessao(
-                sessaoId
-            )
-    );
 
     return botao;
-}
-
-async function trocarSessao(
-    novaSessaoId
-) {
-    if (
-        carregandoTrocaSessao ||
-        vendaEmAndamento ||
-        novaSessaoId === sessaoIdAtual
-    ) {
-        return;
-    }
-
-    carregandoTrocaSessao =
-        true;
-
-    try {
-        await liberarReservasSessaoAtual();
-
-        assentosSelecionados = [];
-
-        atualizarResumoSelecao();
-
-        fecharModal(
-            modalSessoes
-        );
-
-        atualizarSessaoIdUrl(
-            novaSessaoId
-        );
-
-        await carregarSessaoCompleta(
-            novaSessaoId,
-            true
-        );
-
-    } catch (erro) {
-        console.error(
-            "Erro ao trocar sessão:",
-            erro
-        );
-
-        exibirMensagemPagina(
-            erro.message ||
-            "Não foi possível trocar de sessão.",
-            "erro"
-        );
-
-    } finally {
-        carregandoTrocaSessao =
-            false;
-    }
 }
 
 function obterIdSessao(
@@ -2055,30 +1561,96 @@ function obterIdSessao(
     );
 }
 
+/* =========================================================
+   EFETIVAR TROCA DE SESSÃO
+========================================================= */
+
+async function trocarSessao(
+    novaSessaoId
+) {
+    if (
+        vendaEmAndamento ||
+        novaSessaoId === sessaoIdAtual
+    ) {
+        fecharModalSessoes();
+        return;
+    }
+
+    carregandoTrocaSessao = true;
+
+    try {
+        await liberarReservasSessaoAtual();
+
+        assentosSelecionados = [];
+        todosAssentos = [];
+
+        atualizarResumoSelecao();
+
+        sessaoIdAtual =
+            Number(
+                novaSessaoId
+            );
+
+        atualizarSessaoIdUrl(
+            sessaoIdAtual
+        );
+
+        fecharModal(
+            modalSessoes
+        );
+
+        await carregarSessaoCompleta(
+            sessaoIdAtual,
+            true
+        );
+    } catch (erro) {
+        console.error(
+            "Erro ao trocar sessão:",
+            erro
+        );
+
+        exibirMensagemPagina(
+            erro.message ||
+            "Não foi possível alterar a sessão.",
+            "erro"
+        );
+    } finally {
+        carregandoTrocaSessao = false;
+    }
+}
+
+async function liberarReservasSessaoAtual() {
+    if (!sessaoIdAtual) {
+        return;
+    }
+
+    try {
+        await requisicaoAutenticada(
+            `/ReservaAssento/minhas?sessaoId=${sessaoIdAtual}`,
+            {
+                method: "DELETE"
+            }
+        );
+    } catch (erro) {
+        if (erro.status === 401) {
+            throw erro;
+        }
+
+        console.warn(
+            "Não foi possível liberar as reservas da sessão anterior:",
+            erro
+        );
+    }
+}
 
 /* =========================================================
    MODAL DE VENDA
 ========================================================= */
 
-async function abrirModalVenda() {
+function abrirModalVenda() {
     if (
         !assentosSelecionados.length ||
         vendaEmAndamento
-    ) {
-        return;
-    }
-
-    /*
-        Antes de permitir que o funcionário
-        prossiga para o pagamento, garantimos
-        que a seleção otimista já chegou ao
-        servidor.
-    */
-
-    await garantirSelecaoSincronizada();
-
-    if (
-        !assentosSelecionados.length
     ) {
         return;
     }
@@ -2103,69 +1675,131 @@ function fecharModalVenda() {
 }
 
 function preencherResumoVenda() {
-    if (
-        ingressosSelecionados
-    ) {
+    if (ingressosSelecionados) {
         ingressosSelecionados.replaceChildren();
 
-        assentosSelecionados
-            .slice()
-            .sort(
-                (a, b) =>
-                    a.codigo.localeCompare(
-                        b.codigo,
-                        "pt-BR",
-                        {
-                            numeric: true
-                        }
+        assentosSelecionados.forEach(
+            assento => {
+                ingressosSelecionados.append(
+                    criarResumoIngressoVenda(
+                        assento
                     )
-            )
-            .forEach(
-                assento => {
-                    const item =
-                        document.createElement(
-                            "div"
-                        );
-
-                    item.className =
-                        "item-ingresso";
-
-                    const codigo =
-                        document.createElement(
-                            "span"
-                        );
-
-                    codigo.textContent =
-                        `Assento ${assento.codigo}`;
-
-                    const preco =
-                        document.createElement(
-                            "strong"
-                        );
-
-                    preco.textContent =
-                        formatarPreco(
-                            PRECO_INGRESSO
-                        );
-
-                    item.append(
-                        codigo,
-                        preco
-                    );
-
-                    ingressosSelecionados.append(
-                        item
-                    );
-                }
-            );
+                );
+            }
+        );
     }
 
     atualizarValoresModalVenda();
 }
 
+function criarResumoIngressoVenda(
+    assento
+) {
+    const artigo =
+        document.createElement(
+            "article"
+        );
+
+    artigo.className =
+        "ingresso-selecionado";
+
+    const dataHora =
+        new Date(
+            dadosSessaoAtual?.dataHora ??
+            dadosSessaoAtual?.DataHora
+        );
+
+    const titulo =
+        dadosSessaoAtual?.tituloFilme ??
+        dadosSessaoAtual?.TituloFilme ??
+        "Filme";
+
+    artigo.dataset.assentoId =
+        assento.id;
+
+    artigo.innerHTML = `
+        <div class="dado-ingresso dado-filme">
+            <span class="rotulo-ingresso">
+                Filme
+            </span>
+
+            <strong class="valor-ingresso">
+                ${escaparHtml(titulo)}
+            </strong>
+        </div>
+
+        <div class="dado-ingresso">
+            <span class="rotulo-ingresso">
+                Data
+            </span>
+
+            <strong class="valor-ingresso">
+                ${formatarData(dataHora)}
+            </strong>
+        </div>
+
+        <div class="dado-ingresso">
+            <span class="rotulo-ingresso">
+                Horário
+            </span>
+
+            <strong class="valor-ingresso">
+                ${formatarHorario(dataHora)}
+            </strong>
+        </div>
+
+        <div class="dado-ingresso">
+            <span class="rotulo-ingresso">
+                Assento
+            </span>
+
+            <strong class="valor-ingresso">
+                ${escaparHtml(assento.codigo)}
+            </strong>
+        </div>
+
+        <div class="dado-ingresso">
+            <span class="rotulo-ingresso">
+                Valor
+            </span>
+
+            <strong
+                class="valor-ingresso valor-ingresso-preco"
+            >
+                ${formatarPreco(PRECO_INGRESSO)}
+            </strong>
+        </div>
+    `;
+
+    return artigo;
+}
+
 function atualizarValoresModalVenda() {
+    const formaPagamento =
+        obterFormaPagamentoSelecionada();
+
+    const cortesia =
+        formaPagamento === "Cortesia";
+
+    const valorUnitario =
+        cortesia
+            ? 0
+            : PRECO_INGRESSO;
+
     const total =
-        obterValorTotal();
+        valorUnitario *
+        assentosSelecionados.length;
+
+    ingressosSelecionados
+        ?.querySelectorAll(
+            ".valor-ingresso-preco"
+        )
+        .forEach(elemento => {
+            elemento.textContent =
+                formatarPreco(
+                    valorUnitario
+                );
+        });
 
     if (valorTotalModal) {
         valorTotalModal.textContent =
@@ -2175,41 +1809,44 @@ function atualizarValoresModalVenda() {
     }
 }
 
+function obterFormaPagamentoSelecionada() {
+    return document.querySelector(
+        'input[name="formaPagamento"]:checked'
+    )?.value ?? null;
+}
+
 function limparFormaPagamento() {
     opcoesPagamento.forEach(
         opcao => {
             opcao.checked = false;
+            opcao.disabled = false;
         }
     );
 }
-
-function obterFormaPagamentoSelecionada() {
-    const opcao =
-        document.querySelector(
-            'input[name="formaPagamento"]:checked'
-        );
-
-    return (
-        opcao?.value ??
-        null
-    );
-}
-
 
 /* =========================================================
    FINALIZAR VENDA
 ========================================================= */
 
 async function finalizarVenda() {
-    if (
-        vendaEmAndamento
-    ) {
+    if (vendaEmAndamento) {
         return;
     }
 
-    if (
-        !assentosSelecionados.length
-    ) {
+    esconderErroVenda();
+
+    const formaPagamento =
+        obterFormaPagamentoSelecionada();
+
+    if (!formaPagamento) {
+        exibirErroVenda(
+            "Selecione a forma de pagamento."
+        );
+
+        return;
+    }
+
+    if (!assentosSelecionados.length) {
         exibirErroVenda(
             "Selecione pelo menos um assento."
         );
@@ -2217,35 +1854,20 @@ async function finalizarVenda() {
         return;
     }
 
-    const formaPagamento =
-        obterFormaPagamentoSelecionada();
-
-    if (!formaPagamento) {
-        exibirErroVenda(
-            "Selecione uma forma de pagamento."
-        );
-
-        return;
-    }
-
-    vendaEmAndamento = true;
-
-    definirEstadoVenda(
-        true
-    );
-
-    esconderErroVenda();
-
-    const assentosDaVenda =
+    const assentoIds =
         assentosSelecionados.map(
             assento =>
                 assento.id
         );
 
+    definirEstadoFinalizacaoVenda(
+        true
+    );
+
     try {
-        const venda =
+        const resultado =
             await requisicaoAutenticada(
-                "/Ingresso/venda-bilheteria",
+                "/Ingresso/bilheteria/lote",
                 {
                     method: "POST",
 
@@ -2253,75 +1875,105 @@ async function finalizarVenda() {
                         sessaoId:
                             sessaoIdAtual,
 
-                        assentoIds:
-                            assentosDaVenda,
+                        assentoIds,
 
                         formaPagamento
                     })
                 }
             );
 
-        ultimaVendaBilheteria =
-            venda;
+        const venda =
+            normalizarRespostaVenda(
+                resultado
+            );
+
+        /*
+            Primeiro validamos a resposta.
+            Só depois fechamos o modal.
+        */
+
+        if (
+            !venda.vendaId ||
+            !Array.isArray(
+                venda.ingressos
+            ) ||
+            !venda.ingressos.length
+        ) {
+            throw new Error(
+                "A venda foi processada, mas o servidor retornou dados inválidos."
+            );
+        }
 
         fecharModal(
             modalVenda
         );
 
-        mostrarResultadoVenda(
+        await processarVendaConcluida(
             venda
         );
-
-        assentosSelecionados =
-            [];
-
-        await sincronizarAssentosComServidor();
-
     } catch (erro) {
         console.error(
             "Erro ao finalizar venda:",
             erro
         );
 
-        if (
-            erro.status === 401
-        ) {
+        if (erro.status === 401) {
             redirecionarParaLogin();
+            return;
+        }
+
+        if (erro.status === 403) {
+            exibirErroVenda(
+                "Você não possui permissão para realizar esta venda."
+            );
+
             return;
         }
 
         exibirErroVenda(
             erro.message ||
-            "Não foi possível finalizar a venda."
+            "Não foi possível concluir a venda."
         );
 
-    } finally {
-        vendaEmAndamento =
-            false;
+        /*
+            Se a reserva expirou ou algum lugar foi
+            vendido por outra pessoa, atualizamos o
+            mapa imediatamente.
+        */
 
-        definirEstadoVenda(
+        try {
+            await sincronizarAssentosComServidor();
+            preencherResumoVenda();
+        } catch {
+            /* erro de sincronização já tratado */
+        }
+    } finally {
+        definirEstadoFinalizacaoVenda(
             false
         );
     }
 }
 
-function definirEstadoVenda(
-    emAndamento
+function definirEstadoFinalizacaoVenda(
+    finalizando
 ) {
+    vendaEmAndamento =
+        finalizando;
+
     if (botaoFinalizarVenda) {
         botaoFinalizarVenda.disabled =
-            emAndamento;
+            finalizando;
 
         botaoFinalizarVenda.textContent =
-            emAndamento
-                ? "Finalizando..."
+            finalizando
+                ? "Finalizando venda..."
                 : "Finalizar venda";
     }
 
     opcoesPagamento.forEach(
         opcao => {
             opcao.disabled =
-                emAndamento;
+                finalizando;
         }
     );
 
@@ -2329,248 +1981,298 @@ function definirEstadoVenda(
         ?.querySelectorAll(
             "button.assento"
         )
-        .forEach(
-            botao => {
-                botao.disabled =
-                    emAndamento ||
-                    botao.classList.contains(
-                        "ocupado"
-                    );
-            }
-        );
+        .forEach(botao => {
+            botao.disabled =
+                finalizando ||
+                botao.classList.contains(
+                    "ocupado"
+                );
+        });
 
     atualizarEstadoBotaoContinuar();
 }
 
-
 /* =========================================================
-   RESULTADO DA VENDA
+   RESPOSTA DA VENDA
 ========================================================= */
 
-function mostrarResultadoVenda(
-    venda
+function normalizarRespostaVenda(
+    resultado
 ) {
-    const vendaId =
-        venda?.vendaId ??
-        venda?.VendaId ??
-        venda?.id ??
-        venda?.Id ??
-        null;
+    if (!resultado) {
+        return {
+            vendaId: null,
+            formaPagamento: null,
+            valorTotal: 0,
+            ingressos: []
+        };
+    }
 
-    const ingressos =
-        venda?.ingressos ??
-        venda?.Ingressos ??
+    const ingressosOriginais =
+        resultado.ingressos ??
+        resultado.Ingressos ??
         [];
 
-    if (
-        tituloResultadoVenda
-    ) {
-        tituloResultadoVenda.textContent =
-            "Venda concluída";
+    const ingressos =
+        Array.isArray(
+            ingressosOriginais
+        )
+            ? ingressosOriginais.map(
+                normalizarIngressoVenda
+            )
+            : [];
+
+    return {
+        vendaId:
+            Number(
+                resultado.vendaId ??
+                resultado.VendaId
+            ),
+
+        formaPagamento:
+            resultado.formaPagamento ??
+            resultado.FormaPagamento ??
+            null,
+
+        valorTotal:
+            Number(
+                resultado.valorTotal ??
+                resultado.ValorTotal ??
+                0
+            ),
+
+        ingressos
+    };
+}
+
+function normalizarIngressoVenda(
+    ingresso
+) {
+    return {
+        id:
+            Number(
+                ingresso.id ??
+                ingresso.Id
+            ),
+
+        sessaoId:
+            Number(
+                ingresso.sessaoId ??
+                ingresso.SessaoId
+            ),
+
+        filme:
+            ingresso.filme ??
+            ingresso.Filme ??
+            "",
+
+        dataSessao:
+            ingresso.dataSessao ??
+            ingresso.DataSessao ??
+            null,
+
+        assentoId:
+            Number(
+                ingresso.assentoId ??
+                ingresso.AssentoId
+            ),
+
+        codigoAssento:
+            ingresso.codigoAssento ??
+            ingresso.CodigoAssento ??
+            "",
+
+        usuarioId:
+            ingresso.usuarioId ??
+            ingresso.UsuarioId ??
+            null,
+
+        usuario:
+            ingresso.usuario ??
+            ingresso.Usuario ??
+            null,
+
+        valorPago:
+            Number(
+                ingresso.valorPago ??
+                ingresso.ValorPago ??
+                0
+            ),
+
+        tokenQrCode:
+            ingresso.tokenQrCode ??
+            ingresso.TokenQrCode ??
+            "",
+
+        dataCompra:
+            ingresso.dataCompra ??
+            ingresso.DataCompra ??
+            null,
+
+        utilizado:
+            Boolean(
+                ingresso.utilizado ??
+                ingresso.Utilizado ??
+                false
+            ),
+
+        dataUtilizacao:
+            ingresso.dataUtilizacao ??
+            ingresso.DataUtilizacao ??
+            null
+    };
+}
+
+/* =========================================================
+   VENDA CONCLUÍDA
+========================================================= */
+
+async function processarVendaConcluida(venda) {
+    ultimaVendaBilheteria = venda;
+
+    assentosSelecionados = [];
+
+    limparFormaPagamento();
+
+    try {
+        await sincronizarAssentosComServidor();
+    } catch (erro) {
+        console.warn(
+            "Venda concluída, mas o mapa não pôde ser atualizado:",
+            erro
+        );
+
+        atualizarResumoSelecao();
     }
 
-    if (
-        descricaoResultadoVenda
-    ) {
-        descricaoResultadoVenda.textContent =
-            vendaId
-                ? `Venda #${vendaId} realizada com sucesso.`
-                : "Venda realizada com sucesso.";
+    preencherResultadoVenda(venda);
+
+    if (!modalResultadoVenda) {
+        console.error(
+            'O elemento "#modal-resultado-venda" não foi encontrado no HTML.'
+        );
+
+        document.body.classList.remove(
+            "modal-aberto"
+        );
+
+        return;
     }
-
-    if (
-        idsIngressosVenda
-    ) {
-        idsIngressosVenda.replaceChildren();
-
-        if (
-            Array.isArray(ingressos) &&
-            ingressos.length
-        ) {
-            ingressos.forEach(
-                ingresso => {
-                    const ingressoId =
-                        ingresso.id ??
-                        ingresso.Id ??
-                        ingresso.ingressoId ??
-                        ingresso.IngressoId;
-
-                    const codigoAssento =
-                        ingresso.codigoAssento ??
-                        ingresso.CodigoAssento ??
-                        ingresso.assentoCodigo ??
-                        ingresso.AssentoCodigo ??
-                        null;
-
-                    const item =
-                        document.createElement(
-                            "div"
-                        );
-
-                    item.className =
-                        "ingresso-venda-realizada";
-
-                    item.textContent =
-                        codigoAssento
-                            ? `Ingresso #${ingressoId} — Assento ${codigoAssento}`
-                            : `Ingresso #${ingressoId}`;
-
-                    idsIngressosVenda.append(
-                        item
-                    );
-                }
-            );
-        }
-    }
-
-    atualizarStatusImpressao(
-        "pendente"
-    );
 
     abrirModal(
         modalResultadoVenda
     );
-
-    tentarImprimirUltimaVenda();
 }
 
-function atualizarStatusImpressao(
-    status
-) {
-    if (
-        !statusImpressao ||
-        !statusImpressaoTitulo ||
-        !statusImpressaoDescricao
-    ) {
+function preencherResultadoVenda(venda) {
+    const quantidade =
+        venda.ingressos.length;
+
+    if (tituloResultadoVenda) {
+        tituloResultadoVenda.textContent =
+            "Venda concluída";
+    }
+
+    if (descricaoResultadoVenda) {
+        descricaoResultadoVenda.textContent =
+            quantidade === 1
+                ? "O ingresso foi registrado com sucesso."
+                : `${quantidade} ingressos foram registrados com sucesso.`;
+    }
+
+    renderizarIdsIngressos(venda);
+    prepararStatusImpressao(venda);
+}
+
+function renderizarIdsIngressos(venda) {
+    if (!idsIngressosVenda) {
         return;
     }
 
-    statusImpressao.classList.remove(
-        "sucesso",
-        "erro",
-        "pendente"
+    idsIngressosVenda.replaceChildren();
+
+    const identificacaoVenda =
+        document.createElement("div");
+
+    identificacaoVenda.className =
+        "identificacao-venda";
+
+    identificacaoVenda.innerHTML = `
+        <span>Venda</span>
+        <strong>#${venda.vendaId}</strong>
+    `;
+
+    idsIngressosVenda.append(
+        identificacaoVenda
     );
 
-    statusImpressao.classList.add(
-        status
+    venda.ingressos.forEach(
+        ingresso => {
+            const item =
+                document.createElement("div");
+
+            item.className =
+                "identificacao-ingresso";
+
+            item.innerHTML = `
+                <span>
+                    ${escaparHtml(ingresso.codigoAssento)}
+                </span>
+
+                <strong>
+                    Ingresso #${ingresso.id}
+                </strong>
+            `;
+
+            idsIngressosVenda.append(
+                item
+            );
+        }
     );
-
-    if (status === "sucesso") {
-        statusImpressaoTitulo.textContent =
-            "Impressão concluída";
-
-        statusImpressaoDescricao.textContent =
-            "Os ingressos foram enviados para impressão.";
-
-        return;
-    }
-
-    if (status === "erro") {
-        statusImpressaoTitulo.textContent =
-            "Não foi possível imprimir";
-
-        statusImpressaoDescricao.textContent =
-            "Você pode tentar imprimir novamente.";
-
-        return;
-    }
-
-    statusImpressaoTitulo.textContent =
-        "Preparando impressão";
-
-    statusImpressaoDescricao.textContent =
-        "Aguarde enquanto os ingressos são preparados.";
 }
 
 /* =========================================================
-   IMPRESSÃO
+   IMPRESSÃO - PREPARAÇÃO
 ========================================================= */
 
-async function tentarImprimirUltimaVenda() {
-    if (!ultimaVendaBilheteria) {
-        atualizarStatusImpressao(
-            "erro"
-        );
-
-        return;
-    }
-
-    atualizarStatusImpressao(
-        "pendente"
-    );
-
-    try {
-        await imprimirVenda(
-            ultimaVendaBilheteria
-        );
-
-        atualizarStatusImpressao(
+function prepararStatusImpressao(venda) {
+    if (statusImpressao) {
+        statusImpressao.classList.remove(
+            "erro",
             "sucesso"
         );
-
-    } catch (erro) {
-        console.error(
-            "Erro ao imprimir ingressos:",
-            erro
-        );
-
-        atualizarStatusImpressao(
-            "erro"
-        );
     }
+
+    if (statusImpressaoTitulo) {
+        statusImpressaoTitulo.textContent =
+            "Ingressos prontos para impressão";
+    }
+
+    if (statusImpressaoDescricao) {
+        const quantidade =
+            venda.ingressos.length;
+
+        statusImpressaoDescricao.textContent =
+            quantidade === 1
+                ? "O ingresso foi criado e poderá ser impresso quando a integração com a impressora estiver configurada."
+                : "Os ingressos foram criados e poderão ser impressos quando a integração com a impressora estiver configurada.";
+    }
+
+    botaoReimprimir?.classList.add(
+        "hidden"
+    );
 }
 
-async function tentarReimprimirUltimaVenda() {
+function tentarReimprimirUltimaVenda() {
     if (!ultimaVendaBilheteria) {
         return;
     }
 
-    if (botaoReimprimir) {
-        botaoReimprimir.disabled =
-            true;
-    }
-
-    try {
-        await tentarImprimirUltimaVenda();
-
-    } finally {
-        if (botaoReimprimir) {
-            botaoReimprimir.disabled =
-                false;
-        }
-    }
-}
-
-async function imprimirVenda(
-    venda
-) {
     /*
-        Aqui permanece a lógica de impressão
-        utilizada pelo projeto.
-
-        Se o seu arquivo original possui uma
-        implementação específica para gerar
-        ou abrir os ingressos, mantenha essa
-        implementação aqui.
+        A impressão será implementada
+        posteriormente.
     */
-
-    const ingressos =
-        venda?.ingressos ??
-        venda?.Ingressos ??
-        [];
-
-    if (
-        !Array.isArray(ingressos) ||
-        !ingressos.length
-    ) {
-        throw new Error(
-            "Nenhum ingresso disponível para impressão."
-        );
-    }
-
-    window.print();
 }
-
 
 /* =========================================================
    NOVA VENDA
@@ -2581,105 +2283,114 @@ async function iniciarNovaVenda() {
         modalResultadoVenda
     );
 
-    ultimaVendaBilheteria =
-        null;
-
-    assentosSelecionados =
-        [];
+    ultimaVendaBilheteria = null;
 
     limparFormaPagamento();
-
-    atualizarResumoSelecao();
+    esconderErroVenda();
 
     try {
         await sincronizarAssentosComServidor();
-
     } catch {
-        /*
-            O erro de sincronização já é tratado
-            pelo próprio método.
-        */
+        exibirMensagemPagina(
+            "A venda foi concluída, mas não foi possível atualizar os assentos.",
+            "erro"
+        );
     }
 }
 
-
 /* =========================================================
-   LIBERAR RESERVAS
+   MODAIS
 ========================================================= */
 
-async function liberarReservasSessaoAtual() {
-    if (!sessaoIdAtual) {
-        return;
-    }
-
-    try {
-        await requisicaoAutenticada(
-            `/ReservaAssento/minhas?sessaoId=${sessaoIdAtual}`,
-            {
-                method: "DELETE"
-            }
-        );
-
-    } catch (erro) {
+function abrirModal(modal) {
+    if (!modal) {
         console.error(
-            "Erro ao liberar reservas:",
-            erro
+            "Tentativa de abrir um modal inexistente."
         );
 
-        if (
-            erro.status === 401
-        ) {
-            redirecionarParaLogin();
-        }
-
-        throw erro;
+        atualizarBloqueioScroll();
+        return;
     }
+
+    modal.hidden = false;
+
+    modal.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+
+    modal.classList.add(
+        "aberto",
+        "ativo"
+    );
+
+    atualizarBloqueioScroll();
 }
 
+function fecharModal(modal) {
+    if (!modal) {
+        atualizarBloqueioScroll();
+        return;
+    }
 
-/* =========================================================
-   VOLTAR
-========================================================= */
+    modal.classList.remove(
+        "aberto",
+        "ativo"
+    );
 
-async function voltarPaginaAnterior() {
+    modal.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+    modal.hidden = true;
+
+    atualizarBloqueioScroll();
+}
+
+function atualizarBloqueioScroll() {
+    const existeModalVisivel = [
+        modalSessoes,
+        modalVenda,
+        modalResultadoVenda
+    ].some(
+        modal =>
+            modal &&
+            !modal.hidden &&
+            (
+                modal.classList.contains("ativo") ||
+                modal.classList.contains("aberto")
+            )
+    );
+
+    document.body.classList.toggle(
+        "modal-aberto",
+        existeModalVisivel
+    );
+}
+
+function existeModalAberto() {
+    return [
+        modalSessoes,
+        modalVenda,
+        modalResultadoVenda
+    ].some(
+        modal =>
+            modal &&
+            !modal.hidden &&
+            (
+                modal.classList.contains("ativo") ||
+                modal.classList.contains("aberto")
+            )
+    );
+}
+
+function controlarTeclado(evento) {
+    if (evento.key !== "Escape") {
+        return;
+    }
+
     if (vendaEmAndamento) {
-        return;
-    }
-
-    pararAtualizacaoAutomatica();
-
-    try {
-        await liberarReservasSessaoAtual();
-
-    } catch {
-        /*
-            Mesmo se não for possível liberar,
-            não prendemos o funcionário na página.
-        */
-    }
-
-    if (
-        window.history.length > 1
-    ) {
-        window.history.back();
-        return;
-    }
-
-    window.location.href =
-        "../home-funcionario.html";
-}
-
-
-/* =========================================================
-   TECLADO
-========================================================= */
-
-function controlarTeclado(
-    evento
-) {
-    if (
-        evento.key !== "Escape"
-    ) {
         return;
     }
 
@@ -2687,6 +2398,7 @@ function controlarTeclado(
         modalResultadoVenda &&
         !modalResultadoVenda.hidden
     ) {
+        iniciarNovaVenda();
         return;
     }
 
@@ -2706,61 +2418,231 @@ function controlarTeclado(
     }
 }
 
-
 /* =========================================================
-   MODAIS
+   VOLTAR
 ========================================================= */
 
-function abrirModal(
-    modal
-) {
-    if (!modal) {
+async function voltarPaginaAnterior() {
+    if (vendaEmAndamento) {
         return;
     }
 
-    modal.hidden = false;
+    try {
+        await liberarReservasSessaoAtual();
+    } catch {
+        /* não impede navegação */
+    }
 
-    document.body.classList.add(
-        "modal-aberto"
+    if (
+        window.history.length > 1
+    ) {
+        window.history.back();
+        return;
+    }
+
+    window.location.href =
+        "home-admin.html";
+}
+
+/* =========================================================
+   URL
+========================================================= */
+
+function atualizarSessaoIdUrl(
+    sessaoId
+) {
+    const url =
+        new URL(
+            window.location.href
+        );
+
+    url.searchParams.set(
+        "sessaoId",
+        String(sessaoId)
+    );
+
+    window.history.replaceState(
+        {},
+        "",
+        url
     );
 }
 
-function fecharModal(
-    modal
+/* =========================================================
+   COMUNICAÇÃO AUTENTICADA
+========================================================= */
+
+async function requisicaoAutenticada(
+    endpoint,
+    options = {}
 ) {
-    if (!modal) {
-        return;
-    }
-
-    modal.hidden = true;
-
-    const existeOutroModalAberto =
-        Array.from(
-            document.querySelectorAll(
-                ".modal"
-            )
-        ).some(
-            item =>
-                !item.hidden
+    const token =
+        localStorage.getItem(
+            "token"
         );
 
-    if (
-        !existeOutroModalAberto
-    ) {
-        document.body.classList.remove(
-            "modal-aberto"
+    if (!token) {
+        const erro =
+            new Error(
+                "Sua sessão expirou. Faça login novamente."
+            );
+
+        erro.status = 401;
+
+        throw erro;
+    }
+
+    const headers = {
+        Accept:
+            "application/json",
+
+        Authorization:
+            `Bearer ${token}`,
+
+        ...(options.body
+            ? {
+                "Content-Type":
+                    "application/json"
+            }
+            : {}),
+
+        ...(options.headers ?? {})
+    };
+
+    let resposta;
+
+    try {
+        resposta =
+            await fetch(
+                `${API_URL}${endpoint}`,
+                {
+                    ...options,
+                    headers
+                }
+            );
+    } catch {
+        throw new Error(
+            "Não foi possível se comunicar com o servidor."
         );
     }
+
+    const dados =
+        await lerRespostaApi(
+            resposta
+        );
+
+    if (!resposta.ok) {
+        const erro =
+            new Error(
+                obterMensagemResposta(
+                    dados
+                ) ||
+                "Não foi possível concluir a operação."
+            );
+
+        erro.status =
+            resposta.status;
+
+        erro.dados =
+            dados;
+
+        throw erro;
+    }
+
+    return dados;
 }
 
+async function lerRespostaApi(
+    resposta
+) {
+    if (
+        resposta.status === 204
+    ) {
+        return null;
+    }
+
+    const tipoConteudo =
+        resposta.headers.get(
+            "content-type"
+        ) || "";
+
+    if (
+        tipoConteudo.includes(
+            "application/json"
+        )
+    ) {
+        return await resposta.json();
+    }
+
+    const texto =
+        await resposta.text();
+
+    return texto || null;
+}
+
+function obterMensagemResposta(
+    dados
+) {
+    if (!dados) {
+        return null;
+    }
+
+    if (
+        typeof dados === "string"
+    ) {
+        return dados;
+    }
+
+    if (
+        dados.errors &&
+        typeof dados.errors ===
+            "object"
+    ) {
+        return Object.values(
+            dados.errors
+        )
+            .flat()
+            .filter(Boolean)
+            .join("\n");
+    }
+
+    return (
+        dados.mensagem ??
+        dados.Mensagem ??
+        dados.message ??
+        dados.Message ??
+        dados.title ??
+        dados.Title ??
+        dados.erro ??
+        dados.error ??
+        null
+    );
+}
+
+function criarErroApiRequest(
+    resposta,
+    fallback
+) {
+    const erro =
+        new Error(
+            resposta.message ??
+            resposta.mensagem ??
+            fallback
+        );
+
+    erro.status =
+        resposta.status;
+
+    return erro;
+}
 
 /* =========================================================
-   MENSAGENS - PÁGINA
+   MENSAGENS
 ========================================================= */
 
 function exibirMensagemPagina(
     mensagem,
-    tipo = "erro"
+    tipo = "info"
 ) {
     if (!mensagemPagina) {
         return;
@@ -2771,27 +2653,13 @@ function exibirMensagemPagina(
 
     mensagemPagina.className =
         `mensagem-pagina ${tipo}`;
-
-    mensagemPagina.hidden =
-        false;
 }
 
 function esconderMensagemPagina() {
-    if (!mensagemPagina) {
-        return;
-    }
-
-    mensagemPagina.hidden =
-        true;
-
-    mensagemPagina.textContent =
-        "";
+    mensagemPagina?.classList.add(
+        "hidden"
+    );
 }
-
-
-/* =========================================================
-   MENSAGENS - VENDA
-========================================================= */
 
 function exibirErroVenda(
     mensagem
@@ -2803,152 +2671,58 @@ function exibirErroVenda(
     mensagemModalVenda.textContent =
         mensagem;
 
-    mensagemModalVenda.hidden =
-        false;
+    mensagemModalVenda.classList.remove(
+        "hidden"
+    );
 }
 
 function esconderErroVenda() {
-    if (!mensagemModalVenda) {
+    mensagemModalVenda?.classList.add(
+        "hidden"
+    );
+}
+
+function exibirCarregamentoAssentos() {
+    if (!mapaAssentos) {
         return;
     }
 
-    mensagemModalVenda.textContent =
-        "";
-
-    mensagemModalVenda.hidden =
-        true;
+    mapaAssentos.innerHTML = `
+        <p class="mensagem-carregamento">
+            Carregando assentos...
+        </p>
+    `;
 }
 
-
 /* =========================================================
-   REQUISIÇÃO AUTENTICADA
-========================================================= */
-
-async function requisicaoAutenticada(
-    endpoint,
-    opcoes = {}
-) {
-    const token =
-        localStorage.getItem(
-            "token"
-        );
-
-    if (!token) {
-        const erro =
-            new Error(
-                "Sessão expirada."
-            );
-
-        erro.status = 401;
-
-        throw erro;
-    }
-
-    const headers =
-        new Headers(
-            opcoes.headers || {}
-        );
-
-    headers.set(
-        "Authorization",
-        `Bearer ${token}`
-    );
-
-    if (
-        opcoes.body &&
-        !headers.has(
-            "Content-Type"
-        )
-    ) {
-        headers.set(
-            "Content-Type",
-            "application/json"
-        );
-    }
-
-    let resposta;
-
-    try {
-        resposta =
-            await apiRequest(
-                endpoint,
-                {
-                    ...opcoes,
-                    headers
-                }
-            );
-
-    } catch (erro) {
-        throw new Error(
-            "Não foi possível se conectar ao servidor."
-        );
-    }
-
-    if (!resposta.ok) {
-        const erro =
-            criarErroApiRequest(
-                resposta,
-                "Não foi possível concluir a operação."
-            );
-
-        throw erro;
-    }
-
-    return resposta.data;
-}
-
-
-/* =========================================================
-   ERRO DA API
-========================================================= */
-
-function criarErroApiRequest(
-    resposta,
-    mensagemPadrao
-) {
-    const mensagem =
-        resposta?.data?.message ??
-        resposta?.data?.mensagem ??
-        resposta?.data?.Message ??
-        resposta?.data?.Mensagem ??
-        mensagemPadrao;
-
-    const erro =
-        new Error(
-            mensagem
-        );
-
-    erro.status =
-        resposta?.status;
-
-    erro.data =
-        resposta?.data;
-
-    return erro;
-}
-
-
-/* =========================================================
-   FORMATAÇÃO
+   FORMATAÇÕES
 ========================================================= */
 
 function formatarPreco(
     valor
 ) {
-    return Number(
-        valor || 0
-    ).toLocaleString(
-        "pt-BR",
-        {
-            style: "currency",
-            currency: "BRL"
-        }
-    );
+    return Number(valor)
+        .toLocaleString(
+            "pt-BR",
+            {
+                style: "currency",
+                currency: "BRL"
+            }
+        );
 }
 
 function formatarData(
     data
 ) {
+    if (
+        !(data instanceof Date) ||
+        Number.isNaN(
+            data.getTime()
+        )
+    ) {
+        return "--/--/----";
+    }
+
     return data.toLocaleDateString(
         "pt-BR",
         {
@@ -2962,53 +2736,20 @@ function formatarData(
 function formatarHorario(
     data
 ) {
+    if (
+        !(data instanceof Date) ||
+        Number.isNaN(
+            data.getTime()
+        )
+    ) {
+        return "--:--";
+    }
+
     return data.toLocaleTimeString(
         "pt-BR",
         {
             hour: "2-digit",
             minute: "2-digit"
-        }
-    );
-}
-
-function obterNomeRelativoDia(
-    data
-) {
-    const hoje =
-        zerarHorario(
-            new Date()
-        );
-
-    const dataComparacao =
-        zerarHorario(
-            new Date(data)
-        );
-
-    const diferencaDias =
-        Math.round(
-            (
-                dataComparacao -
-                hoje
-            ) /
-            86400000
-        );
-
-    if (
-        diferencaDias === 0
-    ) {
-        return "Hoje";
-    }
-
-    if (
-        diferencaDias === 1
-    ) {
-        return "Amanhã";
-    }
-
-    return data.toLocaleDateString(
-        "pt-BR",
-        {
-            weekday: "long"
         }
     );
 }
@@ -3038,48 +2779,60 @@ function obterChaveDataLocal(
     return `${ano}-${mes}-${dia}`;
 }
 
-function zerarHorario(
+function obterNomeRelativoDia(
     data
 ) {
-    data.setHours(
+    const hoje =
+        new Date();
+
+    hoje.setHours(
         0,
         0,
         0,
         0
     );
 
-    return data;
-}
+    const comparacao =
+        new Date(data);
 
+    comparacao.setHours(
+        0,
+        0,
+        0,
+        0
+    );
 
-/* =========================================================
-   URL
-========================================================= */
-
-function atualizarSessaoIdUrl(
-    sessaoId
-) {
-    const url =
-        new URL(
-            window.location.href
+    const diferenca =
+        Math.round(
+            (
+                comparacao -
+                hoje
+            ) /
+            86400000
         );
 
-    url.searchParams.set(
-        "sessaoId",
-        sessaoId
-    );
+    if (diferenca === 0) {
+        return "Hoje";
+    }
 
-    window.history.replaceState(
-        {},
-        "",
-        url
-    );
+    if (diferenca === 1) {
+        return "Amanhã";
+    }
+
+    return data
+        .toLocaleDateString(
+            "pt-BR",
+            {
+                weekday:
+                    "long"
+            }
+        )
+        .replace(
+            /^./,
+            letra =>
+                letra.toUpperCase()
+        );
 }
-
-
-/* =========================================================
-   HTML
-========================================================= */
 
 function escaparHtml(
     valor
@@ -3109,24 +2862,6 @@ function escaparHtml(
         );
 }
 
-
-/* =========================================================
-   CARREGAMENTO
-========================================================= */
-
-function exibirCarregamentoAssentos() {
-    if (!mapaAssentos) {
-        return;
-    }
-
-    mapaAssentos.innerHTML = `
-        <p class="carregando-assentos">
-            Carregando assentos...
-        </p>
-    `;
-}
-
-
 /* =========================================================
    REDIRECIONAMENTOS
 ========================================================= */
@@ -3140,11 +2875,13 @@ function redirecionarParaLogin() {
         "usuario"
     );
 
-    window.location.href =
-        "../index.html";
+    window.location.replace(
+        "../../index.html"
+    );
 }
 
 function redirecionarParaHomeCliente() {
-    window.location.href =
-        "../home.html";
+    window.location.replace(
+        "../public/home.html"
+    );
 }
