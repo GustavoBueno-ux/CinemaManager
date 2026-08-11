@@ -186,3 +186,39 @@ async function cadastrarUsuario(event) {
     }
 
 }
+
+const campoSenha =
+    document.getElementById("senha");
+
+const botaoToggleSenha =
+    document.getElementById("toggle-password");
+
+botaoToggleSenha?.addEventListener(
+    "click",
+    () => {
+        if (!campoSenha) {
+            return;
+        }
+
+        const senhaEstaVisivel =
+            campoSenha.type === "text";
+
+        campoSenha.type =
+            senhaEstaVisivel
+                ? "password"
+                : "text";
+
+        const novoTexto =
+            senhaEstaVisivel
+                ? "Mostrar senha"
+                : "Ocultar senha";
+
+        botaoToggleSenha.setAttribute(
+            "aria-label",
+            novoTexto
+        );
+
+        botaoToggleSenha.title =
+            novoTexto;
+    }
+);

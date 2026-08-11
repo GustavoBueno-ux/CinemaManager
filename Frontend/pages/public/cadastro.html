@@ -62,22 +62,51 @@
 
                 </div>
 
-                <div class="campo">
-
+               <div class="campo">
+                            
                     <label for="senha">
                         Senha
                     </label>
-
-                    <input
-                        type="password"
-                        id="senha"
-                        name="senha"
-                        placeholder="Crie uma senha"
-                        minlength="6"
-                        required>
-
+                
+                    <div class="password-wrapper">
+                    
+                        <input
+                            type="password"
+                            id="senha"
+                            name="senha"
+                            placeholder="Crie uma senha"
+                            minlength="6"
+                            required
+                        >
+                    
+                        <button
+                            type="button"
+                            class="toggle-password"
+                            id="toggle-password"
+                            aria-label="Mostrar senha"
+                            title="Mostrar senha"
+                        >
+                            <svg
+                                class="icone-olho"
+                                viewBox="0 0 24 24"
+                                aria-hidden="true"
+                            >
+                                <path
+                                    d="M2.2 12s3.5-6 9.8-6 9.8 6 9.8 6-3.5 6-9.8 6-9.8-6-9.8-6Z"
+                                />
+                    
+                                <circle
+                                    cx="12"
+                                    cy="12"
+                                    r="2.7"
+                                />
+                            </svg>
+                        </button>
+                    
+                    </div>
+                
                 </div>
-
+                
                 <p
                     id="cadastro-error"
                     class="error-message">
