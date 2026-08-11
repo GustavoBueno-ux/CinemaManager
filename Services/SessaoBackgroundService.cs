@@ -7,36 +7,68 @@ namespace CinemaAPI.Services;
 public class SessaoBackgroundService : BackgroundService
 {
     private readonly IServiceScopeFactory _scopeFactory;
+    private readonly ILogger<SessaoBackgroundService> _logger;
 
-    public SessaoBackgroundService(IServiceScopeFactory scopeFactory)
+    public SessaoBackgroundService(
+        IServiceScopeFactory scopeFactory,
+        ILogger<SessaoBackgroundService> logger)
     {
         _scopeFactory = scopeFactory;
+        _logger = logger;
     }
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override async Task ExecuteAsync(
+        CancellationToken stoppingToken)
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            using var scope = _scopeFactory.CreateScope();
-
-            var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-
-            var agora = HorarioCinema.Agora;
-
-            var sessoes = await context.Sessoes
-                .Where(s =>
-                    s.Ativa &&
-                    s.DataHora.AddMinutes(30) <= agora)
-                .ToListAsync(stoppingToken);
-
-            foreach (var sessao in sessoes)
+            try
             {
-                sessao.Ativa = false;
+                using var scope = _scopeFactory.CreateScope();
+
+                var context = scope.ServiceProvider
+                    .GetRequiredService<AppDbContext>();
+
+                var agora = HorarioCinema.Agora;
+
+                var sessoes = await context.Sessoes
+                    .Where(s =>
+                        s.Ativa &&
+                        s.DataHora.AddMinutes(30) <= agora)
+                    .ToListAsync(stoppingToken);
+
+                foreach (var sessao in sessoes)
+                {
+                    sessao.Ativa = false;
+                }
+
+                await context.SaveChangesAsync(stoppingToken);
+            }
+            catch (OperationCanceledException)
+                when (stoppingToken.IsCancellationRequested)
+            {
+                break;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(
+                    ex,
+                    "Erro ao atualizar sessões encerradas."
+                );
             }
 
-            await context.SaveChangesAsync(stoppingToken);
-
-            await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
+            try
+            {
+                await Task.Delay(
+                    TimeSpan.FromMinutes(1),
+                    stoppingToken
+                );
+            }
+            catch (OperationCanceledException)
+                when (stoppingToken.IsCancellationRequested)
+            {
+                break;
+            }
         }
     }
 }
