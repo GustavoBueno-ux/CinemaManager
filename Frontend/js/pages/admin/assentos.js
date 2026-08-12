@@ -2286,20 +2286,6 @@ async function imprimirIngressosVenda(venda) {
         return;
     }
 
-    console.log(
-        "Preparando impressão de",
-        venda.ingressos.length,
-        "ingresso(s)"
-    );
-}async function imprimirIngressosVenda(venda) {
-    if (
-        !venda ||
-        !Array.isArray(venda.ingressos) ||
-        !venda.ingressos.length
-    ) {
-        return;
-    }
-
     if (typeof QRCode === "undefined") {
         console.error(
             "Biblioteca QRCode não carregada."
