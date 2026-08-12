@@ -2104,6 +2104,11 @@ function normalizarIngressoVenda(
             ingresso.TokenQrCode ??
             "",
 
+        codigoRecuperacao:
+            ingresso.codigoRecuperacao ??
+            ingresso.CodigoRecuperacao ??
+            "",
+
         dataCompra:
             ingresso.dataCompra ??
             ingresso.DataCompra ??
@@ -2161,6 +2166,15 @@ async function processarVendaConcluida(venda) {
 
     abrirModal(
         modalResultadoVenda
+    );
+
+    window.setTimeout(
+        () => {
+            imprimirIngressosVenda(
+                venda
+            );
+        },
+        300
     );
 }
 
@@ -2263,15 +2277,570 @@ function prepararStatusImpressao(venda) {
     );
 }
 
+async function imprimirIngressosVenda(venda) {
+    if (
+        !venda ||
+        !Array.isArray(venda.ingressos) ||
+        !venda.ingressos.length
+    ) {
+        return;
+    }
+
+    console.log(
+        "Preparando impressão de",
+        venda.ingressos.length,
+        "ingresso(s)"
+    );
+}async function imprimirIngressosVenda(venda) {
+    if (
+        !venda ||
+        !Array.isArray(venda.ingressos) ||
+        !venda.ingressos.length
+    ) {
+        return;
+    }
+
+    if (typeof QRCode === "undefined") {
+        console.error(
+            "Biblioteca QRCode não carregada."
+        );
+
+        return;
+    }
+
+    try {
+        const ingressosPreparados = [];
+
+        for (const ingresso of venda.ingressos) {
+            const qrCode =
+                await gerarQrCodeParaImpressao(
+                    ingresso.tokenQrCode
+                );
+
+            ingressosPreparados.push({
+                ingresso,
+                qrCode
+            });
+        }
+
+        const iframe =
+            document.createElement(
+                "iframe"
+            );
+
+        iframe.style.position = "fixed";
+        iframe.style.width = "0";
+        iframe.style.height = "0";
+        iframe.style.border = "0";
+        iframe.style.right = "0";
+        iframe.style.bottom = "0";
+
+        document.body.appendChild(
+            iframe
+        );
+
+        const documento =
+            iframe.contentDocument;
+
+        if (!documento) {
+            iframe.remove();
+
+            throw new Error(
+                "Não foi possível preparar a impressão."
+            );
+        }
+
+        documento.open();
+
+        documento.write(
+            criarDocumentoImpressao(
+                ingressosPreparados
+            )
+        );
+
+        documento.close();
+
+        /*
+            Dá tempo para o navegador terminar
+            de montar o documento antes da impressão.
+        */
+        setTimeout(
+            () => {
+                iframe.contentWindow?.focus();
+                iframe.contentWindow?.print();
+
+                /*
+                    Esperamos um pouco antes de remover
+                    o iframe.
+                */
+                setTimeout(
+                    () => {
+                        iframe.remove();
+                    },
+                    1000
+                );
+            },
+            250
+        );
+
+    } catch (erro) {
+        console.error(
+            "Erro ao preparar impressão:",
+            erro
+        );
+    }
+}
+
+
+/* =========================================================
+   GERAR QR CODE
+========================================================= */
+
+function gerarQrCodeParaImpressao(
+    tokenQrCode
+) {
+    return new Promise(
+        (resolve, reject) => {
+            if (!tokenQrCode) {
+                reject(
+                    new Error(
+                        "Token do QR Code não encontrado."
+                    )
+                );
+
+                return;
+            }
+
+            const container =
+                document.createElement(
+                    "div"
+                );
+
+            container.style.position =
+                "fixed";
+
+            container.style.left =
+                "-99999px";
+
+            document.body.appendChild(
+                container
+            );
+
+            new QRCode(
+                container,
+                {
+                    text: tokenQrCode,
+
+                    width: 300,
+                    height: 300,
+
+                    colorDark:
+                        "#000000",
+
+                    colorLight:
+                        "#ffffff",
+
+                    correctLevel:
+                        QRCode.CorrectLevel.H
+                }
+            );
+
+            setTimeout(
+                () => {
+                    const canvas =
+                        container.querySelector(
+                            "canvas"
+                        );
+
+                    const imagem =
+                        container.querySelector(
+                            "img"
+                        );
+
+                    let resultado = null;
+
+                    if (canvas) {
+                        resultado =
+                            canvas.toDataURL(
+                                "image/png"
+                            );
+
+                    } else if (imagem) {
+                        resultado =
+                            imagem.src;
+                    }
+
+                    container.remove();
+
+                    if (!resultado) {
+                        reject(
+                            new Error(
+                                "Não foi possível gerar o QR Code."
+                            )
+                        );
+
+                        return;
+                    }
+
+                    resolve(resultado);
+                },
+                50
+            );
+        }
+    );
+}
+
+
+/* =========================================================
+   DOCUMENTO DE IMPRESSÃO
+========================================================= */
+
+function criarDocumentoImpressao(
+    ingressosPreparados
+) {
+    const ingressosHtml =
+        ingressosPreparados
+            .map(
+                item =>
+                    criarIngressoImpressao(
+                        item.ingresso,
+                        item.qrCode
+                    )
+            )
+            .join("");
+
+    return `
+        <!DOCTYPE html>
+
+        <html lang="pt-BR">
+
+        <head>
+
+            <meta charset="UTF-8">
+
+            <title>
+                Ingressos
+            </title>
+
+            <style>
+
+                @page {
+                    size: 80mm 60mm;
+                    margin: 3mm;
+                }
+
+                * {
+                    box-sizing: border-box;
+                }
+
+                html,
+                body {
+                    margin: 0;
+                    padding: 0;
+
+                    color: #000;
+                    background: #fff;
+
+                    font-family:
+                        Arial,
+                        Helvetica,
+                        sans-serif;
+                }
+
+                .ticket-page {
+                    display: grid;
+
+                    grid-template-columns:
+                        29mm
+                        minmax(0, 1fr);
+
+                    gap: 3mm;
+
+                    align-items: center;
+
+                    width: 100%;
+                    min-height: 54mm;
+
+                    margin: 0;
+                    padding: 0;
+
+                    color: #000;
+                    background: #fff;
+
+                    break-inside: avoid;
+                    page-break-inside: avoid;
+                }
+
+                .ticket-page:not(:last-child) {
+                    break-after: page;
+                    page-break-after: always;
+                }
+
+                .ticket-qr-area {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+
+                    width: 29mm;
+                }
+
+                .ticket-qr-container {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    width: 27mm;
+                    height: 27mm;
+
+                    padding: 1mm;
+
+                    background: #fff;
+                }
+
+                .ticket-qr-container img {
+                    display: block;
+
+                    width: 100%;
+                    height: 100%;
+                }
+
+                .ticket-information {
+                    display: flex;
+                    flex-direction: column;
+
+                    gap: 2mm;
+
+                    min-width: 0;
+                }
+
+                .ticket-information-header h2 {
+                    margin: 0;
+
+                    color: #000;
+
+                    font-size: 13px;
+                    font-weight: 800;
+                    line-height: 1.15;
+                }
+
+                .ticket-details {
+                    display: grid;
+
+                    grid-template-columns:
+                        repeat(
+                            3,
+                            minmax(0, 1fr)
+                        );
+
+                    gap: 1mm;
+                }
+
+                .ticket-detail {
+                    display: flex;
+                    flex-direction: column;
+
+                    gap: 0.3mm;
+                }
+
+                .ticket-detail span {
+                    color: #555;
+
+                    font-size: 6px;
+                    font-weight: 700;
+
+                    text-transform: uppercase;
+
+                    letter-spacing:
+                        0.2px;
+                }
+
+                .ticket-detail strong {
+                    color: #000;
+
+                    font-size: 9px;
+                    font-weight: 700;
+
+                    white-space: nowrap;
+                }
+
+                .ticket-recovery-code-container {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
+
+                    gap: 0.5mm;
+
+                    width: 100%;
+
+                    margin-top: 1mm;
+                    padding-top: 1.5mm;
+
+                    border-top:
+                        1px dashed #555;
+                }
+
+                .ticket-recovery-code-label {
+                    color: #555;
+
+                    font-size: 6px;
+                    font-weight: 700;
+
+                    text-transform: uppercase;
+
+                    letter-spacing:
+                        0.3px;
+                }
+
+                .ticket-recovery-code {
+                    color: #000;
+
+                    font-size: 15px;
+                    font-weight: 900;
+
+                    line-height: 1;
+
+                    letter-spacing:
+                        1.5px;
+                }
+
+            </style>
+
+        </head>
+
+        <body>
+
+            ${ingressosHtml}
+
+        </body>
+
+        </html>
+    `;
+}
+
+
+/* =========================================================
+   INGRESSO INDIVIDUAL
+========================================================= */
+
+function criarIngressoImpressao(
+    ingresso,
+    qrCode
+) {
+    const dataHoraSessao =
+        new Date(
+            ingresso.dataSessao
+        );
+
+    return `
+        <article class="ticket-page">
+
+            <section class="ticket-qr-area">
+
+                <div class="ticket-qr-container">
+
+                    <img
+                        src="${qrCode}"
+                        alt=""
+                    >
+
+                </div>
+
+            </section>
+
+
+            <section class="ticket-information">
+
+                <header class="ticket-information-header">
+
+                    <h2>
+                        ${escaparHtml(
+                            ingresso.filme ||
+                            "Filme"
+                        )}
+                    </h2>
+
+                </header>
+
+
+                <div class="ticket-details">
+
+                    <div class="ticket-detail">
+
+                        <span>
+                            Data da sessão
+                        </span>
+
+                        <strong>
+                            ${formatarData(
+                                dataHoraSessao
+                            )}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="ticket-detail">
+
+                        <span>
+                            Horário
+                        </span>
+
+                        <strong>
+                            ${formatarHorario(
+                                dataHoraSessao
+                            )}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="ticket-detail">
+
+                        <span>
+                            Assento
+                        </span>
+
+                        <strong>
+                            ${escaparHtml(
+                                ingresso.codigoAssento
+                            )}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="ticket-recovery-code-container">
+
+                    <span class="ticket-recovery-code-label">
+                        Código do ingresso
+                    </span>
+
+                    <strong class="ticket-recovery-code">
+                        ${escaparHtml(
+                            ingresso.codigoRecuperacao ||
+                            "--------"
+                        )}
+                    </strong>
+
+                </div>
+
+            </section>
+
+        </article>
+    `;
+}
+
 function tentarReimprimirUltimaVenda() {
     if (!ultimaVendaBilheteria) {
         return;
     }
 
-    /*
-        A impressão será implementada
-        posteriormente.
-    */
+    imprimirIngressosVenda(
+        ultimaVendaBilheteria
+    );
 }
 
 /* =========================================================
