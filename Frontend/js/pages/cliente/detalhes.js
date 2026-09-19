@@ -10,6 +10,8 @@ const menuUsuario = document.getElementById("menuUsuario");
 
 const logoutBtn = document.getElementById("logoutBtn");
 
+const usuarioContainer = document.getElementById("usuarioContainer");
+
 const posterFilme = document.getElementById("posterFilme");
 
 const tituloFilme = document.getElementById("tituloFilme");
@@ -38,21 +40,28 @@ let sessoes = [];
 // LOGIN
 // =========================
 
-function verificarLogin() {
+function obterUsuarioLogado() {
 
     const token = localStorage.getItem("token");
 
     const usuario = localStorage.getItem("usuario");
 
     if (!token || !usuario) {
+        return null;
+    }
 
-        window.location.href = "../../index.html";
+    try {
+
+        return JSON.parse(usuario);
+
+    } catch {
+
+        localStorage.removeItem("token");
+        localStorage.removeItem("usuario");
 
         return null;
 
     }
-
-    return JSON.parse(usuario);
 
 }
 
@@ -62,7 +71,10 @@ function verificarLogin() {
 
 function carregarUsuario() {
 
-    const usuario = verificarLogin();
+    const usuario = obterUsuarioLogado();
+
+    usuarioContainer.classList.toggle("logado", Boolean(usuario));
+    usuarioContainer.classList.toggle("deslogado", !usuario);
 
     if (!usuario)
         return;
@@ -83,11 +95,18 @@ function configurarMenuUsuario() {
 
         menuUsuario.classList.toggle("ativo");
 
+        usuarioBtn.setAttribute(
+            "aria-expanded",
+            String(menuUsuario.classList.contains("ativo"))
+        );
+
     });
 
     document.addEventListener("click", function () {
 
         menuUsuario.classList.remove("ativo");
+
+        usuarioBtn.setAttribute("aria-expanded", "false");
 
     });
 
@@ -289,6 +308,14 @@ function mostrarSessoes() {
         const botao = card.querySelector("button");
 
         botao.addEventListener("click", function () {
+
+            if (!obterUsuarioLogado()) {
+
+                window.location.href = "../../index.html";
+
+                return;
+
+            }
 
             window.location.href =
                 `assentos.html?sessaoId=${sessao.id}`;

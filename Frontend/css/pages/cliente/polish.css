@@ -1,0 +1,88 @@
+/* Estrutura comum para que o fluxo público se comporte como um único produto. */
+body { min-width: 320px; }
+
+body.pagina-publica {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+body.pagina-publica > main {
+    flex: 1;
+    width: min(100%, 1360px);
+    margin-inline: auto;
+    padding: clamp(30px, 4vw, 54px) clamp(20px, 6vw, 88px);
+}
+
+body.pagina-home > main { width: 100%; padding: 0; }
+
+.pagina-assentos,
+.pagina-ingresso,
+.pagina-ingressos,
+.pagina-perfil,
+.detalhes-filme,
+.auth-container { width: min(100%, 1280px); margin-inline: auto; }
+
+.pagina-publica .botao-voltar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    margin: 0 0 24px;
+    padding: 0 14px;
+    border-radius: 7px;
+    font-weight: 650;
+    transition: background .2s ease, border-color .2s ease, transform .2s ease;
+}
+
+.pagina-publica .botao-voltar:hover { transform: translateX(-2px); }
+
+.pagina-publica > footer {
+    width: 100%;
+    min-height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 18px 20px;
+    border-top: 1px solid rgba(255, 255, 255, .1);
+    background: #0b0b0b;
+    color: #89898d;
+    font: .8rem Inter, "Segoe UI", Arial, sans-serif;
+    text-align: center;
+}
+
+.pagina-publica > footer p { margin: 0; }
+
+.ingresso-card,
+.perfil-card,
+.detalhes-filme,
+.resumo-selecao { box-shadow: 0 12px 28px rgba(0, 0, 0, .18); }
+
+.campo input,
+.campo select,
+.campo textarea { min-height: 44px; border-radius: 7px; }
+
+.pagina-auth .login-card,
+.pagina-auth .auth-card { border-radius: 18px; }
+
+.pagina-auth .login-footer,
+.pagina-auth .copyright {
+    margin-top: 26px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(255, 255, 255, .08);
+    color: #8f8f94;
+    font-size: .82rem;
+    text-align: center;
+}
+
+.pagina-auth .login-footer small,
+.pagina-auth .copyright small { color: #77777c; }
+
+@media (max-width: 580px) {
+    .pagina-assentos,
+    .pagina-ingresso,
+    .pagina-ingressos,
+    .pagina-perfil,
+    .detalhes-filme { width: 100%; }
+}

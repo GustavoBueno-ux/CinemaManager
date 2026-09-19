@@ -9,10 +9,12 @@
     <title>Home | Cinemax Piraju</title>
 
     <link rel="stylesheet" href="../../css/pages/cliente/home.css">
+    <link rel="stylesheet" href="../../css/pages/cliente/navbar.css">
+    <link rel="stylesheet" href="../../css/pages/cliente/polish.css">
 
 </head>
 
-<body>
+<body class="pagina-publica pagina-home">
 
 <header class="navbar">
 
@@ -26,11 +28,11 @@
 
     </div>
 
-    <div class="usuario-container">
+    <div class="usuario-container" id="usuarioContainer">
 
-        <button
-            class="usuario-btn"
-            id="usuarioBtn">
+        <a class="entrar-btn" id="entrarBtn" href="../../index.html">Entrar</a>
+
+        <button class="usuario-btn" id="usuarioBtn" aria-expanded="false">
 
             <span id="nomeUsuario">
 
@@ -38,11 +40,7 @@
 
             </span>
 
-            <span>
-
-                ▼
-
-            </span>
+            <span class="usuario-seta" aria-hidden="true">⌄</span>
 
         </button>
 
@@ -76,6 +74,8 @@
 
 <section class="introducao">
 
+    <p class="eyebrow">CINEMAX · A SUA PRÓXIMA HISTÓRIA</p>
+
     <h1>
 
         Encontre sua próxima sessão
@@ -88,9 +88,11 @@
 
     </p>
 
+    <a class="hero-cta" href="#filmesEmCartaz">Ver filmes em cartaz <span aria-hidden="true">→</span></a>
+
 </section>
 
-<section class="filmes">
+<section class="filmes" id="filmesEmCartaz">
 
     <h2>
 
@@ -102,11 +104,10 @@
         class="cards-filmes"
         id="listaFilmes">
 
-        <p class="mensagem-vazia">
-
-            Conectando com o servidor...
-
-        </p>
+        <div class="estado-pagina carregando" role="status">
+            <span class="indicador-carregamento" aria-hidden="true"></span>
+            <p>Carregando filmes em cartaz...</p>
+        </div>
 
     </div>
 
@@ -142,11 +143,10 @@
         class="cards-sessoes"
         id="listaSessoes">
 
-        <p class="mensagem-vazia">
-
-            Conectando com o servidor...
-
-        </p>
+        <div class="estado-pagina carregando" role="status">
+            <span class="indicador-carregamento" aria-hidden="true"></span>
+            <p>Buscando as próximas sessões...</p>
+        </div>
 
     </div>
 

@@ -15,10 +15,12 @@
     <link
         rel="stylesheet"
         href="../../css/pages/cliente/detalhes.css">
+    <link rel="stylesheet" href="../../css/pages/cliente/navbar.css">
+    <link rel="stylesheet" href="../../css/pages/cliente/polish.css">
 
 </head>
 
-<body>
+<body class="pagina-publica">
 
     <header class="navbar">
 
@@ -32,11 +34,14 @@
 
         </div>
 
-        <div class="usuario-container">
+        <div class="usuario-container" id="usuarioContainer">
+
+            <a class="entrar-btn" href="../../index.html">Entrar</a>
 
             <button
                 class="usuario-btn"
-                id="usuarioBtn">
+                id="usuarioBtn"
+                aria-expanded="false">
 
                 <span id="nomeUsuario">
 

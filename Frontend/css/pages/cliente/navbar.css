@@ -1,0 +1,77 @@
+/* Navegação compartilhada das telas do cliente. */
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    height: 68px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 clamp(20px, 6vw, 88px);
+    background: rgba(9, 9, 9, .92);
+    border-bottom: 1px solid rgba(255, 255, 255, .1);
+    backdrop-filter: blur(14px);
+}
+
+.navbar .logo,
+.navbar .logo a { display: flex; align-items: center; }
+
+.navbar .logo img {
+    display: block;
+    width: 45px;
+    height: 45px;
+    object-fit: cover;
+    border: 0;
+    border-radius: 50%;
+    box-shadow: none;
+    transition: transform .2s ease;
+}
+
+.navbar .logo img:hover { transform: scale(1.045); }
+.navbar .usuario-container { position: relative; display: flex; align-items: center; }
+.navbar .usuario-container.deslogado .usuario-btn,
+.navbar .usuario-container.deslogado .menu-usuario { display: none; }
+.navbar .usuario-container.logado .entrar-btn { display: none; }
+
+.navbar .usuario-btn,
+.navbar .entrar-btn {
+    min-height: 38px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 14px;
+    border: 1px solid rgba(255, 255, 255, .18);
+    border-radius: 8px;
+    background: transparent;
+    color: #fff;
+    font: 650 .9rem Inter, "Segoe UI", Arial, sans-serif;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background .2s ease, border-color .2s ease;
+}
+
+.navbar .usuario-btn:hover,
+.navbar .entrar-btn:hover { background: rgba(255, 255, 255, .07); border-color: rgba(255, 255, 255, .38); }
+
+.navbar .menu-usuario {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 10px);
+    z-index: 2;
+    display: none;
+    width: 195px;
+    padding: 7px;
+    border: 1px solid rgba(255, 255, 255, .1);
+    border-radius: 10px;
+    background: #191919;
+    box-shadow: 0 16px 32px rgba(0, 0, 0, .38);
+}
+
+.navbar .menu-usuario.ativo { display: grid; }
+.navbar .menu-usuario a { padding: 10px; border-radius: 6px; color: #f4f4f4; font: .9rem Inter, "Segoe UI", Arial, sans-serif; text-decoration: none; }
+.navbar .menu-usuario a:hover { background: rgba(219, 21, 32, .15); }
+
+@media (max-width: 580px) {
+    .navbar { height: 62px; }
+    .navbar .logo img { width: 40px; height: 40px; }
+}
