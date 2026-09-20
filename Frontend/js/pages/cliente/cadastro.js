@@ -155,18 +155,19 @@ async function cadastrarUsuario(event) {
         // ============================
         // Redirecionamento
         // ============================
-
-        if (login.data.usuario.tipoUsuario === "Funcionario") {
-
+            
+        const tipoUsuario = login.data.usuario.tipoUsuario;
+            
+        if (
+            tipoUsuario === "Funcionario" ||
+            tipoUsuario === "Admin"
+        ) {
             window.location.href =
-                "../admin/dashboard.html";
-
+                "../admin/home-admin.html";
         }
         else {
-
             window.location.href =
                 "home.html";
-
         }
 
     }

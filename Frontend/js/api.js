@@ -21,6 +21,11 @@ async function apiRequest(endpoint, options = {}) {
             }
         );
 
+        if (response.status === 401) {
+            localStorage.removeItem("token");
+            localStorage.removeItem("usuario");
+        }
+
         let data = null;
 
         const contentType =

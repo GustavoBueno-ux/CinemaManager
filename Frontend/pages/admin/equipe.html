@@ -1,0 +1,1491 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Gerenciamento da equipe do Cinemax Piraju"
+    >
+
+    <title>Equipe | Cinemax Piraju</title>
+
+
+    <link
+        rel="stylesheet"
+        href="../../css/pages/admin/navbar-admin.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="../../css/pages/admin/equipe.css"
+    >
+
+</head>
+
+
+<body>
+
+    <div class="admin-layout">
+
+
+        <!-- =====================================================
+             SIDEBAR
+        ====================================================== -->
+
+        <aside
+            class="sidebar"
+            id="sidebar"
+        >
+
+            <div class="sidebar-header">
+
+                <a
+                    href="home-admin.html"
+                    class="sidebar-logo"
+                    aria-label="Ir para a página inicial do painel"
+                >
+
+                    <img
+                        src="../../assets/logo/Logo Cinemax.png"
+                        alt=""
+                        class="sidebar-logo-image"
+                        aria-hidden="true"
+                    >
+
+                    <span class="sidebar-logo-text">
+                        Cinemax Piraju
+                    </span>
+
+                </a>
+
+
+                <button
+                    type="button"
+                    class="sidebar-close-button"
+                    id="sidebar-close-button"
+                    aria-label="Fechar menu lateral"
+                >
+                    &times;
+                </button>
+
+            </div>
+
+
+            <nav
+                class="sidebar-navigation"
+                aria-label="Navegação administrativa"
+            >
+
+                <ul class="sidebar-menu">
+
+
+                    <!-- INÍCIO -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="home-admin.html"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                ⌂
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Início
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- FILMES -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="filmes.html"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                🎬
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Filmes
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- SESSÕES -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="sessoes.html"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                📅
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Sessões
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- VENDER INGRESSOS -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="venda-ingressos.html"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                🎟️
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Vender ingressos
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- BUSCAR INGRESSO -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="buscar-ingresso.html"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                🔎
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Buscar ingresso
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- ESCANEAR QR CODE -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="escanear-ingresso.html"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                ▣
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Escanear QR Code
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- RELATÓRIOS -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="relatorios.html"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                📊
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Relatórios
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- EQUIPE -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="equipe.html"
+                            class="sidebar-link active"
+                            aria-current="page"
+                        >
+
+                            <span
+                                class="sidebar-link-icon"
+                                aria-hidden="true"
+                            >
+                                👥
+                            </span>
+
+                            <span class="sidebar-link-text">
+                                Equipe
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                </ul>
+
+            </nav>
+
+
+            <!-- USUÁRIO -->
+
+            <div class="sidebar-footer">
+
+                <div class="sidebar-user">
+
+                    <div
+                        class="sidebar-user-avatar"
+                        id="sidebar-user-avatar"
+                        aria-hidden="true"
+                    >
+                        A
+                    </div>
+
+
+                    <div class="sidebar-user-information">
+
+                        <strong
+                            class="sidebar-user-name"
+                            id="sidebar-user-name"
+                        >
+                            Administrador
+                        </strong>
+
+                        <span class="sidebar-user-role">
+                            Administrador
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="logout-button"
+                    id="logout-button"
+                >
+
+                    <span aria-hidden="true">
+                        ↪
+                    </span>
+
+                    <span>
+                        Sair
+                    </span>
+
+                </button>
+
+            </div>
+
+        </aside>
+
+
+
+        <!-- =====================================================
+             OVERLAY MOBILE
+        ====================================================== -->
+
+        <div
+            class="sidebar-overlay"
+            id="sidebar-overlay"
+            aria-hidden="true"
+        ></div>
+
+
+
+        <!-- =====================================================
+             CONTEÚDO
+        ====================================================== -->
+
+        <div class="admin-content">
+
+
+            <!-- CABEÇALHO MOBILE -->
+
+            <header class="mobile-header">
+
+                <button
+                    type="button"
+                    class="sidebar-open-button"
+                    id="sidebar-open-button"
+                    aria-label="Abrir menu lateral"
+                    aria-controls="sidebar"
+                    aria-expanded="false"
+                >
+                    ☰
+                </button>
+
+
+                <a
+                    href="home-admin.html"
+                    class="mobile-logo"
+                >
+                    Cinemax Piraju
+                </a>
+
+            </header>
+
+
+
+            <!-- =================================================
+                 CONTEÚDO PRINCIPAL
+            ================================================== -->
+
+            <main class="team-main">
+
+
+                <!-- =============================================
+                     CABEÇALHO DA PÁGINA
+                ============================================== -->
+
+                <section
+                    class="team-heading"
+                    aria-labelledby="team-title"
+                >
+
+                    <div class="team-heading-text">
+
+                        <p class="page-label">
+                            Administração
+                        </p>
+
+                        <h1 id="team-title">
+                            Equipe
+                        </h1>
+
+                        <p class="team-heading-description">
+                            Gerencie funcionários e administradores com acesso ao painel do cinema.
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="new-member-button"
+                        id="new-member-button"
+                    >
+
+                        <span
+                            class="new-member-button-icon"
+                            aria-hidden="true"
+                        >
+                            +
+                        </span>
+
+                        <span>
+                            Novo funcionário
+                        </span>
+
+                    </button>
+
+                </section>
+
+
+
+                <!-- =============================================
+                     RESUMO
+                ============================================== -->
+
+                <section
+                    class="team-summary"
+                    aria-label="Resumo da equipe"
+                >
+
+                    <article class="summary-card">
+
+                        <span class="summary-card-label">
+                            Total
+                        </span>
+
+                        <strong
+                            class="summary-card-value"
+                            id="team-total-count"
+                        >
+                            0
+                        </strong>
+
+                        <span class="summary-card-description">
+                            membros cadastrados
+                        </span>
+
+                    </article>
+
+
+                    <article class="summary-card">
+
+                        <span class="summary-card-label">
+                            Funcionários
+                        </span>
+
+                        <strong
+                            class="summary-card-value"
+                            id="team-employee-count"
+                        >
+                            0
+                        </strong>
+
+                        <span class="summary-card-description">
+                            acesso operacional
+                        </span>
+
+                    </article>
+
+
+                    <article class="summary-card">
+
+                        <span class="summary-card-label">
+                            Administradores
+                        </span>
+
+                        <strong
+                            class="summary-card-value"
+                            id="team-admin-count"
+                        >
+                            0
+                        </strong>
+
+                        <span class="summary-card-description">
+                            acesso administrativo
+                        </span>
+
+                    </article>
+
+
+                    <article class="summary-card">
+
+                        <span class="summary-card-label">
+                            Inativos
+                        </span>
+
+                        <strong
+                            class="summary-card-value"
+                            id="team-inactive-count"
+                        >
+                            0
+                        </strong>
+
+                        <span class="summary-card-description">
+                            sem acesso ao sistema
+                        </span>
+
+                    </article>
+
+                </section>
+
+
+
+                <!-- =============================================
+                     CONTROLES
+                ============================================== -->
+
+                <section
+                    class="team-controls"
+                    aria-label="Pesquisa e filtros da equipe"
+                >
+
+                    <div class="team-search-container">
+
+                        <span
+                            class="team-search-icon"
+                            aria-hidden="true"
+                        >
+                            ⌕
+                        </span>
+
+                        <input
+                            type="search"
+                            id="team-search"
+                            class="team-search-input"
+                            placeholder="Pesquisar por nome ou e-mail..."
+                            autocomplete="off"
+                            aria-label="Pesquisar membro por nome ou e-mail"
+                        >
+
+                    </div>
+
+
+                    <div
+                        class="team-status-filters"
+                        role="group"
+                        aria-label="Filtrar equipe por status"
+                    >
+
+                        <button
+                            type="button"
+                            class="team-filter-button active"
+                            data-status="todos"
+                        >
+                            Todos
+                        </button>
+
+                        <button
+                            type="button"
+                            class="team-filter-button"
+                            data-status="ativo"
+                        >
+                            Ativos
+                        </button>
+
+                        <button
+                            type="button"
+                            class="team-filter-button"
+                            data-status="inativo"
+                        >
+                            Inativos
+                        </button>
+
+                    </div>
+
+
+                    <div class="team-role-filter-container">
+
+                        <label
+                            for="team-role-filter"
+                            class="visually-hidden"
+                        >
+                            Filtrar por cargo
+                        </label>
+
+                        <select
+                            id="team-role-filter"
+                            class="team-role-filter"
+                        >
+                            <option value="">
+                                Todos os cargos
+                            </option>
+
+                            <option value="Funcionario">
+                                Funcionários
+                            </option>
+
+                            <option value="Admin">
+                                Administradores
+                            </option>
+                        </select>
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- =============================================
+                     CONTAGEM DE RESULTADOS
+                ============================================== -->
+
+                <div class="team-results-header">
+
+                    <p
+                        class="team-results-count"
+                        id="team-results-count"
+                    >
+                        Carregando equipe...
+                    </p>
+
+                </div>
+
+
+
+                <!-- =============================================
+                     ERRO
+                ============================================== -->
+
+                <section
+                    class="team-error hidden"
+                    id="team-error"
+                    role="alert"
+                >
+
+                    <div>
+
+                        <strong>
+                            Não foi possível carregar a equipe.
+                        </strong>
+
+                        <p id="team-error-message">
+                            Verifique sua conexão e tente novamente.
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="team-retry-button"
+                        id="team-retry-button"
+                    >
+                        Tentar novamente
+                    </button>
+
+                </section>
+
+
+
+                <!-- =============================================
+                     CARREGAMENTO
+                ============================================== -->
+
+                <section
+                    class="team-loading"
+                    id="team-loading"
+                    aria-live="polite"
+                >
+
+                    <div class="loading-spinner"></div>
+
+                    <p>
+                        Carregando equipe...
+                    </p>
+
+                </section>
+
+
+
+                <!-- =============================================
+                     TABELA DA EQUIPE
+                ============================================== -->
+
+                <section
+                    class="team-list-section hidden"
+                    id="team-list-section"
+                    aria-labelledby="team-list-title"
+                >
+
+                    <h2
+                        class="visually-hidden"
+                        id="team-list-title"
+                    >
+                        Membros da equipe
+                    </h2>
+
+
+                    <div class="team-table-container">
+
+                        <table class="team-table">
+
+                            <thead>
+
+                                <tr>
+                                    <th scope="col">Membro</th>
+                                    <th scope="col">Cargo</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Cadastro</th>
+                                    <th
+                                        scope="col"
+                                        class="team-actions-column"
+                                    >
+                                        Ações
+                                    </th>
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody id="team-table-body">
+                                <!-- Membros inseridos pelo JavaScript -->
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- =============================================
+                     ESTADO VAZIO
+                ============================================== -->
+
+                <section
+                    class="team-empty-state hidden"
+                    id="team-empty-state"
+                >
+
+                    <span
+                        class="team-empty-icon"
+                        aria-hidden="true"
+                    >
+                        👥
+                    </span>
+
+                    <h2>
+                        Nenhum membro encontrado
+                    </h2>
+
+                    <p>
+                        Não existem membros correspondentes aos filtros selecionados.
+                    </p>
+
+                    <button
+                        type="button"
+                        class="clear-team-filters-button"
+                        id="clear-team-filters-button"
+                    >
+                        Limpar filtros
+                    </button>
+
+                </section>
+
+            </main>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================================================
+         TEMPLATE DE MEMBRO
+    ========================================================== -->
+
+    <template id="team-member-template">
+
+        <tr class="team-member-row">
+
+            <!-- MEMBRO -->
+
+            <td>
+
+                <div class="team-member">
+
+                    <div
+                        class="team-member-avatar"
+                        aria-hidden="true"
+                    >
+                        U
+                    </div>
+
+
+                    <div class="team-member-information">
+
+                        <strong class="team-member-name">
+                            Nome do membro
+                        </strong>
+
+                        <span class="team-member-email">
+                            email@exemplo.com
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </td>
+
+
+            <!-- CARGO -->
+
+            <td>
+
+                <span
+                    class="team-role-badge"
+                    data-role=""
+                >
+                    Funcionário
+                </span>
+
+            </td>
+
+
+            <!-- STATUS -->
+
+            <td>
+
+                <span
+                    class="team-status-badge"
+                    data-status=""
+                >
+                    Ativo
+                </span>
+
+            </td>
+
+
+            <!-- CADASTRO -->
+
+            <td>
+
+                <span class="team-registration-date">
+                    --
+                </span>
+
+            </td>
+
+
+            <!-- AÇÕES -->
+
+            <td class="team-actions-cell">
+
+                <div class="team-actions">
+
+                    <button
+                        type="button"
+                        class="team-edit-button"
+                        title="Editar dados"
+                    >
+                        Editar
+                    </button>
+
+
+                    <button
+                        type="button"
+                        class="team-more-button"
+                        aria-label="Mais ações"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                    >
+                        ⋮
+                    </button>
+
+
+                    <div class="team-actions-menu hidden">
+
+                        <button
+                            type="button"
+                            class="team-action-button change-password-action"
+                        >
+                            Alterar senha
+                        </button>
+
+                        <button
+                            type="button"
+                            class="team-action-button change-role-action"
+                        >
+                            Promover a administrador
+                        </button>
+
+                        <button
+                            type="button"
+                            class="team-action-button change-status-action"
+                        >
+                            Desativar acesso
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </td>
+
+        </tr>
+
+    </template>
+
+
+
+    <!-- =========================================================
+         MODAL: NOVO FUNCIONÁRIO
+    ========================================================== -->
+
+    <div
+        class="modal-overlay hidden"
+        id="new-member-modal"
+        aria-hidden="true"
+    >
+
+        <section
+            class="team-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="new-member-modal-title"
+        >
+
+            <header class="team-modal-header">
+
+                <div>
+
+                    <p class="modal-label">
+                        Equipe
+                    </p>
+
+                    <h2 id="new-member-modal-title">
+                        Novo funcionário
+                    </h2>
+
+                    <p class="modal-description">
+                        Crie o acesso de um novo funcionário ao painel do cinema.
+                    </p>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="modal-close-button"
+                    data-close-modal="new-member-modal"
+                    aria-label="Fechar cadastro"
+                >
+                    &times;
+                </button>
+
+            </header>
+
+
+            <form
+                class="team-form"
+                id="new-member-form"
+            >
+
+                <div class="form-field form-field-full">
+
+                    <label for="new-member-name">
+                        Nome
+                    </label>
+
+                    <input
+                        type="text"
+                        id="new-member-name"
+                        name="nome"
+                        maxlength="100"
+                        autocomplete="name"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-field form-field-full">
+
+                    <label for="new-member-email">
+                        E-mail
+                    </label>
+
+                    <input
+                        type="email"
+                        id="new-member-email"
+                        name="email"
+                        maxlength="150"
+                        autocomplete="email"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-field form-field-full">
+
+                    <label for="new-member-password">
+                        Senha inicial
+                    </label>
+
+                    <input
+                        type="password"
+                        id="new-member-password"
+                        name="senha"
+                        minlength="6"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                    <span class="form-field-hint">
+                        Use pelo menos 6 caracteres.
+                    </span>
+
+                </div>
+
+
+                <div
+                    class="modal-form-error hidden"
+                    id="new-member-error"
+                    role="alert"
+                >
+                    Não foi possível cadastrar o funcionário.
+                </div>
+
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        class="modal-cancel-button"
+                        data-close-modal="new-member-modal"
+                    >
+                        Cancelar
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="modal-save-button"
+                        id="new-member-save-button"
+                    >
+                        Cadastrar funcionário
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+    </div>
+
+
+
+    <!-- =========================================================
+         MODAL: EDITAR MEMBRO
+    ========================================================== -->
+
+    <div
+        class="modal-overlay hidden"
+        id="edit-member-modal"
+        aria-hidden="true"
+    >
+
+        <section
+            class="team-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="edit-member-modal-title"
+        >
+
+            <header class="team-modal-header">
+
+                <div>
+
+                    <p class="modal-label">
+                        Equipe
+                    </p>
+
+                    <h2 id="edit-member-modal-title">
+                        Editar membro
+                    </h2>
+
+                    <p class="modal-description">
+                        Atualize o nome ou o e-mail deste membro.
+                    </p>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="modal-close-button"
+                    data-close-modal="edit-member-modal"
+                    aria-label="Fechar edição"
+                >
+                    &times;
+                </button>
+
+            </header>
+
+
+            <form
+                class="team-form"
+                id="edit-member-form"
+            >
+
+                <input
+                    type="hidden"
+                    id="edit-member-id"
+                >
+
+
+                <div class="form-field form-field-full">
+
+                    <label for="edit-member-name">
+                        Nome
+                    </label>
+
+                    <input
+                        type="text"
+                        id="edit-member-name"
+                        name="nome"
+                        maxlength="100"
+                        autocomplete="name"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-field form-field-full">
+
+                    <label for="edit-member-email">
+                        E-mail
+                    </label>
+
+                    <input
+                        type="email"
+                        id="edit-member-email"
+                        name="email"
+                        maxlength="150"
+                        autocomplete="email"
+                        required
+                    >
+
+                </div>
+
+
+                <div
+                    class="modal-form-error hidden"
+                    id="edit-member-error"
+                    role="alert"
+                >
+                    Não foi possível salvar as alterações.
+                </div>
+
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        class="modal-cancel-button"
+                        data-close-modal="edit-member-modal"
+                    >
+                        Cancelar
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="modal-save-button"
+                        id="edit-member-save-button"
+                    >
+                        Salvar alterações
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+    </div>
+
+
+
+    <!-- =========================================================
+         MODAL: ALTERAR SENHA
+    ========================================================== -->
+
+    <div
+        class="modal-overlay hidden"
+        id="change-password-modal"
+        aria-hidden="true"
+    >
+
+        <section
+            class="team-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="change-password-modal-title"
+        >
+
+            <header class="team-modal-header">
+
+                <div>
+
+                    <p class="modal-label">
+                        Segurança
+                    </p>
+
+                    <h2 id="change-password-modal-title">
+                        Alterar senha
+                    </h2>
+
+                    <p
+                        class="modal-description"
+                        id="change-password-member-description"
+                    >
+                        Defina uma nova senha para este membro.
+                    </p>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="modal-close-button"
+                    data-close-modal="change-password-modal"
+                    aria-label="Fechar alteração de senha"
+                >
+                    &times;
+                </button>
+
+            </header>
+
+
+            <form
+                class="team-form"
+                id="change-password-form"
+            >
+
+                <input
+                    type="hidden"
+                    id="change-password-member-id"
+                >
+
+
+                <div class="form-field form-field-full">
+
+                    <label for="change-password-new">
+                        Nova senha
+                    </label>
+
+                    <input
+                        type="password"
+                        id="change-password-new"
+                        minlength="6"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                    <span class="form-field-hint">
+                        Use pelo menos 6 caracteres.
+                    </span>
+
+                </div>
+
+
+                <div class="form-field form-field-full">
+
+                    <label for="change-password-confirm">
+                        Confirmar nova senha
+                    </label>
+
+                    <input
+                        type="password"
+                        id="change-password-confirm"
+                        minlength="6"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                </div>
+
+
+                <div
+                    class="modal-form-error hidden"
+                    id="change-password-error"
+                    role="alert"
+                >
+                    Não foi possível alterar a senha.
+                </div>
+
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        class="modal-cancel-button"
+                        data-close-modal="change-password-modal"
+                    >
+                        Cancelar
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="modal-save-button"
+                        id="change-password-save-button"
+                    >
+                        Alterar senha
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+    </div>
+
+
+
+    <!-- =========================================================
+         MODAL: CONFIRMAÇÃO
+    ========================================================== -->
+
+    <div
+        class="modal-overlay hidden"
+        id="confirmation-modal"
+        aria-hidden="true"
+    >
+
+        <section
+            class="team-modal confirmation-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="confirmation-modal-title"
+        >
+
+            <header class="team-modal-header">
+
+                <div>
+
+                    <p
+                        class="modal-label"
+                        id="confirmation-modal-label"
+                    >
+                        Confirmação
+                    </p>
+
+                    <h2 id="confirmation-modal-title">
+                        Confirmar ação
+                    </h2>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="modal-close-button"
+                    data-close-modal="confirmation-modal"
+                    aria-label="Fechar confirmação"
+                >
+                    &times;
+                </button>
+
+            </header>
+
+
+            <div class="confirmation-content">
+
+                <p id="confirmation-modal-message">
+                    Tem certeza de que deseja realizar esta ação?
+                </p>
+
+
+                <div
+                    class="modal-form-error hidden"
+                    id="confirmation-error"
+                    role="alert"
+                >
+                    Não foi possível concluir a ação.
+                </div>
+
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        class="modal-cancel-button"
+                        data-close-modal="confirmation-modal"
+                    >
+                        Cancelar
+                    </button>
+
+                    <button
+                        type="button"
+                        class="modal-confirm-button"
+                        id="confirmation-button"
+                    >
+                        Confirmar
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+
+    <!-- =========================================================
+         TOAST
+    ========================================================== -->
+
+    <div
+        class="toast-container"
+        id="toast-container"
+        aria-live="polite"
+        aria-atomic="true"
+    ></div>
+
+
+
+    <!-- =========================================================
+         FOOTER
+    ========================================================== -->
+
+    <footer>
+
+        <p>
+            © 2026 Cinemax Piraju. Todos os direitos reservados.
+        </p>
+
+    </footer>
+
+
+
+    <!-- =========================================================
+         JAVASCRIPT
+    ========================================================== -->
+
+    <script src="../../js/config.js"></script>
+    <script src="../../js/api.js"></script>
+    <script src="../../js/pages/admin/interno.js"></script>
+    <script src="../../js/pages/admin/equipe.js"></script>
+
+</body>
+
+</html>

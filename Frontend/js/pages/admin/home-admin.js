@@ -57,7 +57,7 @@ function iniciarPagina() {
         return;
     }
 
-    if (usuario.tipoUsuario !== "Funcionario") {
+    if (!CinemaxInterno.ehUsuarioInterno(usuario)) {
         redirecionarParaHomeCliente();
         return;
     }

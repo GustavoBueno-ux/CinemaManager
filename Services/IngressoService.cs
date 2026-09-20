@@ -391,12 +391,12 @@ public class IngressoService : IIngressoService
             }
 
             if (
-                funcionario.TipoUsuario !=
-                TipoUsuario.Funcionario
+                funcionario.TipoUsuario != TipoUsuario.Funcionario &&
+                funcionario.TipoUsuario != TipoUsuario.Admin
             )
             {
                 throw new InvalidOperationException(
-                    "O usuário autenticado não é um funcionário."
+                    "O usuário autenticado não possui permissão para realizar vendas na bilheteria."
                 );
             }
 

@@ -94,7 +94,10 @@ form.addEventListener("submit", async (event) => {
     );
 
 
-    if(usuario.tipoUsuario === "Funcionario"){
+    if(
+        usuario.tipoUsuario === "Funcionario" ||
+        usuario.tipoUsuario === "Admin"
+    ){
 
         window.location.href =
             "pages/admin/home-admin.html";

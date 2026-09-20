@@ -315,10 +315,7 @@ async function iniciarPagina() {
     }
 
 
-    if (
-        usuario.tipoUsuario !==
-        "Funcionario"
-    ) {
+    if (!CinemaxInterno.ehAdmin(usuario)) {
 
         redirecionarParaHomeCliente();
 
