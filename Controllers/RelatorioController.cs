@@ -6,7 +6,7 @@ namespace CinemaAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "Funcionario")]
+[Authorize(Roles = "Admin")]
 public class RelatorioController : ControllerBase
 {
     private readonly IRelatorioService _relatorioService;

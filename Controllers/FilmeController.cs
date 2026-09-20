@@ -22,7 +22,7 @@ public class FilmeController : ControllerBase
     }
 
 
-    [Authorize(Roles = "Funcionario")]
+    [Authorize(Roles = "Funcionario,Admin")]
     [HttpPost]
     public async Task<IActionResult> CadastrarFilme(
         CriarFilmeDTO dto
@@ -69,7 +69,7 @@ public class FilmeController : ControllerBase
     }
 
 
-    [Authorize(Roles = "Funcionario")]
+    [Authorize(Roles = "Funcionario,Admin")]
     [HttpPatch("{id}")]
     public async Task<IActionResult> PatchFilme(
         int id,
@@ -90,7 +90,7 @@ public class FilmeController : ControllerBase
     }
 
 
-    [Authorize(Roles = "Funcionario")]
+    [Authorize(Roles = "Funcionario,Admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> ExcluirFilmePorId(
         int id
@@ -107,7 +107,7 @@ public class FilmeController : ControllerBase
     }
 
 
-    [Authorize(Roles = "Funcionario")]
+    [Authorize(Roles = "Funcionario,Admin")]
     [HttpPost("upload-poster")]
     [Consumes("multipart/form-data")]
     public async Task<IActionResult> UploadPoster(

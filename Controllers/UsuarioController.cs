@@ -33,7 +33,7 @@ public class UsuarioController : ControllerBase
         }
     }
 
-    [Authorize(Roles = "Funcionario")]
+    [Authorize(Roles = "Admin")]
     [HttpPost("funcionario")]
     public async Task<IActionResult> CriarFuncionario(
         [FromBody] CriarUsuarioDTO dto
@@ -77,7 +77,7 @@ public class UsuarioController : ControllerBase
         return Ok(usuario);
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     public async Task<IActionResult> ListarUsuarios()
     {
@@ -139,21 +139,28 @@ public class UsuarioController : ControllerBase
         return NoContent();
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> ExcluirUsuario(int id)
     {
-        var excluido = await _usuarioService.ExcluirAsync(id);
-
-        if (!excluido)
+        try
         {
-            return NotFound(new
-            {
-                mensagem = "Usuário não encontrado."
-            });
-        }
+            var excluido = await _usuarioService.ExcluirAsync(id);
 
-        return NoContent();
+            if (!excluido)
+            {
+                return NotFound(new
+                {
+                    mensagem = "Usuário não encontrado."
+                });
+            }
+
+            return NoContent();
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new { mensagem = ex.Message });
+        }
     }
 
     private bool TentarObterUsuarioId(out int usuarioId)

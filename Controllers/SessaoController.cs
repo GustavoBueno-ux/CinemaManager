@@ -1,5 +1,6 @@
 using CinemaAPI.DTOs.Sessoes;
 using CinemaAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CinemaAPI.Controllers;
@@ -16,6 +17,7 @@ public class SessaoController : ControllerBase
     }
 
 
+    [Authorize(Roles = "Funcionario,Admin")]
     [HttpPost]
     public async Task<IActionResult> CriarSessao(
         CriarSessaoDTO dto
@@ -89,6 +91,7 @@ public class SessaoController : ControllerBase
     }
 
 
+    [Authorize(Roles = "Funcionario,Admin")]
     [HttpPatch("{id:int}")]
     public async Task<IActionResult> AtualizarSessao(
         int id,
@@ -127,6 +130,7 @@ public class SessaoController : ControllerBase
     }
 
 
+    [Authorize(Roles = "Funcionario,Admin")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> ExcluirSessao(
         int id

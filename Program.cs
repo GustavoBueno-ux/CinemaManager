@@ -1,4 +1,5 @@
 using System.Text;
+using System.Security.Claims;
 using CinemaAPI.Data;
 using CinemaAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -139,7 +140,47 @@ builder.Services
                         Encoding.UTF8.GetBytes(
                             builder.Configuration["Jwt:Key"]!
                         )
-                    )
+                    ),
+
+                // Impede o uso de tokens ainda válidos de contas desativadas.
+                RoleClaimType = ClaimTypes.Role
+            };
+
+        options.Events = new JwtBearerEvents
+            {
+                OnTokenValidated = async context =>
+                {
+                    var usuarioId = context.Principal?
+                        .FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                    if (!int.TryParse(usuarioId, out var id))
+                    {
+                        context.Fail("Token inválido.");
+                        return;
+                    }
+
+                    var dbContext = context.HttpContext.RequestServices
+                        .GetRequiredService<AppDbContext>();
+
+                    var usuario = await dbContext.Usuarios
+                        .Where(u => u.Id == id)
+                        .Select(u => new
+                        {
+                            u.Ativo,
+                            u.TipoUsuario
+                        })
+                        .FirstOrDefaultAsync();
+
+                    var roleToken = context.Principal?
+                        .FindFirst(ClaimTypes.Role)?.Value;
+
+                    if (usuario is null ||
+                        !usuario.Ativo ||
+                        roleToken != usuario.TipoUsuario.ToString())
+                    {
+                        context.Fail("Token não corresponde ao usuário atual.");
+                    }
+                }
             };
     });
 

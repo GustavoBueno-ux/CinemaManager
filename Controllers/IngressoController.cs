@@ -144,7 +144,7 @@ public class IngressoController : ControllerBase
     }
 
 
-    [Authorize(Roles = "Funcionario")]
+    [Authorize(Roles = "Funcionario,Admin")]
     [HttpPost("bilheteria/lote")]
     public async Task<IActionResult> VenderIngressosBilheteria(
         [FromBody] CriarVendaBilheteriaDTO dto
@@ -213,6 +213,7 @@ public class IngressoController : ControllerBase
     }
 
 
+    [Authorize(Roles = "Funcionario,Admin")]
     [HttpGet]
     public async Task<IActionResult> ListarTodos()
     {
@@ -304,7 +305,7 @@ public class IngressoController : ControllerBase
     }
 
 
-    [Authorize(Roles = "Funcionario")]
+    [Authorize(Roles = "Funcionario,Admin")]
     [HttpGet("bilheteria/codigo/{codigo}")]
     public async Task<IActionResult>
         BuscarPorCodigoRecuperacao(
@@ -330,7 +331,7 @@ public class IngressoController : ControllerBase
     }
 
 
-    [Authorize(Roles = "Funcionario")]
+    [Authorize(Roles = "Funcionario,Admin")]
     [HttpPost("validar")]
     public async Task<IActionResult> Validar(
         [FromBody] ValidarIngressoDTO dto
@@ -356,6 +357,7 @@ public class IngressoController : ControllerBase
     }
 
 
+    [Authorize(Roles = "Funcionario,Admin")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Excluir(
         int id

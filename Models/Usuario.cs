@@ -22,11 +22,14 @@ public class Usuario
     [Required]
     public TipoUsuario TipoUsuario { get; set; } = TipoUsuario.Cliente;
 
+    public bool Ativo { get; set; } = true;
+
     public DateTime DataCadastro { get; set; } = HorarioCinema.Agora;
 }
 
 public enum TipoUsuario
 {
     Cliente = 1,
-    Funcionario = 2
+    Funcionario = 2,
+    Admin = 3
 }

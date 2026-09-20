@@ -6,7 +6,7 @@ namespace CinemaAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "Funcionario")]
+[Authorize(Roles = "Funcionario,Admin")]
 public class DashboardController : ControllerBase
 {
     private readonly IDashboardService _dashboardService;
