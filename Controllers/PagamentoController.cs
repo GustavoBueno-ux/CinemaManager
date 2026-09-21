@@ -14,14 +14,17 @@ public class PagamentoController : ControllerBase
 {
     private readonly IPagamentoService _pagamentoService;
     private readonly IConfiguration _configuration;
+    private readonly ILogger<PagamentoController> _logger;
 
     public PagamentoController(
         IPagamentoService pagamentoService,
-        IConfiguration configuration
+        IConfiguration configuration,
+        ILogger<PagamentoController> logger
     )
     {
         _pagamentoService = pagamentoService;
         _configuration = configuration;
+        _logger = logger;
     }
 
 
@@ -67,6 +70,12 @@ public class PagamentoController : ControllerBase
         }
         catch (ArgumentException ex)
         {
+            _logger.LogWarning(
+                ex,
+                "Dados inválidos ao criar Checkout para o usuário {UsuarioId}.",
+                usuarioId
+            );
+
             return BadRequest(new
             {
                 mensagem = ex.Message
@@ -74,6 +83,12 @@ public class PagamentoController : ControllerBase
         }
         catch (KeyNotFoundException ex)
         {
+            _logger.LogWarning(
+                ex,
+                "Recurso não encontrado ao criar Checkout para o usuário {UsuarioId}.",
+                usuarioId
+            );
+
             return NotFound(new
             {
                 mensagem = ex.Message
@@ -81,13 +96,25 @@ public class PagamentoController : ControllerBase
         }
         catch (InvalidOperationException ex)
         {
+            _logger.LogError(
+                ex,
+                "Falha ao criar Checkout para o usuário {UsuarioId}.",
+                usuarioId
+            );
+
             return Conflict(new
             {
                 mensagem = ex.Message
             });
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            _logger.LogError(
+                ex,
+                "Erro inesperado ao criar Checkout para o usuário {UsuarioId}.",
+                usuarioId
+            );
+
             return StatusCode(500, new
             {
                 mensagem =
@@ -121,6 +148,10 @@ public class PagamentoController : ControllerBase
             )
         )
         {
+            _logger.LogError(
+                "Stripe:WebhookSecret não está configurado."
+            );
+
             return StatusCode(500);
         }
 
@@ -140,8 +171,13 @@ public class PagamentoController : ControllerBase
                     webhookSecret
                 );
         }
-        catch (StripeException)
+        catch (StripeException ex)
         {
+            _logger.LogWarning(
+                ex,
+                "Webhook do Stripe recebido com assinatura inválida."
+            );
+
             return BadRequest();
         }
 
@@ -184,8 +220,15 @@ public class PagamentoController : ControllerBase
 
             return Ok();
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            _logger.LogError(
+                ex,
+                "Erro ao processar webhook do Stripe. Evento: {StripeEventType}, ID: {StripeEventId}.",
+                stripeEvent.Type,
+                stripeEvent.Id
+            );
+
             /*
              * IMPORTANTE:
              *

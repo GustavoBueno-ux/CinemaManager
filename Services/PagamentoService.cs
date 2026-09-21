@@ -16,16 +16,19 @@ public class PagamentoService : IPagamentoService
     private readonly AppDbContext _context;
     private readonly IConfiguration _configuration;
     private readonly IIngressoService _ingressoService;
+    private readonly ILogger<PagamentoService> _logger;
 
     public PagamentoService(
         AppDbContext context,
         IConfiguration configuration,
-        IIngressoService ingressoService
+        IIngressoService ingressoService,
+        ILogger<PagamentoService> logger
     )
     {
         _context = context;
         _configuration = configuration;
         _ingressoService = ingressoService;
+        _logger = logger;
     }
 
 
@@ -416,10 +419,19 @@ public class PagamentoService : IPagamentoService
                             options
                         );
             }
-            catch (StripeException)
+            catch (StripeException ex)
             {
+                _logger.LogError(
+                    ex,
+                    "Stripe recusou a criação do Checkout do pedido {PedidoId}. StripeErrorType: {StripeErrorType}, StripeErrorCode: {StripeErrorCode}.",
+                    pedido.Id,
+                    ex.StripeError?.Type,
+                    ex.StripeError?.Code
+                );
+
                 throw new InvalidOperationException(
-                    "Não foi possível iniciar o pagamento no Stripe."
+                    "Não foi possível iniciar o pagamento no Stripe.",
+                    ex
                 );
             }
 
@@ -483,7 +495,7 @@ public class PagamentoService : IPagamentoService
         // =========================================================
         // PAGAMENTO PRECISA ESTAR CONFIRMADO
         // =========================================================
-    
+
         if (
             !string.Equals(
                 session.PaymentStatus,
@@ -494,12 +506,12 @@ public class PagamentoService : IPagamentoService
         {
             return;
         }
-    
-    
+
+
         // =========================================================
         // LOCALIZAR PEDIDO
         // =========================================================
-    
+
         var pedido =
             await _context.PedidosOnline
                 .AsNoTracking()
@@ -508,19 +520,19 @@ public class PagamentoService : IPagamentoService
                         p.StripeCheckoutSessionId ==
                         session.Id
                 );
-    
+
         if (pedido is null)
         {
             throw new InvalidOperationException(
                 "Pedido referente ao Checkout não encontrado."
             );
         }
-    
-    
+
+
         // =========================================================
         // IDEMPOTÊNCIA
         // =========================================================
-    
+
         if (
             pedido.Status ==
             StatusPedidoOnline.Pago
@@ -528,7 +540,7 @@ public class PagamentoService : IPagamentoService
         {
             return;
         }
-    
+
         if (
             pedido.Status !=
             StatusPedidoOnline.Pendente
@@ -538,12 +550,12 @@ public class PagamentoService : IPagamentoService
                 "O pedido não está pendente."
             );
         }
-    
-    
+
+
         // =========================================================
         // VALIDAR REFERÊNCIA DO PEDIDO
         // =========================================================
-    
+
         if (
             string.IsNullOrWhiteSpace(
                 session.ClientReferenceId
@@ -556,12 +568,12 @@ public class PagamentoService : IPagamentoService
                 "A referência do Checkout não corresponde ao pedido."
             );
         }
-    
-    
+
+
         // =========================================================
         // VALIDAR MOEDA
         // =========================================================
-    
+
         if (
             !string.Equals(
                 session.Currency,
@@ -574,17 +586,17 @@ public class PagamentoService : IPagamentoService
                 "A moeda do pagamento não corresponde à moeda do pedido."
             );
         }
-    
-    
+
+
         // =========================================================
         // VALIDAR VALOR PAGO
         // =========================================================
-    
+
         var valorEsperadoCentavos =
             decimal.ToInt64(
                 pedido.ValorTotal * 100m
             );
-    
+
         if (
             session.AmountTotal is null ||
             session.AmountTotal.Value !=
@@ -595,12 +607,12 @@ public class PagamentoService : IPagamentoService
                 "O valor pago não corresponde ao valor do pedido."
             );
         }
-    
-    
+
+
         // =========================================================
         // PAYMENT INTENT
         // =========================================================
-    
+
         if (
             string.IsNullOrWhiteSpace(
                 session.PaymentIntentId
@@ -611,18 +623,19 @@ public class PagamentoService : IPagamentoService
                 "O pagamento não possui um PaymentIntent válido."
             );
         }
-    
-    
+
+
         // =========================================================
         // EFETIVAR VENDA
         // =========================================================
-    
+
         await _ingressoService
             .ConfirmarPedidoOnlineAsync(
                 pedido.Id,
                 session.PaymentIntentId
             );
     }
+
 
     // =========================================================
     // CHECKOUT EXPIRADO
