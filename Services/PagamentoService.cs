@@ -423,10 +423,16 @@ public class PagamentoService : IPagamentoService
             {
                 _logger.LogError(
                     ex,
-                    "Stripe recusou a criação do Checkout do pedido {PedidoId}. StripeErrorType: {StripeErrorType}, StripeErrorCode: {StripeErrorCode}.",
+                    "Stripe recusou a criação do Checkout do pedido {PedidoId}. " +
+                    "StripeErrorType: {StripeErrorType}, " +
+                    "StripeErrorCode: {StripeErrorCode}, " +
+                    "StripeErrorMessage: {StripeErrorMessage}, " +
+                    "StripeErrorParam: {StripeErrorParam}.",
                     pedido.Id,
                     ex.StripeError?.Type,
-                    ex.StripeError?.Code
+                    ex.StripeError?.Code,
+                    ex.StripeError?.Message,
+                    ex.StripeError?.Param
                 );
 
                 throw new InvalidOperationException(
