@@ -342,7 +342,9 @@ public class PagamentoService : IPagamentoService
                     Mode = "payment",
 
                     ExpiresAt =
-                        expiraEm,
+                        DateTime.UtcNow.AddMinutes(
+                            MinutosCheckout
+                        ),
 
                     SuccessUrl =
                         $"{frontendBaseUrl}/pagamento-sucesso.html" +
