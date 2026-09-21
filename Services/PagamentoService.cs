@@ -347,11 +347,11 @@ public class PagamentoService : IPagamentoService
                         ),
 
                     SuccessUrl =
-                        $"{frontendBaseUrl}/pagamento-sucesso.html" +
-                        "?session_id={CHECKOUT_SESSION_ID}",
-
+                        $"{frontendBaseUrl}/pages/public/meus-ingressos.html" +
+                        "?pagamento=sucesso",
+                    
                     CancelUrl =
-                        $"{frontendBaseUrl}/assentos.html" +
+                        $"{frontendBaseUrl}/pages/public/assentos.html" +
                         $"?sessaoId={dto.SessaoId}",
 
                     CustomerEmail =
