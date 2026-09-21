@@ -330,6 +330,276 @@ public class IngressoService : IIngressoService
         }
     }
 
+    public async Task ConfirmarPedidoOnlineAsync(
+        int pedidoId,
+        string? stripePaymentIntentId
+    )
+    {
+        await using var transaction =
+            await _context.Database.BeginTransactionAsync(
+                System.Data.IsolationLevel.Serializable
+            );
+
+        try
+        {
+            var pedido =
+                await _context.PedidosOnline
+                    .Include(p => p.Assentos)
+                    .FirstOrDefaultAsync(
+                        p => p.Id == pedidoId
+                    );
+
+            if (pedido is null)
+            {
+                throw new KeyNotFoundException(
+                    "Pedido online não encontrado."
+                );
+            }
+
+
+            // =====================================================
+            // IDEMPOTÊNCIA
+            // =====================================================
+
+            if (
+                pedido.Status ==
+                StatusPedidoOnline.Pago
+            )
+            {
+                await transaction.CommitAsync();
+                return;
+            }
+
+            if (
+                pedido.Status !=
+                StatusPedidoOnline.Pendente
+            )
+            {
+                throw new InvalidOperationException(
+                    "O pedido não está pendente."
+                );
+            }
+
+
+            // =====================================================
+            // ASSENTOS
+            // =====================================================
+
+            var assentoIds =
+                pedido.Assentos
+                    .Select(a => a.AssentoId)
+                    .Distinct()
+                    .ToList();
+
+            if (assentoIds.Count == 0)
+            {
+                throw new InvalidOperationException(
+                    "O pedido não possui assentos."
+                );
+            }
+
+
+            // =====================================================
+            // PROTEÇÃO CONTRA VENDA DUPLICADA
+            // =====================================================
+
+            var assentoJaVendido =
+                await _context.Ingressos
+                    .AnyAsync(i =>
+                        i.SessaoId ==
+                            pedido.SessaoId &&
+
+                        assentoIds.Contains(
+                            i.AssentoId
+                        )
+                    );
+
+            if (assentoJaVendido)
+            {
+                throw new InvalidOperationException(
+                    "Um ou mais assentos do pedido já possuem ingresso."
+                );
+            }
+
+
+            // =====================================================
+            // SESSÃO
+            // =====================================================
+
+            var sessao =
+                await _context.Sessoes
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(
+                        s =>
+                            s.Id ==
+                            pedido.SessaoId
+                    );
+
+            if (sessao is null)
+            {
+                throw new KeyNotFoundException(
+                    "Sessão do pedido não encontrada."
+                );
+            }
+
+
+            // =====================================================
+            // VALOR CONGELADO NO PEDIDO
+            // =====================================================
+            
+            if (pedido.ValorTotal < 0)
+            {
+                throw new InvalidOperationException(
+                    "O pedido possui valor inválido."
+                );
+            }
+            
+            var valorUnitario =
+                pedido.ValorTotal /
+                assentoIds.Count;
+
+
+            // =====================================================
+            // VENDA
+            // =====================================================
+
+            var agora =
+                HorarioCinema.Agora;
+
+            var venda =
+                new Venda
+                {
+                    DataHora =
+                        agora,
+
+                    FormaPagamento =
+                        FormaPagamento.Cartao,
+
+                    OrigemVenda =
+                        OrigemVenda.Online,
+
+                    FuncionarioId =
+                        null,
+
+                    ValorTotal =
+                        pedido.ValorTotal
+                };
+
+
+            // =====================================================
+            // INGRESSOS
+            // =====================================================
+
+            var ingressos =
+                new List<Ingresso>();
+
+            var codigosGerados =
+                new HashSet<string>();
+
+            foreach (
+                var assentoId in assentoIds
+            )
+            {
+                var ingresso =
+                    await CriarIngressoAsync(
+                        sessaoId:
+                            pedido.SessaoId,
+
+                        assentoId:
+                            assentoId,
+
+                        usuarioId:
+                            pedido.UsuarioId,
+
+                        valorPago:
+                            valorUnitario,
+
+                        dataCompra:
+                            agora,
+
+                        venda:
+                            venda,
+
+                        codigosGerados:
+                            codigosGerados
+                    );
+
+                ingressos.Add(
+                    ingresso
+                );
+            }
+
+
+            // =====================================================
+            // RESERVAS
+            // =====================================================
+
+            var reservas =
+                await _context.ReservasAssentos
+                    .Where(r =>
+                        r.SessaoId ==
+                            pedido.SessaoId &&
+
+                        r.UsuarioId ==
+                            pedido.UsuarioId &&
+
+                        assentoIds.Contains(
+                            r.AssentoId
+                        )
+                    )
+                    .ToListAsync();
+
+
+            // =====================================================
+            // PERSISTÊNCIA
+            // =====================================================
+
+            await _context.Vendas
+                .AddAsync(venda);
+
+            await _context.Ingressos
+                .AddRangeAsync(ingressos);
+
+            if (reservas.Count > 0)
+            {
+                _context.ReservasAssentos
+                    .RemoveRange(reservas);
+            }
+
+            /*
+             * Primeiro SaveChanges para obter Venda.Id.
+             */
+
+            await _context.SaveChangesAsync();
+
+
+            // =====================================================
+            // FINALIZAR PEDIDO
+            // =====================================================
+
+            pedido.VendaId =
+                venda.Id;
+
+            pedido.StripePaymentIntentId =
+                stripePaymentIntentId;
+
+            pedido.Status =
+                StatusPedidoOnline.Pago;
+
+            await _context.SaveChangesAsync();
+
+            await transaction.CommitAsync();
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+
+            _context.ChangeTracker.Clear();
+
+            throw;
+        }
+    }
+
 
     public async Task<VendaBilheteriaResponseDTO>
         CriarVendaBilheteriaAsync(

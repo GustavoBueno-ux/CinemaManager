@@ -6,8 +6,25 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Stripe;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+// =========================================================
+// STRIPE
+// =========================================================
+
+var stripeSecretKey = builder.Configuration["Stripe:SecretKey"];
+
+if (string.IsNullOrWhiteSpace(stripeSecretKey))
+{
+    throw new InvalidOperationException(
+        "A chave secreta do Stripe não foi configurada."
+    );
+}
+
+StripeConfiguration.ApiKey = stripeSecretKey;
 
 
 // =========================================================
@@ -103,6 +120,7 @@ builder.Services.AddScoped<IReservaAssentoService, ReservaAssentoService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IPosterService, PosterService>();
 builder.Services.AddScoped<IRelatorioService, RelatorioService>();
+builder.Services.AddScoped<IPagamentoService, PagamentoService>();
 
 
 // =========================================================

@@ -1,5 +1,6 @@
 using CinemaAPI.Data;
 using Microsoft.EntityFrameworkCore;
+using CinemaAPI.Utils;
 
 namespace CinemaAPI.Services;
 
@@ -34,8 +35,7 @@ public class ReservaAssentoBackgroundService
                 var context = scope.ServiceProvider
                     .GetRequiredService<AppDbContext>();
 
-                var agora = DateTime.UtcNow;
-
+                var agora = HorarioCinema.Agora;
                 var quantidadeRemovida =
                     await context.ReservasAssentos
                         .Where(r => r.ExpiraEm <= agora)

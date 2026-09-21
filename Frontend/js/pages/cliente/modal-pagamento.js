@@ -582,36 +582,55 @@ async function finalizarPagamento() {
     definirEstadoPagamento(true);
 
     try {
+        const checkout =
+            await criarCheckout(
+                sessaoId,
+                assentoIds
+            );
 
-        await comprarIngressosEmLote(
-            sessaoId,
-            assentoIds
-        );
+        const checkoutUrl =
+            checkout?.checkoutUrl
+            ?? checkout?.CheckoutUrl;
+
+        if (
+            typeof checkoutUrl !== "string"
+            || !checkoutUrl.trim()
+        ) {
+            throw new Error(
+                "A API não retornou a página de pagamento."
+            );
+        }
 
         window.location.href =
-            "meus-ingressos.html";
+            checkoutUrl;
 
     } catch (erro) {
-
         console.error(
-            "Erro ao finalizar a compra:",
+            "Erro ao iniciar o pagamento:",
             erro
         );
 
+        if (erro.status === 401) {
+            localStorage.removeItem("token");
+            localStorage.removeItem("usuario");
+
+            window.location.href =
+                "login.html";
+
+            return;
+        }
+
         exibirErroPagamento(
             erro.message
-            ?? "Não foi possível finalizar a compra."
+            ?? "Não foi possível iniciar o pagamento."
         );
 
-        if (
-            erro.status === 401
-            || erro.status === 409
-        ) {
+        if (erro.status === 409) {
             try {
                 await sincronizarAssentosComServidor();
             } catch (erroSincronizacao) {
                 console.error(
-                    "Erro ao atualizar os assentos após a falha da compra:",
+                    "Erro ao atualizar os assentos após a falha do pagamento:",
                     erroSincronizacao
                 );
             }
@@ -622,14 +641,17 @@ async function finalizarPagamento() {
 }
 
 
-async function comprarIngressosEmLote(
+/* =========================================
+   STRIPE CHECKOUT
+========================================= */
+
+async function criarCheckout(
     sessaoId,
     assentoIds
 ) {
-
     const resposta =
         await fetch(
-            `${API_URL}/Ingresso/online/lote`,
+            `${API_URL}/Pagamento/checkout`,
             {
                 method: "POST",
 
@@ -644,18 +666,21 @@ async function comprarIngressosEmLote(
         );
 
     if (!resposta.ok) {
-
         const mensagem =
             await obterMensagemErroApi(
                 resposta
             );
 
-        const erro = new Error(
-            mensagem
-            ?? "Não foi possível concluir a compra."
-        );
+        const erro =
+            new Error(
+                mensagem
+                ?? obterMensagemPadraoCheckout(
+                    resposta.status
+                )
+            );
 
-        erro.status = resposta.status;
+        erro.status =
+            resposta.status;
 
         throw erro;
     }
@@ -663,6 +688,25 @@ async function comprarIngressosEmLote(
     return await lerRespostaApi(
         resposta
     );
+}
+
+function obterMensagemPadraoCheckout(status) {
+    switch (status) {
+        case 400:
+            return "Os dados do pagamento são inválidos.";
+
+        case 401:
+            return "Sua sessão expirou. Faça login novamente.";
+
+        case 404:
+            return "A sessão ou um dos assentos não foi encontrado.";
+
+        case 409:
+            return "Não foi possível iniciar o pagamento. Verifique se os assentos continuam disponíveis.";
+
+        default:
+            return "Não foi possível iniciar o pagamento.";
+    }
 }
 
 
@@ -728,8 +772,8 @@ function definirEstadoPagamento(
 
         botaoPagar.textContent =
             estaCarregando
-                ? "Finalizando..."
-                : "Finalizar compra";
+                ? "Redirecionando..."
+                : "Finalizar pagamento";
     }
 
     if (botaoFecharModal) {
@@ -787,6 +831,7 @@ async function obterMensagemErroApi(
             await resposta.text();
 
         return texto.trim() || null;
+
     } catch (erro) {
         console.error(
             "Erro ao ler resposta da API:",

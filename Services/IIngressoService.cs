@@ -13,6 +13,11 @@ public interface IIngressoService
         CriarIngressosEmLoteDTO dto
     );
 
+    Task ConfirmarPedidoOnlineAsync(
+        int pedidoId,
+        string? stripePaymentIntentId
+    );
+
     Task<VendaBilheteriaResponseDTO> CriarVendaBilheteriaAsync(
         int funcionarioId,
         CriarVendaBilheteriaDTO dto
